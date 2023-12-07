@@ -6,7 +6,7 @@ on:
       - main
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/linchpino-ui
+  IMAGE_NAME: ${{ github.actor }}
   
 jobs:
       push-store-image:
