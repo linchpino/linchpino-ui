@@ -14,30 +14,31 @@ export default function JobSearchSection() {
     }
 
     return (
-        <div className='flex flex-col items-center justify-center text-black'>
-            <Image style={{position: 'absolute', top: 25, left: 0}} src="/home/HomeCloudTwo.svg" alt='logo' width={350}
+        <div className='flex flex-col items-center justify-center text-black mt-8 md:mt-0'>
+            <Image className='hidden md:flex' style={{position: 'absolute', top: 25, left: 0}}
+                   src="/home/HomeCloudTwo.svg" alt='logo' width={350}
                    height={107}/>
-            <Image style={{position: 'absolute', top: 10, right: 200}} src="/home/HomeCloudOne.svg" alt='logo'
+            <Image className='hidden md:flex' style={{position: 'absolute', top: 10, right: 200}}
+                   src="/home/HomeCloudOne.svg" alt='logo'
                    width={260} height={119}/>
-            <div className='flex justify-between relative z-10'>
+            <div className='hidden md:flex justify-between relative z-5'>
                 <Image src="/home/HomeCloudThree.svg" alt='logo' width={312} height={61}/>
                 <Image className='mt-5' src="/home/HomeCloudThree.svg" alt='logo' width={700} height={150}/>
             </div>
-            <p className='whitespace-pre-line'>
-                Empower Your Job Search
-                Participate in a Free Mock Interview with Professionals
-            </p>
-
-
-            <div className="flex-col items-center relative">
-                <h2 className="whitespace-pre-line relative z-10 text-center ml-[40%]">
+            <div className="sm:flex-col md:flex items-center justify-between relative">
+                <h2 className="relative z-5 text-center sm:ml-[55%] md:ml-[40%] ">
                     Empower Your Job Search
                     <br/>
                     Participate in a Free Mock Interview with Professionals
                 </h2>
-                <Image className='mt-[-5rem]' src="/home/JobSearch.svg" alt='logo' width={1000} height={250}/>
+                <div className="flex flex-col justify-between items-center">
+
+                    <Image className='hidden sm:flex mt-[-40px]'
+                           src="/home/JobSearch.svg" alt='logo' width={820}
+                           height={180}/>
+                </div>
                 <div
-                    className='flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 absolute top-0 border-2 border-[#F9A826] rounded-lg gap-y-8'>
+                    className='flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 mt-4 sm:absolute sm:top-0 md:left-[-3rem]  border-2 border-[#F9A826] rounded-lg gap-y-8'>
                     <AsyncPaginate
                         classNames={{
                             control: () =>

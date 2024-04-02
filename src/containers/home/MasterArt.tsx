@@ -3,9 +3,9 @@ import {Button} from "@mui/material";
 
 export default function MasterArt() {
     return (
-        <div className='flex items-center mt-14'>
-
-            <div className="flex-col items-center px-10">
+        <div className='lg:flex items-center mt-14'>
+            <Image src="/home/MasterArt.svg" className="flex order-2 lg:order-2" alt='logo' width={480} height={472}/>
+            <div className="flex-col items-center lg:px-20 order-1 lg:order-1 mt-5 lg:mt-0">
                 <h2 style={{
                     fontWeight: '600',
                     fontSize: '20px',
@@ -23,10 +23,6 @@ export default function MasterArt() {
                     Explore techniques
                 </Button>
             </div>
-
-
-            <Image src="/home/MasterArt.svg" alt='logo' width={480} height={472}/>
-
         </div>
     )
 }

@@ -3,8 +3,9 @@ import {Button} from "@mui/material";
 
 export default function ScheduleAnInterview() {
     return (
-        <div className='flex items-center mt-14'>
-            <div className="flex-col items-center px-10">
+        <div className='lg:flex items-center mt-14'>
+            <Image className="flex order-2 lg:order-2" src="/home/ScheduleAnInterview.svg" alt='logo' width={480} height={472}/>
+            <div className="flex-col items-center lg:px-20 order-1 lg:order-1 mt-5 lg:mt-0">
                 <h2 style={{
                     fontWeight: '600',
                     fontSize: '20px',
@@ -25,7 +26,6 @@ export default function ScheduleAnInterview() {
                     Schedule an interview
                 </Button>
             </div>
-            <Image src="/home/ScheduleAnInterview.svg" alt='logo' width={480} height={472}/>
         </div>
 
     )

@@ -3,7 +3,7 @@ import {BsFacebook, BsLinkedin, BsTwitter, BsYoutube, BsInstagram} from 'react-i
 
 export default function Footer() {
     return (
-        <div className='flex flex-col gap-y-10 mt-10 w-full bg-[#E7ECFF] pt-12 px-24 pb-10'>
+        <div className='hidden lg:flex flex-col gap-y-10 mt-10 w-full bg-[#E7ECFF] pt-12 px-24 pb-10'>
             <div className='flex justify-between items -center'>
                 <p>
                     ©2024 Linchpino
@@ -41,11 +41,11 @@ export default function Footer() {
                     {/*<Link href="/">*/}
                     {/*    Invite Friends*/}
                     {/*</Link>*/}
-                    <a href=''><BsFacebook color='#473F77'/></a>
-                    <a href=''><BsLinkedin color='#473F77'/></a>
-                    <a href=''><BsTwitter color='#473F77'/></a>
-                    <a href=''><BsYoutube color='#473F77'/></a>
-                    <a href=''><BsInstagram color='#473F77'/></a>
+                    <a href='https://google.com/'><BsFacebook color='#473F77'/></a>
+                    <a href='https://google.com/'><BsLinkedin color='#473F77'/></a>
+                    <a href='https://google.com/'><BsTwitter color='#473F77'/></a>
+                    <a href='https://google.com/'><BsYoutube color='#473F77'/></a>
+                    <a href='https://google.com/'><BsInstagram color='#473F77'/></a>
 
                 </div>
             </div>

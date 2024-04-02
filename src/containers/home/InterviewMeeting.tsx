@@ -3,10 +3,10 @@ import {Button} from "@mui/material";
 
 export default function InterviewMeeting() {
     return (
-        <div className='flex items-center mt-14'>
-            <Image src="/home/InterviewMeeting.svg" alt='logo' width={480} height={472}/>
+        <div className='lg:flex items-center mt-14'>
+            <Image className="flex order-2 lg:order-1" src="/home/InterviewMeeting.svg" alt='logo' width={480} height={472}/>
 
-            <div className="flex-col items-center px-20">
+            <div className="flex-col items-center lg:px-20 order-1 lg:order-2 mt-5 lg:mt-0">
                 <h2 style={{
                     fontWeight: '600',
                     fontSize: '20px',
