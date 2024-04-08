@@ -10,8 +10,8 @@ import Footer from "@/components/Footer";
 export default function Home() {
     return (
         <>
-            <div className='bg-white container pb-5 lg:pb-0 overflow-x-hidden'>
-                <Header/>
+            <Header/>
+            <div className='bg-white  pb-5 lg:pb-0 overflow-x-hidden container'>
                 <JobSearchSection/>
                 <BeMentor/>
                 <ScheduleAnInterview/>
