@@ -26,7 +26,7 @@ export default function JobSearchSection() {
                 <Image className='mt-5' src="/home/HomeCloudThree.svg" alt='logo' width={700} height={150}/>
             </div>
             <div className="flex flex-col items-center justify-between relative">
-                <h2 className="relative z-5 text-center sm:ml-[55%] md:ml-[40%] ">
+                <h2 className="relative z-5 text-center md:ml-[40%] ">
                     Empower Your Job Search
                     <br/>
                     Participate in a Free Mock Interview with Professionals
@@ -37,7 +37,7 @@ export default function JobSearchSection() {
                            height={180}/>
                 </div>
                 <div
-                    className='flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 mt-4 sm:absolute sm:top-0 md:left-[-3rem] w-72 border-2 border-[#F9A826] rounded-lg gap-y-8'>
+                        className='flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 mt-4 sm:absolute sm:top-[15%] md:top-0 md:left-[-3rem] w-72 border-2 border-[#F9A826] rounded-lg gap-y-8'>
                     <AsyncPaginate
                         classNames={{
                             control: () =>
