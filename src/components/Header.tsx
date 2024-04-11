@@ -77,7 +77,7 @@ const Header: React.FC<Props> = () => {
       }
       .showMenuNav {
         display: block;
-        position: absolute;
+        position: fixed;
         width: 100%;
         height: 100vh;
         top: 0;
@@ -109,7 +109,7 @@ const Header: React.FC<Props> = () => {
                         <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                 </button>
-                <div className="MENU-LINK-MOBILE-OPEN flex flex-col items-center justify-between min-h-[350px]">
+                <div className="MENU-LINK-MOBILE-OPEN flex fixed flex-col items-center justify-between min-h-[350px]">
                     <div
                         className="input input-bordered input-md bg-transparent rounded-md w-[100%] flex items-center gap-2 mt-5">
                         <input type="text" className="grow" placeholder="Search Here ..."/>
