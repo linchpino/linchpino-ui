@@ -6,7 +6,7 @@ export default function SignIn() {
     return (
         <>
             <Header/>
-            <div className='bg-white container'>
+            <div className='bg-white container pb-5 lg:pb-0'>
                 <div className="flex flex-col items-center justify-center gap-y-8 mt-14">
                     <h1 className='text-black text-3xl'>Sign In</h1>
                     <label className="form-control w-full max-w-xs">
@@ -28,7 +28,7 @@ export default function SignIn() {
                         Login
                     </Link>
                     <div className='flex items-center'>
-                        <Link href='/' className='text-[#F9A826] text-sm'>
+                        <Link href='/signup' className='text-[#F9A826] text-sm'>
                             Register
                         </Link>
                         /
