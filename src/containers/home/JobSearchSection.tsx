@@ -1,6 +1,7 @@
 'use client'
 import Image from "next/image";
 import {AsyncPaginate} from "react-select-async-paginate";
+import Link from "next/link";
 
 export default function JobSearchSection() {
     async function loadOptions() {
@@ -66,10 +67,10 @@ export default function JobSearchSection() {
                         unstyled
                         placeholder="Dream job"
                         loadOptions={loadOptions}/>
-                    <button
+                    <Link href="/schedule-inteview"
                         className='btn btn-sm w-2/3 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                         Schedule the interview
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

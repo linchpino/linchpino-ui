@@ -55,7 +55,7 @@ const ScheduleInterview = () => {
                         />
                     </div>
                 <div
-                    className='flex flex-col items-center gap-y-8 w-full sm:w-2/3 md:w-1/2 lg:w-1/2'>
+                    className='flex flex-col items-center gap-y-8 w-full sm:w-2/3 md:w-1/2 lg:w-1/3'>
                     <AsyncPaginate
                         classNames={{
                             control: () =>
