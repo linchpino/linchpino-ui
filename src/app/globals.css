@@ -15,17 +15,27 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
-body {
-  /*color: rgb(var(--foreground-rgb));*/
-  /*background: linear-gradient(*/
-  /*    to bottom,*/
-  /*    transparent,*/
-  /*    rgb(var(--background-end-rgb))*/
-  /*  )*/
-  /*  rgb(var(--background-start-rgb));*/
+.mentor-scroll-bar {
+  scrollbar-width: auto;
+  scrollbar-color: #0b3fc0;
 }
 
+/* Chrome, Edge, and Safari */
+.mentor-scroll-bar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.mentor-scroll-bar::-webkit-scrollbar-track {
+  background: #ffffff;
+  border : 1px solid #F9A826;
+  border-radius: 5px;
+}
+
+.mentor-scroll-bar::-webkit-scrollbar-thumb {
+  background-color: #F9A826;
+  border-radius: 5px;
+  border: 1px solid #ffffff;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;
