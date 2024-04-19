@@ -12,7 +12,6 @@ const ChooseMentor = () => {
     const [value, setValue] = useState<Value>('');
     const fetchProjects = async () => {
         const res = await fetch('https://jsonplaceholder.typicode.com/posts')
-        console.log(res)
         return res.json()
     }
     const { data} = useQuery({
@@ -20,7 +19,6 @@ const ChooseMentor = () => {
         queryFn: fetchProjects,
     })
     const now = new DateObject()
-    console.log(typeof value)
     return (
         <div className='flex flex-col justify-center w-full items-center'>
             <p className="text-[20px] text-[#F9A826]">{!empty(value) ? value.format("dddd DD MMMM YYYY") : now.format("dddd DD MMMM YYYY")}</p>
