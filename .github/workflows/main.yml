@@ -3,7 +3,7 @@ name: Deploy Images to GHCR
 on:
   push:
     branches:
-      - main
+      - docker-custom-setting
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -40,3 +40,20 @@ jobs:
               tags: ${{ steps.meta.outputs.tags }}
               labels: ${{ steps.meta.outputs.labels }}
               
+      Deploy-to-linchpino-core-server:
+        runs-on: self-hosted
+        permissions:
+          contents: read
+          packages: write
+        needs: build-and-push-to-GHCR 
+        steps:
+          - name: Connect to linchpino-UI on GCP instance
+            run: |
+              cd /opt/linchpino-ui
+              sudo git fetch --all
+              sudo git reset --hard	
+              sudo git pull 
+              docker-compose stop linchpino-ui
+              sleep 2
+              docker-compose rm -f linchpino-ui
+              docker-compose up -d     
