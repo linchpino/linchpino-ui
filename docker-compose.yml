@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  linchpino-ui:
+    image: ghcr.io/linchpino/linchpino-ui:docker-custom-setting
+    container_name: linchpino-ui
+    restart: unless-stopped
+    ports:
+      - "8083:3000"
