@@ -1,16 +1,29 @@
 "use client"
-import {useState} from "react";
+import React, {useState} from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
-import Link from "next/link";
 import ChooseMentor from "@/containers/scheduleInteview/ChooseMentor";
 import Finalize from "@/containers/scheduleInteview/Finalize";
-import {empty} from "@/helper/helper";
+import {useQuery} from "@tanstack/react-query";
+import {SubmitHandler, useForm} from "react-hook-form";
+
+type Inputs = {
+    email:string
+    emailRequired:string
+}
 
 const ScheduleInterview = () => {
     const [activeStep, setActiveStep] = useState(1);
-    const [emailInput, setEmailInput] = useState("");
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: {errors},
+    } = useForm<Inputs>()
+    const onSubmit: SubmitHandler<Inputs> = (data) => setActiveStep(activeStep+1)
+    console.log(watch("email")) // watch input value by passing the name of it
+
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return "Choose a mentor and schedule an interview"
@@ -22,7 +35,14 @@ const ScheduleInterview = () => {
         }
         return "What are you looking for?"
     }
-
+    const fetchProjects = async () => {
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts')
+        return res.json()
+    }
+    const { data} = useQuery({
+        queryKey: ['todos'],
+        queryFn: fetchProjects,
+    })
     async function loadOptions() {
         const response = await fetch(`https://jsonplaceholder.typicode.com/todos/1`);
         const responseJSON = await response.json();
@@ -35,14 +55,46 @@ const ScheduleInterview = () => {
 
     const renderCurrentStepComponent = () => {
         if (activeStep === 1) {
-            return <ChooseMentor/>
+            return <ChooseMentor activeStep={activeStep} setActiveStep={setActiveStep} data={data}/>
         } else if (activeStep === 2) {
-            return <Finalize emailInput={emailInput} setEmailInput={setEmailInput}/>
+            return (
+                <Finalize>
+                    <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
+                        <label className="form-control w-full " >
+                            <div className="label">
+                                <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
+                            </div>
+                            <input {...register("email", {
+                                required: "Email is required!",
+                                pattern: {
+                                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                                    message: "Please enter a valid email"
+                                }
+                            })} type="text"
+                                   placeholder="***@gmail.com"
+                                   className="input input-bordered w-full  bg-white"/>
+                            {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
+
+                        </label>
+                        {activeStep === 2 &&
+                            <div className="flex items-center justify-between w-full max-w-xs mt-10">
+                                <button onClick={() => setActiveStep(activeStep - 1)}
+                                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                                    Back
+                                </button>
+                                <button type='submit'
+                                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs`}>
+                                    Confirm
+                                </button>
+                            </div>
+                        }
+                    </form>
+
+                </Finalize>
+            )
         }
     }
-    const checkNextButtonStatus = () => {
-        return !!(activeStep === 2 && empty(emailInput));
-    }
+
     return (
         <>
             <Header/>
@@ -74,16 +126,7 @@ const ScheduleInterview = () => {
                     />
                 </div>
                 {renderCurrentStepComponent()}
-                <div className="flex items-center justify-between w-full max-w-xs">
-                    <button onClick={() => setActiveStep(activeStep - 1)}
-                            className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
-                        Back
-                    </button>
-                    <button disabled={checkNextButtonStatus()} onClick={() => setActiveStep(activeStep + 1)}
-                            className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs`}>
-                        Next
-                    </button>
-                </div>
+
 
             </div>
             <Footer/>
