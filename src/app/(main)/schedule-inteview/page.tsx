@@ -7,6 +7,7 @@ import ChooseMentor from "@/containers/scheduleInteview/ChooseMentor";
 import Finalize from "@/containers/scheduleInteview/Finalize";
 import {useQuery} from "@tanstack/react-query";
 import {SubmitHandler, useForm} from "react-hook-form";
+import {empty} from "@/helper/helper";
 
 type Inputs = {
     email:string
@@ -22,8 +23,6 @@ const ScheduleInterview = () => {
         formState: {errors},
     } = useForm<Inputs>()
     const onSubmit: SubmitHandler<Inputs> = (data) => setActiveStep(activeStep+1)
-    console.log(watch("email")) // watch input value by passing the name of it
-
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return "Choose a mentor and schedule an interview"
@@ -78,18 +77,17 @@ const ScheduleInterview = () => {
                         </label>
                         {activeStep === 2 &&
                             <div className="flex items-center justify-between w-full max-w-xs mt-10">
-                                <button onClick={() => setActiveStep(activeStep - 1)}
+                                <button  onClick={() => setActiveStep(activeStep - 1)}
                                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                                     Back
                                 </button>
-                                <button type='submit'
+                                <button disabled={empty(watch("email"))} type='submit'
                                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs`}>
                                     Confirm
                                 </button>
                             </div>
                         }
                     </form>
-
                 </Finalize>
             )
         }
