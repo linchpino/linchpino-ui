@@ -8,7 +8,7 @@ import Finalize from "@/containers/scheduleInteview/Finalize";
 import {useQuery} from "@tanstack/react-query";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/helper/helper";
-import Confirmation from "@/containers/scheduleInteview/Cofirmation";
+import Confirmation from "@/containers/scheduleInteview/Confirmation";
 
 type Inputs = {
     email:string
