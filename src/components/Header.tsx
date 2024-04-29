@@ -13,7 +13,7 @@ const Header: React.FC<Props> = () => {
     return (
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
-                <a href="https://google.com" className="flex items-end">
+                <a href="https://linchpino.liara.run" className="flex items-end">
                     <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
                         <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
