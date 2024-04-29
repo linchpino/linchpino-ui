@@ -8,6 +8,7 @@ import Finalize from "@/containers/scheduleInteview/Finalize";
 import {useQuery} from "@tanstack/react-query";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/helper/helper";
+import Confirmation from "@/containers/scheduleInteview/Cofirmation";
 
 type Inputs = {
     email:string
@@ -82,7 +83,7 @@ const ScheduleInterview = () => {
                                     Back
                                 </button>
                                 <button disabled={empty(watch("email"))} type='submit'
-                                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs`}>
+                                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]`}>
                                     Confirm
                                 </button>
                             </div>
@@ -90,6 +91,8 @@ const ScheduleInterview = () => {
                     </form>
                 </Finalize>
             )
+        }else if (activeStep === 3){
+           return  <Confirmation/>
         }
     }
 
