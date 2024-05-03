@@ -5,7 +5,7 @@ import type {Value} from "react-multi-date-picker"
 import MentorListItem from "@/containers/scheduleInteview/MentorListItem";
 import '../../app/globals.css'
 import "react-multi-date-picker/styles/colors/yellow.css"
-import {empty} from "@/helper/helper";
+import {empty} from "@/utils/helper";
 
 interface ChooseMentorProp {
     activeStep: number,
