@@ -1,9 +1,8 @@
 "use client"
-import React, { useState, useRef ,useEffect} from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AsyncPaginate } from "react-select-async-paginate";
-import Link from "next/link";
 import { BASE_URL_API } from "@/utils/system";
 import axios from "axios";
 import { empty } from "@/utils/helper";
@@ -27,11 +26,17 @@ export default function JobSearchSection() {
 
     useUpdateEffect(() => {
         if (jobValue && !empty(jobValue)) {
-            loadInterview({ page: 0 });
+            loadInterview("",[],{ page: 0 });
         }
     }, [jobValue]);
 
-    const loadJob = async (search: string, { page }: { page: number }): Promise<{ options: Job[]; additional: { page: number; }; }> => {
+    const loadJob = async (search: string,loadedOptions:unknown[], { page }: { page: number }): Promise<{
+        additional: {
+            page: number
+        };
+        options: Job[];
+        hasMore: boolean
+    }> => {
         const response = await axios.get(`${BASE_URL_API}jobposition/search`, {
             params: {
                 page,
@@ -42,16 +47,26 @@ export default function JobSearchSection() {
             value: item.id,
             label: item.title,
         }));
+        console.log(response)
         return {
             options,
+            hasMore: !response.data.last,
             additional: {
                 page: page + 1,
             },
         };
     };
 
-    const loadInterview = async ({ page }: { page: number }) => {
-        if (!jobValue) return Promise.resolve({ options: [], additional: { page: page + 1 } });
+    const loadInterview = async (search: string,loadedOptions:unknown[], { page }: { page: number }): Promise<{
+        additional: {
+            page: number
+        };
+        options: Job[];
+        hasMore: boolean
+    }>=>{
+        if (!jobValue) { // @ts-ignore
+            return Promise.resolve({ options: [], additional: { page: page + 1 } });
+        }
         try {
             // @ts-ignore
             const response = await axios.get(`${BASE_URL_API}jobposition/${jobValue?.value}/interviewtype`, {
@@ -66,15 +81,20 @@ export default function JobSearchSection() {
 
             if (options.length > 0) {
                 setInterviewValue(options[0]);
+            }else {
+                //@ts-ignore
+                setInterviewValue({value: 0, label:''});
             }
             return {
                 options,
+                hasMore : !response.data.last,
                 additional: {
                     page: page + 1,
                 },
             };
         } catch (error) {
             console.error("Error loading interviews:", error);
+            // @ts-ignore
             return Promise.resolve({ options: [], additional: { page: page + 1 } });
         }
     };
@@ -135,7 +155,8 @@ export default function JobSearchSection() {
                         }}
                         unstyled
                         placeholder="Dream job"
-                        loadOptions={(search) => loadJob(search, { page: 0 })}
+                        //@ts-ignore
+                        loadOptions={loadJob}
                         additional={{
                             page: 0,
                         }}
@@ -158,7 +179,8 @@ export default function JobSearchSection() {
                         onChange={setInterviewValue}
                         unstyled
                         placeholder="Interview Type"
-                        loadOptions={() => loadInterview({page: 0})}
+                        //@ts-ignore
+                        loadOptions={loadInterview}
                         additional={{
                             page: 0,
                         }}
