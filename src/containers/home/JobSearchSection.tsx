@@ -83,7 +83,7 @@ export default function JobSearchSection() {
                 setInterviewValue(options[0]);
             }else {
                 //@ts-ignore
-                setInterviewValue({value: 0, label:''});
+                setInterviewValue(null);
             }
             return {
                 options,
