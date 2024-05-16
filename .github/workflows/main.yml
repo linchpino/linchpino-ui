@@ -55,8 +55,9 @@ jobs:
               cd /opt/linchpino-ui
               sudo git reset --hard
               sudo git fetch --all 
-              sudo git checkout origin/${GITHUB_REF##*/}	
-              sudo git checkout origin/${GITHUB_REF##*/} --  docker-compose.yml            
+              echo origin/${GITHUB_REF##*/}
+              sudo git checkout --track origin/${GITHUB_REF##*/}	
+              sudo git checkout --track origin/${GITHUB_REF##*/} --  docker-compose.yml            
               docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
               docker-compose up -d
 
