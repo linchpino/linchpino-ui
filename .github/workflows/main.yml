@@ -1,9 +1,11 @@
 name: Deploy Images to GHCR
 
-on:
-  push:
-    branches:
-      - docker-custom-setting
+on:  
+  pull_request:
+      branches: [develop]
+      types: [opened,reopened,synchronize]
+  workflow_dispatch:
+  
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -50,12 +52,14 @@ jobs:
           - name: Connect to linchpino-UI on GCP instance
             run: |
               cd /opt/linchpino-ui
-              sudo git fetch --all
-              sudo git stash
-              sudo git checkout ${GITHUB_REF##*/}	
-              sudo git pull 
-              sudo sed -i "s/\/linchpino-ui:.*/\/linchpino-ui:${GITHUB_REF##*\/}/" docker-compose.yml
-              docker-compose stop linchpino-ui
-              sleep 2
-              docker-compose rm -f linchpino-ui
-              docker-compose up -d     
+              sudo git reset --hard
+              sudo git fetch --all 
+              sudo git checkout origin/${GITHUB_REF##*/}	
+              sudo git checkout origin/${GITHUB_REF##*/} --  docker-compose.yml            
+              docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
+              docker-compose up -d
+
+
+
+
+
