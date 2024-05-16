@@ -56,7 +56,10 @@ jobs:
               sudo git reset --hard
               sudo git fetch --all 
               echo origin/${GITHUB_REF##*/}
-              sudo git checkout origin/${GITHUB_REF##*/}	
+              ehco ${GITHUB_REF##*/}
+              sudo git checkout origin/${GITHUB_REF##*/}
+              echo origin/${GITHUB_REF##*/}
+              ehco ${GITHUB_REF##*/}
               sudo git checkout origin/${GITHUB_REF##*/} --  docker-compose.yml            
               docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
               docker-compose up -d
