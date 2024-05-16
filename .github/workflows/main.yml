@@ -56,10 +56,12 @@ jobs:
               sudo git fetch --all 
               echo ${GITHUB_HEAD_REF##*/}
               echo ${GITHUB_REF##*/}
-              sudo git checkout origin/${GITHUB_REF##*/}
-              echo origin/${GITHUB_REF##*/}
+              sudo git checkout ${GITHUB_HEAD_REF##*/}
+              echo ${GITHUB_HEAD_REF##*/}
               echo ${GITHUB_REF##*/}
-              sudo git checkout origin/${GITHUB_REF##*/} --  docker-compose.yml            
+              sudo git checkout origin/${GITHUB_REF##*/} --  docker-compose.yml   
+              echo ${GITHUB_HEAD_REF##*/}
+              echo ${GITHUB_REF##*/}
               docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
               docker-compose up -d
 
