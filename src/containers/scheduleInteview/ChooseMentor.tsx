@@ -1,42 +1,82 @@
 //@ts-nocheck
-import React, {FC, useState} from "react";
+import React, {FC, useEffect} from "react";
 import {Calendar, DateObject} from "react-multi-date-picker"
-import type {Value} from "react-multi-date-picker"
 import MentorListItem from "@/containers/scheduleInteview/MentorListItem";
 import '../../app/globals.css'
 import "react-multi-date-picker/styles/colors/yellow.css"
 import {empty} from "@/utils/helper";
+import type {Value} from "react-multi-date-picker"
+import {useQuery} from "@tanstack/react-query";
+import moment from "moment/moment";
+import {BASE_URL_API} from "@/utils/system";
+import Spinner from "@/components/Spinner";
+import axios from "axios";
+import 'moment-timezone';
+import {useSearchParams} from 'next/navigation';
 
 interface ChooseMentorProp {
+    calendarValue: Value;
+    setCalendarValue: React.Dispatch<React.SetStateAction<Value>>;
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-    data : {
-        id: number;
-        title: string;
-        content: string;
-    }[]
 }
 
-const ChooseMentor : FC<ChooseMentorProp> = (props) => {
-    const {activeStep, setActiveStep,data} = props
-    const [value, setValue] = useState<Value>('');
-
+const ChooseMentor: FC<ChooseMentorProp> = (props) => {
+    const searchParams = useSearchParams();
+    const interviewId= searchParams.get('interviewTypeId')
+    const {calendarValue, setCalendarValue, activeStep, setActiveStep} = props
     const now = new DateObject()
+    const fetchMetnor = async () => {
+        let selectedDate = ""
+        if (empty(calendarValue)) {
+            selectedDate = moment().tz('GMT').format('YYYY-MM-DDTHH:mm:ss%2B00:00');
+        } else {
+            const strDate = calendarValue.toDate?.()
+            selectedDate = moment(strDate).tz('GMT').format('YYYY-MM-DDTHH:mm:ss%2B00:00');
+        }
+        const response = await axios(`${BASE_URL_API}accounts/mentors/search?interviewTypeId=${interviewId}&date=${selectedDate}`)
+        return response.data
+    }
+    const {data = [], refetch, isLoading, isRefetching} = useQuery({
+        queryKey: ['mentor'],
+        queryFn: fetchMetnor,
+    })
+    useEffect(() => {
+        refetch()
+    }, [calendarValue]);
+
+    const renderList = () => {
+        if (isLoading || isRefetching) {
+            return <Spinner loading={isLoading || isRefetching}/>
+        } else if (empty(data.length)) {
+            return <p className='text-[#F9A826] mt-8'>For this time not slot available</p>
+        } else {
+            return (
+                <div
+                    className={`mentor-scroll-bar overflow-scroll overflow-x-hidden bg-scroll w-full lg:w-4/5 max-h-[800px] grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 justify-items-center gap-5 mt-10 px-4`}>
+                    {
+                        !empty(data) && !empty(data.length) &&
+                        data.map((mentorItem, index) => {
+                            return <MentorListItem
+                                key={mentorItem.mentorId}
+                                availableTimeFrom={mentorItem.from}
+                                availableTimeTo={mentorItem.to}
+                                title={`${mentorItem.mentorFirstName} ${mentorItem.mentorLastName}`}
+                                onSelect={() => {
+                                    setActiveStep(activeStep + 1)
+                                }}
+                            />
+                        })
+                    }
+                </div>
+            )
+        }
+    }
     return (
         <div className='flex flex-col justify-center w-full items-center'>
-            <p className="text-[20px] text-[#F9A826]">{!empty(value) ? value.format("dddd DD MMMM YYYY") : now.format("dddd DD MMMM YYYY")}</p>
-            <Calendar className='yellow mt-3' value={value} onChange={setValue}/>
-            <div
-                className='mentor-scroll-bar overflow-scroll overflow-x-hidden bg-scroll w-full lg:w-4/5 h-[800px] grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 justify-items-center gap-5 mt-10 px-4'>
-                {data && data.length > 0 &&
-                    data.map((el) => {
-                        return <MentorListItem key={el.id} content={el.content} title={el.title} onSelect={() =>{
-                            setActiveStep(activeStep + 1)
-
-                        }}/>
-                    })
-                }
-            </div>
+            <p className="text-[20px] text-[#F9A826]">{!empty(calendarValue) ? calendarValue.format("dddd DD MMMM YYYY") : now.format("dddd DD MMMM YYYY")}</p>
+            <Calendar className='yellow mt-3' value={calendarValue} onChange={setCalendarValue}/>
+            {renderList()}
         </div>
     )
 }

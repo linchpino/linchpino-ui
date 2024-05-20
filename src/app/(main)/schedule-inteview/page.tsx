@@ -5,10 +5,10 @@ import Footer from "@/components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
 import ChooseMentor from "@/containers/scheduleInteview/ChooseMentor";
 import Finalize from "@/containers/scheduleInteview/Finalize";
-import {useQuery} from "@tanstack/react-query";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/utils/helper";
 import Confirmation from "@/containers/scheduleInteview/Confirmation";
+import {Value} from "react-multi-date-picker";
 
 type Inputs = {
     email:string
@@ -17,6 +17,7 @@ type Inputs = {
 
 const ScheduleInterview = () => {
     const [activeStep, setActiveStep] = useState(1);
+    const [calendarValue, setCalendarValue] = useState<Value>('');
     const {
         register,
         handleSubmit,
@@ -35,27 +36,11 @@ const ScheduleInterview = () => {
         }
         return "What are you looking for?"
     }
-    const fetchProjects = async () => {
-        const res = await fetch('https://jsonplaceholder.typicode.com/posts')
-        return res.json()
-    }
-    const { data} = useQuery({
-        queryKey: ['todos'],
-        queryFn: fetchProjects,
-    })
-    async function loadOptions() {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/1`);
-        const responseJSON = await response.json();
-
-        return {
-            options: responseJSON.results,
-            hasMore: responseJSON.has_more,
-        };
-    }
 
     const renderCurrentStepComponent = () => {
         if (activeStep === 1) {
-            return <ChooseMentor activeStep={activeStep} setActiveStep={setActiveStep} data={data}/>
+            return <ChooseMentor calendarValue={calendarValue} setCalendarValue={setCalendarValue}
+                                 activeStep={activeStep} setActiveStep={setActiveStep} />
         } else if (activeStep === 2) {
             return (
                 <Finalize>
