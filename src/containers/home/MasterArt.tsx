@@ -1,3 +1,4 @@
+'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
 
 export default function MasterArt() {
@@ -9,6 +10,8 @@ export default function MasterArt() {
             description="Elevate your skills with our insightful blogs. Dive into expert tips for success and conquer your
                     next interview with confidence"
             buttonText="Explore techniques"
+            onClick={()=> console.log(1)}
+
         />
     )
 }
