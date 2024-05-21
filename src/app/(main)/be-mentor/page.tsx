@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
 import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/utils/helper";
+import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 
 type Inputs = {
     email:string
@@ -23,6 +24,9 @@ const BeMentor = () => {
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return "Sign Up"
+        } else if (activeStep === 2) {
+            return "Register yourself as a mentor"
+
         }
     }
     const renderCurrentStepComponent = () => {
@@ -50,6 +54,8 @@ const BeMentor = () => {
                     </button>
                 </form>
             )
+        }else if (activeStep === 2) {
+            return <RegisterMentor />
         }
     }
 

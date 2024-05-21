@@ -1,4 +1,4 @@
-import {empty} from "@/helper/helper";
+import {empty} from "@/utils/helper";
 import React from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {AsyncPaginate} from "react-select-async-paginate";
@@ -51,13 +51,13 @@ const RegisterMentor = () => {
             </label>
             <label className="form-control w-full ">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Last Name:</span>
+                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Field of expertise:</span>
                 </div>
                 <AsyncPaginate
                     classNames={{
                         control: () =>
                             'border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2 ',
-                        container: () => 'text-sm rounded w-full',
+                        container: () => 'text-sm rounded w-full tex-left',
                         menu: () => 'bg-withe border py-2',
                         option: ({isSelected}) =>
                             isSelected ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2" : "px-4 py-2",
@@ -65,12 +65,12 @@ const RegisterMentor = () => {
                     value={''}
                     onChange={(e: any) => console.log(e.target.value)}
                     unstyled
-                    placeholder="Field of proficiency"
+                    placeholder="Dream job"
                     loadOptions={loadOptions}/>
 
             </label>
 
-            <button disabled={empty(watch("firstName"))} onClick={() => console.log(1)}
+            <button disabled={empty(watch("firstName")) || empty(watch("lastName"))} onClick={() => console.log(1)}
                     className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
                 Next
             </button>
