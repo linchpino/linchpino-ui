@@ -1,3 +1,4 @@
+'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
 
 export default function ScheduleAnInterview() {
@@ -12,6 +13,8 @@ export default function ScheduleAnInterview() {
                     ace
                     your interview."
             buttonText="Schedule an interview"
+            onClick={()=> console.log(1)}
+
         />
     )
 }
