@@ -99,8 +99,10 @@ const RegisterMentor = () => {
                                     : "px-4 py-2",
                     }}
                     value={interviewValue}
+                    //@ts-ignore
                     onChange={setInterviewValue}
                     unstyled
+                    isMulti
                     placeholder="Interview Type"
                     //@ts-ignore
                     loadOptions={loadInterview}
