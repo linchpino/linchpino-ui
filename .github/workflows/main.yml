@@ -61,7 +61,7 @@ jobs:
               if [ ${GITHUB_REF##*/} == "merge" ]; then
               currentBranch=pr-$PR_NUMBER
               echo "Merage currentBranch :" $currentBranch
-              sudo git checkout origin/develop --  docker-compose.yml
+              sudo git checkout origin/docker-custom-setting --  docker-compose.yml
               echo "after git checkout"
               else
               currentBranch=${GITHUB_REF##*/}
