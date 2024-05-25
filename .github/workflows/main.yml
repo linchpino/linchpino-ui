@@ -3,7 +3,7 @@ name: Build and Deploy Current Branches to linchpino-core-dev server
 on:  
   pull_request:
       branches: [develop]
-      types: [opened,reopened,synchronize]
+      types: [opened,reopened]
   workflow_dispatch:
   
 env:
