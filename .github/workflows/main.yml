@@ -65,10 +65,6 @@ jobs:
               sudo git checkout origin/$currentBranch
               sudo git checkout origin/$currentBranch --  docker-compose.yml
               fi
+              sudo sed -i "s/\/linchpino-ui:.*/\/linchpino-ui:$currentBranch/" docker-compose.yml
               docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
               docker-compose up -d
-
-
-
-
-
