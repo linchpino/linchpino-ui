@@ -54,14 +54,14 @@ jobs:
               PR_NUMBER: ${{ github.event.number }}
             run: |
               cd /opt/linchpino-ui
-              sudo git fetch --all
               sudo git reset --hard
+              sudo git fetch --all
               echo "the github ref is :" ${GITHUB_REF##*/}
               echo "currentBranch : " $currentBranch
               if [ ${GITHUB_REF##*/} == "merge" ]; then
               currentBranch=pr-$PR_NUMBER
               echo "Merage currentBranch :" $currentBranch
-              sudo git checkout origin/docker-custom-setting --  docker-compose.yml
+              sudo git checkout origin/develop --  docker-compose.yml
               echo "after git checkout"
               else
               currentBranch=${GITHUB_REF##*/}
@@ -69,7 +69,6 @@ jobs:
               sudo git checkout origin/$currentBranch
               sudo git checkout origin/$currentBranch --  docker-compose.yml
               fi
-              echo "yml"
               sudo sed -i "s/\/linchpino-ui:.*/\/linchpino-ui:$currentBranch/" docker-compose.yml
               docker-compose stop && docker-compose rm -f linchpino-ui && docker-compose pull linchpino-ui
               docker-compose up -d
