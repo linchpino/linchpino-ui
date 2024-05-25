@@ -34,7 +34,6 @@ const RegisterMentor = () => {
         options: Interview[];
         hasMore: boolean
     }> => {
-
         try {
             // @ts-ignore
             const response = await axios.get(`${BASE_URL_API}jobposition/1/interviewtype`, {
@@ -59,7 +58,7 @@ const RegisterMentor = () => {
             return Promise.resolve({options: [], additional: {page: page + 1}});
         }
     };
-    console.log(interviewValue)
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full ">
@@ -88,15 +87,16 @@ const RegisterMentor = () => {
                 </div>
                 <AsyncPaginate
                     classNames={{
-                        control: () => " border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2",
+                        control: () => " border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 mr-2 py-2",
                         container: () => "text-sm rounded w-full text-[#000000] text-left",
-                        menu: () => " bg-gray-100 rounded border py-2 ",
+                        menu: () => " bg-gray-100 rounded border py-2",
                         option: ({isSelected, isFocused}) =>
                             isSelected
                                 ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
                                 : isFocused
                                     ? "bg-gray-200 px-4 py-2"
                                     : "px-4 py-2",
+                        multiValue: () => " bg-[#F9A82699] rounded border p-1 mx-1 truncate my-1 max-w-40",
                     }}
                     value={interviewValue}
                     //@ts-ignore
@@ -120,4 +120,5 @@ const RegisterMentor = () => {
         </form>
     )
 }
-export default RegisterMentor
+// @ts-ignore
+export default RegisterMentor;
