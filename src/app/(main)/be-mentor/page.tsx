@@ -6,6 +6,7 @@ import MobileStepper from '@mui/material/MobileStepper';
 import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
+import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
 
 type Inputs = {
     email:string
@@ -26,7 +27,8 @@ const BeMentor = () => {
             return "Sign Up"
         } else if (activeStep === 2) {
             return "Register yourself as a mentor"
-
+        } else if (activeStep === 3) {
+            return "Finalize your registration"
         }
     }
     const renderCurrentStepComponent = () => {
@@ -55,10 +57,11 @@ const BeMentor = () => {
                 </form>
             )
         }else if (activeStep === 2) {
-            return <RegisterMentor />
+            return <RegisterMentor activeStep={activeStep} setActiveStep={setActiveStep}/>
+        }else if (activeStep === 3){
+            return  <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
         }
     }
-
     return (
         <>
             <Header/>
