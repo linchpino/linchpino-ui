@@ -7,6 +7,7 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {empty} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
+import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
 
 type Inputs = {
     email:string
@@ -30,6 +31,8 @@ const BeMentor = () => {
         } else if (activeStep === 3) {
             return "Finalize your registration"
         }
+        return "Confirmation"
+
     }
     const renderCurrentStepComponent = () => {
         if (activeStep === 1) {
@@ -60,6 +63,8 @@ const BeMentor = () => {
             return <RegisterMentor activeStep={activeStep} setActiveStep={setActiveStep}/>
         }else if (activeStep === 3){
             return  <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
+        }else if (activeStep === 4){
+            return  <ConfirmationMentor/>
         }
     }
     return (
