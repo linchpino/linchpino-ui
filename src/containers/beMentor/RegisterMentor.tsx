@@ -1,10 +1,11 @@
 "use client"
 import {empty} from "@/utils/helper";
-import React, {useState} from "react";
+import React, {FC, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {AsyncPaginate} from "react-select-async-paginate";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
+import {Value} from "react-multi-date-picker";
 
 type Inputs = {
     firstName: string
@@ -17,8 +18,13 @@ interface Interview {
     id: number;
     title: string;
 }
-const RegisterMentor = () => {
+interface RegisterMentorProp {
+    activeStep: number,
+    setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}
+const RegisterMentor: FC<RegisterMentorProp> = (props) =>{
     const [interviewValue, setInterviewValue] = useState<Interview | null>(null);
+    const { activeStep, setActiveStep} = props
 
     const {
         register,
@@ -26,7 +32,8 @@ const RegisterMentor = () => {
         watch,
         formState: {errors},
     } = useForm<Inputs>()
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+    const onSubmit: SubmitHandler<Inputs> = () => setActiveStep(activeStep + 1)
+
     const loadInterview = async (search: string, loadedOptions: unknown[], {page}: { page: number }): Promise<{
         additional: {
             page: number
