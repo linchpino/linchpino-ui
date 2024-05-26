@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React, {FC} from "react";
-import {SubmitHandler} from "react-hook-form";
 interface FinalizeRegisterProp {
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
@@ -28,7 +27,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) =>{
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                     Back
                 </button>
-                <button
+                <button onClick={()=>setActiveStep(activeStep + 1)}
                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
                     Confirm
                 </button>
