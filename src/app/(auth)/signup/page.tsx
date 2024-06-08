@@ -5,6 +5,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import {z} from "zod"
+import axios from "axios";
+import {BASE_URL_API} from "@/utils/system";
+import {useMutation} from "@tanstack/react-query";
 
 const schema = z.object({
     first_name: z.string().min(1),
@@ -21,8 +24,31 @@ export default function SignUp() {
         resolver: zodResolver(schema)
     })
     const onSubmit: SubmitHandler<SignUpFields> = data => {
-        console.log(data)
+        //@ts-ignore
+        data.type = 1
+        //@ts-ignore
+        delete data.repeat_password
+        mutation.mutate(data)
     }
+
+    const sendForm: SubmitHandler<SignUpFields> = async (data) => {
+        console.log(data)
+        const response = await axios.post(`${BASE_URL_API}accounts`, data)
+        return response.data;
+    };
+
+    const mutation = useMutation({
+        //@ts-ignore
+        mutationFn: sendForm,
+        onSuccess: () => {
+            console.log('s')
+        },
+        onError: (error) => {
+            console.log(error)
+        }
+    })
+
+
     return (
         <>
             <Header/>
