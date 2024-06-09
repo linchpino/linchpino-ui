@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
 import CustomToast, {toastError, toastSuccess} from "@/components/CustomToast";
 
+//pattern for validate password
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
