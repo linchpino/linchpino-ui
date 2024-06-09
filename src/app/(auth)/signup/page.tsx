@@ -13,12 +13,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BASE_URL_API } from "@/utils/system";
 import CustomToast, { toastError, toastSuccess } from "@/components/CustomToast";
 
+const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must contain at least 8 character(s)"),
-    repeat_password: z.string().min(8, "Re-Password must contain at least 8 character(s)"),
+    password: z.string().min(6, "Password must contain at least 6 character(s) must include at least one letter, one number, and one special character").regex(passwordPattern, "Password must include at least one letter, one number, and one special character"),
+    repeat_password: z.string().min(6, "Re-Password must contain at least 6 character(s) must include at least one letter, one number, and one special character").regex(passwordPattern, "Re-Password must include at least one letter, one number, and one special character"),
 }).refine((data) => data.password === data.repeat_password, {
     message: "Passwords don't match",
     path: ["repeat_password"],
@@ -79,7 +81,7 @@ export default function SignUp() {
                                 <input {...register("firstName")} type="text" placeholder="Your first name"
                                        className="input input-bordered w-full bg-white" />
                                 {errors.firstName && (
-                                    <div className="text-red-500">{errors.firstName.message}</div>
+                                    <div className="text-red-500 text-sm mt-1">{errors.firstName.message}</div>
                                 )}
                             </label>
                             <label className="w-full lg:w-[20rem]">
@@ -89,7 +91,7 @@ export default function SignUp() {
                                 <input {...register("lastName")} type="text" placeholder="Your last name"
                                        className="input input-bordered w-full bg-white" />
                                 {errors.lastName && (
-                                    <div className="text-red-500">{errors.lastName.message}</div>
+                                    <div className="text-red-500 text-sm mt-1">{errors.lastName.message}</div>
                                 )}
                             </label>
                         </div>
@@ -100,7 +102,7 @@ export default function SignUp() {
                             <input {...register("email")} type="email" placeholder="***@gmail.com"
                                    className="input input-bordered w-full bg-white" />
                             {errors.email && (
-                                <div className="text-red-500">{errors.email.message}</div>
+                                <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                             )}
                         </label>
                         <div className="flex flex-col md:flex-row flex-nowrap md:flex-wrap gap-x-2 w-full gap-y-5">
@@ -111,7 +113,7 @@ export default function SignUp() {
                                 <input {...register("password")} type="password" placeholder="********"
                                        className="input input-bordered w-full bg-white" />
                                 {errors.password && (
-                                    <div className="text-red-500">{errors.password.message}</div>
+                                    <div className="text-red-500 text-sm mt-1">{errors.password.message}</div>
                                 )}
                             </label>
                             <label className="w-full lg:w-[20rem]">
@@ -121,7 +123,7 @@ export default function SignUp() {
                                 <input {...register("repeat_password")} type="password" placeholder="********"
                                        className="input input-bordered w-full bg-white" />
                                 {errors.repeat_password && (
-                                    <div className="text-red-500">{errors.repeat_password.message}</div>
+                                    <div className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
                                 )}
                             </label>
                         </div>
