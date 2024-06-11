@@ -6,14 +6,15 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import {z} from "zod";
 import axios from "axios";
-import {Bounce, toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import {useState} from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
-import CustomToast, {toastError, toastSuccess} from "@/components/CustomToast";
+import {toastError, toastSuccess} from "@/components/CustomToast";
 import {BsEyeFill , BsEyeSlashFill} from "react-icons/bs"
-//pattern for validate password
+
+
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
