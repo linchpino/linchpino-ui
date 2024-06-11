@@ -1,6 +1,6 @@
-'use client'
+"use client"
 import {SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from '@hookform/resolvers/zod';
+import {zodResolver} from '@hookform/resolvers/zod'
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -161,7 +161,6 @@ export default function SignUp() {
                 </div>
             </div>
             <Footer/>
-            <ToastContainer/>
         </>
     );
 }
