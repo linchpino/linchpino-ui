@@ -12,8 +12,7 @@ import {useState} from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
-import {BsEyeFill , BsEyeSlashFill} from "react-icons/bs"
-
+import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -116,10 +115,13 @@ export default function SignUp() {
                                     <span className="label-text">Password:</span>
                                 </div>
                                 <div className="flex items-center justify-between relative">
-                                    <input {...register("password")} type={showPassword ? "text" : "password"} placeholder="********"
+                                    <input {...register("password")} type={showPassword ? "text" : "password"}
+                                           placeholder="********"
                                            className="input input-bordered w-full bg-white pr-8 "/>
-                                    <button type="button" onClick={toggleShowPassword} className="absolute right-3 flex items-center text-gray-700">
-                                        {showPassword ? <BsEyeSlashFill color="#686868"/> : <BsEyeFill color="#686868"/>}
+                                    <button type="button" onClick={toggleShowPassword}
+                                            className="absolute right-3 flex items-center text-gray-700">
+                                        {showPassword ? <BsEyeSlashFill color="#686868"/> :
+                                            <BsEyeFill color="#686868"/>}
                                     </button>
                                 </div>
                                 {errors.password && (
@@ -131,14 +133,18 @@ export default function SignUp() {
                                     <span className="label-text">Re-Password:</span>
                                 </div>
                                 <div className="flex items-center justify-between relative">
-                                    <input {...register("repeat_password")} type={showRepeatPassword ? "text" : "password"} placeholder="********"
+                                    <input {...register("repeat_password")}
+                                           type={showRepeatPassword ? "text" : "password"} placeholder="********"
                                            className="input input-bordered w-full bg-white pr-8"/>
-                                    <button type="button" onClick={toggleShowRepeatPassword} className="absolute right-3 flex items-center text-gray-700">
-                                        {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> : <BsEyeFill color="#686868"/>}
+                                    <button type="button" onClick={toggleShowRepeatPassword}
+                                            className="absolute right-3 flex items-center text-gray-700">
+                                        {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :
+                                            <BsEyeFill color="#686868"/>}
                                     </button>
                                 </div>
                                 {errors.repeat_password && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
+                                    <div
+                                        className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
                                 )}
                             </label>
                         </div>
@@ -160,6 +166,7 @@ export default function SignUp() {
                     </div>
                 </div>
             </div>
+            <ToastContainer/>
             <Footer/>
         </>
     );
