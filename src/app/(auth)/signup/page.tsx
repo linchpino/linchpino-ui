@@ -4,51 +4,71 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import {z} from "zod"
+import {z} from "zod";
 import axios from "axios";
+import {ToastContainer} from "react-toastify";
+import {ClipLoader} from 'react-spinners';
+import {useState} from 'react';
+import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
-import {useMutation} from "@tanstack/react-query";
+import {toastError, toastSuccess} from "@/components/CustomToast";
+import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
 
+const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
-    first_name: z.string().min(1),
-    last_name: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(8),
-    repeat_password: z.string().min(8),
-})
-
-type SignUpFields = z.infer<typeof schema>
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
+    repeat_password: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
+}).refine((data) => data.password === data.repeat_password, {
+    message: "Passwords don't match",
+    path: ["repeat_password"],
+});
+type SignUpFields = z.infer<typeof schema>;
 
 export default function SignUp() {
     const {register, handleSubmit, formState: {errors}} = useForm<SignUpFields>({
         resolver: zodResolver(schema)
-    })
-    const onSubmit: SubmitHandler<SignUpFields> = data => {
-        //@ts-ignore
-        data.type = 1
-        //@ts-ignore
-        delete data.repeat_password
-        mutation.mutate(data)
-    }
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
-    const sendForm: SubmitHandler<SignUpFields> = async (data) => {
-        console.log(data)
-        const response = await axios.post(`${BASE_URL_API}accounts`, data)
-        return response.data;
+    const toggleShowPassword = () => setShowPassword(prev => !prev);
+    const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
+
+    const sendSignupForm = async (data: Omit<SignUpFields, 'repeat_password'> & { type: number }) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.post(`${BASE_URL_API}accounts`, data);
+            toastSuccess({message: 'Registration successful!'});
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400 && error.response?.data?.error) {
+                    toastError({message: error.response?.data?.error});
+                } else if (error.response?.status === 500) {
+                    toastError({message: 'An error occurred. Please try again.'});
+                }
+            } else {
+                toastError({message: 'Registration failed. Please try again.'});
+            }
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const mutation = useMutation({
-        //@ts-ignore
-        mutationFn: sendForm,
-        onSuccess: () => {
-            console.log('s')
-        },
-        onError: (error) => {
-            console.log(error)
+    const onSubmit: SubmitHandler<SignUpFields> = async (data) => {
+        const {repeat_password, ...dataToSubmit} = data;
+        try {
+            await sendSignupForm({...dataToSubmit, type: 1});
+        } catch (error) {
+            console.error('Signup failed', error);
         }
-    })
-
-
+    };
     return (
         <>
             <Header/>
@@ -61,20 +81,20 @@ export default function SignUp() {
                                 <div className="label">
                                     <span className="label-text">First Name:</span>
                                 </div>
-                                <input {...register("first_name")} type="text" placeholder="Your first name"
+                                <input {...register("firstName")} type="text" placeholder="Your first name"
                                        className="input input-bordered w-full bg-white"/>
-                                {errors.first_name && (
-                                    <div className="text-red-500">First name is required!</div>
+                                {errors.firstName && (
+                                    <div className="text-red-500 text-sm mt-1">{errors.firstName.message}</div>
                                 )}
                             </label>
                             <label className="w-full lg:w-[20rem]">
                                 <div className="label">
                                     <span className="label-text">Last Name:</span>
                                 </div>
-                                <input {...register("last_name")} type="text" placeholder="Your last name"
+                                <input {...register("lastName")} type="text" placeholder="Your last name"
                                        className="input input-bordered w-full bg-white"/>
-                                {errors.last_name && (
-                                    <div className="text-red-500">Last name is required!</div>
+                                {errors.lastName && (
+                                    <div className="text-red-500 text-sm mt-1">{errors.lastName.message}</div>
                                 )}
                             </label>
                         </div>
@@ -85,34 +105,53 @@ export default function SignUp() {
                             <input {...register("email")} type="email" placeholder="***@gmail.com"
                                    className="input input-bordered w-full bg-white"/>
                             {errors.email && (
-                                <div className="text-red-500">{errors.email.message}</div>
+                                <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                             )}
                         </label>
                         <div className="flex flex-col md:flex-row flex-nowrap md:flex-wrap gap-x-2 w-full gap-y-5">
+
                             <label className="w-full lg:w-[20rem]">
                                 <div className="label">
                                     <span className="label-text">Password:</span>
                                 </div>
-                                <input {...register("password")} type="password" placeholder="********"
-                                       className="input input-bordered w-full bg-white"/>
+                                <div className="flex items-center justify-between relative">
+                                    <input {...register("password")} type={showPassword ? "text" : "password"}
+                                           placeholder="********"
+                                           className="input input-bordered w-full bg-white pr-8 "/>
+                                    <button type="button" onClick={toggleShowPassword}
+                                            className="absolute right-3 flex items-center text-gray-700">
+                                        {showPassword ? <BsEyeSlashFill color="#686868"/> :
+                                            <BsEyeFill color="#686868"/>}
+                                    </button>
+                                </div>
                                 {errors.password && (
-                                    <div className="text-red-500">Password must contain at least 8 character(s)</div>
+                                    <div className="text-red-500 text-sm mt-1">{errors.password.message}</div>
                                 )}
                             </label>
                             <label className="w-full lg:w-[20rem]">
                                 <div className="label">
                                     <span className="label-text">Re-Password:</span>
                                 </div>
-                                <input {...register("repeat_password")} type="password" placeholder="********"
-                                       className="input input-bordered w-full  bg-white"/>
+                                <div className="flex items-center justify-between relative">
+                                    <input {...register("repeat_password")}
+                                           type={showRepeatPassword ? "text" : "password"} placeholder="********"
+                                           className="input input-bordered w-full bg-white pr-8"/>
+                                    <button type="button" onClick={toggleShowRepeatPassword}
+                                            className="absolute right-3 flex items-center text-gray-700">
+                                        {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :
+                                            <BsEyeFill color="#686868"/>}
+                                    </button>
+                                </div>
                                 {errors.repeat_password && (
-                                    <div className="text-red-500">Re-Password must contain at least 8 character(s)</div>
+                                    <div
+                                        className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
                                 )}
                             </label>
                         </div>
                         <button type="submit"
-                                className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3 self-center'>
-                            Register
+                                className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3 self-center'
+                                disabled={isLoading}>
+                            {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Register'}
                         </button>
                     </form>
 
@@ -127,6 +166,7 @@ export default function SignUp() {
                     </div>
                 </div>
             </div>
+            <ToastContainer/>
             <Footer/>
         </>
     );
