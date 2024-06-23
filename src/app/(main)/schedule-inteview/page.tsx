@@ -1,22 +1,38 @@
 "use client"
 import React, {useState,Suspense} from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
-import ChooseMentor from "@/containers/scheduleInteview/ChooseMentor";
-import Finalize from "@/containers/scheduleInteview/Finalize";
+import ChooseMentor from "../../../containers/scheduleInteview/ChooseMentor";
+import Finalize from "../../../containers/scheduleInteview/Finalize";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {empty} from "@/utils/helper";
-import Confirmation from "@/containers/scheduleInteview/Confirmation";
+import {empty, ValidateEmailPattern} from "../../../utils/helper";
+import Confirmation from "../../../containers/scheduleInteview/Confirmation";
 import {Value} from "react-multi-date-picker";
+import useStore from "../../../store/store";
+import {useMutation} from "@tanstack/react-query";
+import {Bounce, toast, ToastContainer} from "react-toastify";
+import axios from "axios";
+import {BASE_URL_API} from "../../../utils/system";
+import {ClipLoader} from "react-spinners";
+
+type ScheduleInterviewData = {
+    interviewTypeId: number | null | string;
+    jobPositionId: number | null | string;
+    jobSeekerEmail: string | null;
+    mentorAccountId: number | null | string;
+    timeSlotId: number | null | string;
+};
 
 type Inputs = {
-    email:string
-    emailRequired:string
-}
+    email: string;
+    emailRequired: string;
+};
 
 const ScheduleInterview = () => {
+    const {scheduleInterview, setScheduleInterviewItem} = useStore();
     const [activeStep, setActiveStep] = useState(1);
+    const [isLoadingSendForm, setIsLoadingSendForm] = useState(false);
     const [calendarValue, setCalendarValue] = useState<Value>('');
     const {
         register,
@@ -24,7 +40,62 @@ const ScheduleInterview = () => {
         watch,
         formState: {errors},
     } = useForm<Inputs>()
-    const onSubmit: SubmitHandler<Inputs> = (data) => setActiveStep(activeStep+1)
+
+    const sendInterviewData = async (data: ScheduleInterviewData) => {
+        try {
+            setIsLoadingSendForm(true)
+            const response = await axios.post(`${BASE_URL_API}interviews`, data);
+            return response
+        } catch (error: any) {
+            throw new Error('Error sending interview data: ' + error.message);
+        }
+    };
+    const interviewMutation = useMutation( {
+        mutationFn :sendInterviewData,
+        onSuccess: () => {
+            toast.success('Yes! You are logged in.', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+                transition: Bounce,
+            });
+            setActiveStep(activeStep + 1);
+            setIsLoadingSendForm(false)
+
+        },
+        onError: () => {
+            setIsLoadingSendForm(false)
+
+            toast.error('Login failed. Please check your credentials.', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+                transition: Bounce,
+            });
+        },
+    });
+    const onSubmit: SubmitHandler<Inputs> = (data) =>   {
+        const interviewData: ScheduleInterviewData = {
+            interviewTypeId: scheduleInterview.interviewTypeId,
+            jobPositionId: scheduleInterview.jobPositionId,
+            jobSeekerEmail: data.email,
+            mentorAccountId:scheduleInterview.mentorAccountId,
+            timeSlotId: scheduleInterview.timeSlotId
+        };
+        setScheduleInterviewItem('jobSeekerEmail',data.email)
+        interviewMutation.mutate(interviewData);
+
+    };
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return "Choose a mentor and schedule an interview"
@@ -52,7 +123,7 @@ const ScheduleInterview = () => {
                             <input {...register("email", {
                                 required: "Email is required!",
                                 pattern: {
-                                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                                    value: ValidateEmailPattern,
                                     message: "Please enter a valid email"
                                 }
                             })} type="text"
@@ -64,12 +135,13 @@ const ScheduleInterview = () => {
                         {activeStep === 2 &&
                             <div className="flex items-center justify-between w-full max-w-xs mt-10">
                                 <button  onClick={() => setActiveStep(activeStep - 1)}
-                                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                                     Back
                                 </button>
-                                <button disabled={empty(watch("email"))} type='submit'
+                                <button disabled={isLoadingSendForm || empty(watch("email"))} type='submit'
                                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]`}>
-                                    Confirm
+                                    {isLoadingSendForm ? <ClipLoader size={24} color={"#fff"} /> : 'Confirm'}
+
                                 </button>
                             </div>
                         }
@@ -77,7 +149,7 @@ const ScheduleInterview = () => {
                 </Finalize>
             )
         }else if (activeStep === 3){
-           return  <Confirmation/>
+            return  <Confirmation/>
         }
     }
 
@@ -112,10 +184,9 @@ const ScheduleInterview = () => {
                     />
                 </div>
                 {renderCurrentStepComponent()}
-
-
             </div>
             <Footer/>
+            <ToastContainer/>
         </Suspense>
     )
 }
