@@ -13,6 +13,7 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import 'moment-timezone';
 import {useSearchParams} from 'next/navigation';
+import useStore from "@/store/store";
 
 interface ChooseMentorProp {
     calendarValue: Value;
@@ -22,8 +23,8 @@ interface ChooseMentorProp {
 }
 
 const ChooseMentor: FC<ChooseMentorProp> = (props) => {
-    const searchParams = useSearchParams();
-    const interviewId= searchParams.get('interviewTypeId')
+    const {scheduleInterview, setScheduleInterviewItem} = useStore();
+    const interviewId = scheduleInterview.interviewTypeId
     const {calendarValue, setCalendarValue, activeStep, setActiveStep} = props
     const now = new DateObject()
     const fetchMetnor = async () => {
@@ -57,12 +58,18 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                     {
                         !empty(data) && !empty(data.length) &&
                         data.map((mentorItem, index) => {
+                            const mentorFullName = mentorItem.mentorFirstName + " " + mentorItem.mentorLastName
+                            const isoDate=!empty(mentorItem.from) ?  moment(mentorItem.from).format('ddd, D MMMM YYYY, HH:mm') : ""
                             return <MentorListItem
                                 key={mentorItem.mentorId}
                                 availableTimeFrom={mentorItem.from}
                                 availableTimeTo={mentorItem.to}
-                                title={`${mentorItem.mentorFirstName} ${mentorItem.mentorLastName}`}
+                                title={mentorFullName}
                                 onSelect={() => {
+                                    setScheduleInterviewItem('timeSlotId', mentorItem.timeSlotId);
+                                    setScheduleInterviewItem('mentorAccountId', mentorItem.mentorId);
+                                    setScheduleInterviewItem('mentorName', mentorFullName);
+                                    setScheduleInterviewItem('isoDate', isoDate);
                                     setActiveStep(activeStep + 1)
                                 }}
                             />
@@ -75,7 +82,8 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
     return (
         <div className='flex flex-col justify-center w-full items-center'>
             <p className="text-[20px] text-[#F9A826]">{!empty(calendarValue) ? calendarValue.format("dddd DD MMMM YYYY") : now.format("dddd DD MMMM YYYY")}</p>
-            <Calendar className='yellow mt-3' value={calendarValue} onChange={setCalendarValue}/>
+            <Calendar minDate={new Date().toISOString().split('T')[0]}
+                      className='yellow mt-3' value={calendarValue} onChange={setCalendarValue}/>
             {renderList()}
         </div>
     )
