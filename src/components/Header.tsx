@@ -1,6 +1,7 @@
+//@ts-nocheck
 'use client'
-import {useState} from "react";
-import {BsFillPersonFill} from 'react-icons/bs'
+import React, {useState} from "react";
+import { BsFillPersonFill} from 'react-icons/bs'
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,17 +10,81 @@ interface Props {
 
 const Header: React.FC<Props> = () => {
     const [isNavOpen, setIsNavOpen] = useState(false); // initiate isNavOpen state with false
-
+    const linkData = [
+        {id: 1, name: "Our Services"},
+        {id: 2, name: "Blog"},
+        {id: 3, name: "About Us"},
+        {id: 4, name: "Contact Us"},
+    ]
+    const [activeRate, setActiveRate] = useState(4)
+    const [comment, setComment] = useState('')
+    const rateData = [
+        {id: 1, rate: 'very-bad', image: '/emoji/very-bad.png', disableImage: '/emoji/very-bad-disable.png'},
+        {id: 2, rate: 'bad', image: '/emoji/bad.png', disableImage: '/emoji/bad-disable.png'},
+        {id: 3, rate: 'normal', image: '/emoji/normal.png', disableImage: '/emoji/normal-disable.png'},
+        {id: 4, rate: 'good', image: '/emoji/good.png', disableImage: '/emoji/good-disable.png'},
+        {id: 5, rate: 'very-good', image: '/emoji/very-good.png', disableImage: '/emoji/very-good-disable.png'},
+    ]
     return (
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
-                <a href="https://linchpino.liara.run" className="flex items-end">
+                <button onClick={() => document.getElementById(`modal`).showModal()} className="flex items-end">
                     <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
                         <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
                         <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
                     </div>
-                </a>
+                </button>
+                <dialog id='modal'
+                        className="modal">
+                    <div className="modal-box max-w-lg bg-white flex flex-col items-center">
+                        <form method="dialog">
+                            <button
+                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                            </button>
+                        </form>
+                        <div
+                            className="flex flex-col py-6 items-center justify-center w-full border-[.6px] rounded-md mt-10 mb-10 lg:mb-0 container p-3">
+                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the
+                                interview</h1>
+                            <div className='flex flex-col text-center w-full max-w-xs'>
+                                <span className='mt-10'>What is your feeling?</span>
+                                <div className="flex mt-3 justify-between">
+                                    {rateData.map((item => {
+                                        return (
+                                            <div key={item.id} className="tooltip tooltip-bottom"
+                                                 data-tip={item.rate}>
+                                                <button onClick={() => setActiveRate(item.id)}>
+                                                    {item.id === activeRate
+                                                        ?
+                                                        <Image width={40} height={40} src={item.image}
+                                                               key={item.id}
+                                                               alt='Rate'/>
+                                                        :
+                                                        <Image width={40} height={40}
+                                                               src={item.disableImage}
+                                                               key={item.id} alt='Rate'/>
+                                                    }
+                                                </button>
+                                            </div>
+                                        )
+                                    }))}
+                                </div>
+                                <span className='mt-10'>Tell us what do you want?</span>
+                                <textarea maxLength={300} value={comment}
+                                          onChange={(e) => setComment(e.target.value)}
+                                          className="textarea textarea-bordered bg-white mt-2 w-full max-w-sm"
+                                          placeholder="Write something..."></textarea>
+                                <span className="text-xs text-left ml-1 mt-1">{comment.length} / 300</span>
+                                <button
+                                    className='btn btn-sm btn-warning w-32 bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'>
+                                    Send
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </dialog>
                 <nav>
                     <section className="MOBILE-MENU flex lg:hidden z-20">
                         <div className='flex flex-col '>
@@ -40,18 +105,15 @@ const Header: React.FC<Props> = () => {
                     </section>
                     <div className='DESKTOP-MENU hidden lg:flex flex-col justify-end '>
                         <div className='flex justify-end gap-6'>
-                            <Link href="/">
-                                Our Services
-                            </Link>
-                            <Link href="/">
-                                Blog
-                            </Link>
-                            <Link href="/">
-                                About Us
-                            </Link>
-                            <Link href="/">
-                                Contact Us
-                            </Link>
+                            {linkData.map(linkItem => {
+                                // @ts-ignore
+                                return (
+                                    <button  key={linkItem.id}>
+                                        {linkItem.name}
+                                    </button>
+                                )
+                            })}
+
                         </div>
                         <div className='lg:flex items-center justify-end mt-6'>
                             <div
@@ -120,18 +182,14 @@ const Header: React.FC<Props> = () => {
                                   clipRule="evenodd"/>
                         </svg>
                     </div>
-                    <Link href="/" className="border-b border-gray-400 my-8 uppercase">
-                        Our Services
-                    </Link>
-                    <Link href="/" className="border-b border-gray-400 my-8 uppercase">
-                        Invite Friends
-                    </Link>
-                    <Link href="/" className="border-b border-gray-400 my-8 uppercase">
-                        About Us
-                    </Link>
-                    <Link href="/" className="border-b border-gray-400 my-8 uppercase">
-                        Contact Us
-                    </Link>
+                    {linkData.map(linkItem => {
+                        // @ts-ignore
+                        return (
+                            <button className="border-b border-gray-400 my-8 uppercase" key={linkItem.id}>
+                                {linkItem.name}
+                            </button>
+                        )
+                    })}
                 </div>
             </div>
         </>
