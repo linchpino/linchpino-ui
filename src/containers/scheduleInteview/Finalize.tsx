@@ -2,6 +2,7 @@ import {DateObject} from "react-multi-date-picker";
 import Image from "next/image";
 import Rating from "@mui/material/Rating";
 import React, {FC} from "react";
+import useStore from "@/store/store";
 
 type Inputs = {
     children:any
@@ -10,6 +11,7 @@ type Inputs = {
 const Finalize: FC<Inputs> = (props) => {
     const {children} = props
     const now = new DateObject()
+    const {scheduleInterview, setScheduleInterviewItem} = useStore();
 
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
@@ -24,7 +26,7 @@ const Finalize: FC<Inputs> = (props) => {
                         className="rounded-full"
                     />
                 </div>
-                <h6 className='text-[#F9A826] text-[14px]'>mentor name</h6>
+                <h6 className='text-[#F9A826] text-[14px]'>{scheduleInterview.mentorName}</h6>
                 <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly/>
             </div>
             {children}
