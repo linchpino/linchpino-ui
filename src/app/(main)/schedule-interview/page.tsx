@@ -1,19 +1,19 @@
 "use client"
 import React, {useState,Suspense} from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
-import ChooseMentor from "@/containers/scheduleInteview/ChooseMentor";
-import Finalize from "@/containers/scheduleInteview/Finalize";
+import ChooseMentor from "../../../containers/scheduleInteview/ChooseMentor";
+import Finalize from "../../../containers/scheduleInteview/Finalize";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {empty} from "@/utils/helper";
-import Confirmation from "@/containers/scheduleInteview/Confirmation";
+import {empty, ValidateEmailPattern} from "../../../utils/helper";
+import Confirmation from "../../../containers/scheduleInteview/Confirmation";
 import {Value} from "react-multi-date-picker";
-import useStore from "@/store/store";
+import useStore from "../../../store/store";
 import {useMutation} from "@tanstack/react-query";
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import axios from "axios";
-import {BASE_URL_API} from "@/utils/system";
+import {BASE_URL_API} from "../../../utils/system";
 import {ClipLoader} from "react-spinners";
 
 type ScheduleInterviewData = {
@@ -120,10 +120,10 @@ const ScheduleInterview = () => {
                                 <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
                             </div>
                             <input {...register("email", {
-                                required: "Email is required!",
+                                required: "Email is required",
                                 pattern: {
-                                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                                    message: "Please enter a valid email"
+                                    value: ValidateEmailPattern,
+                                    message: "Invalid email address"
                                 }
                             })} type="text"
                                    placeholder="***@gmail.com"

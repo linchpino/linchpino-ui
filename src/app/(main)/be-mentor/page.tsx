@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileStepper from '@mui/material/MobileStepper';
 import {SubmitHandler, useForm} from "react-hook-form";
-import {empty} from "@/utils/helper";
+import {empty, ValidateEmailPattern} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
 import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
@@ -43,10 +43,10 @@ const BeMentor = () => {
                             <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
                         </div>
                         <input {...register("email", {
-                            required: "Email is required!",
+                            required: "Email is required",
                             pattern: {
-                                value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                                message: "Please enter a valid email"
+                                value: ValidateEmailPattern,
+                                message: "Invalid email address"
                             }
                         })} type="text"
                                placeholder="***@gmail.com"
