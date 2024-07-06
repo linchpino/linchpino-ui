@@ -5,7 +5,6 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {AsyncPaginate} from "react-select-async-paginate";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
-import {Value} from "react-multi-date-picker";
 
 type Inputs = {
     firstName: string
@@ -22,6 +21,7 @@ interface RegisterMentorProp {
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
+
 const RegisterMentor: FC<RegisterMentorProp> = (props) =>{
     const [interviewValue, setInterviewValue] = useState<Interview | null>(null);
     const { activeStep, setActiveStep} = props
@@ -43,9 +43,11 @@ const RegisterMentor: FC<RegisterMentorProp> = (props) =>{
     }> => {
         try {
             // @ts-ignore
-            const response = await axios.get(`${BASE_URL_API}jobposition/1/interviewtype`, {
+            const response = await axios.get(`${BASE_URL_API}interviewtypes/search`, {
                 params: {
                     page,
+                    name:search
+
                 },
             });
             const options: Interview[] = response.data.content.map((item: any) => ({
