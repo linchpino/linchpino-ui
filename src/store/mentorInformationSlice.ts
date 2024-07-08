@@ -1,22 +1,16 @@
 import { StateCreator } from 'zustand';
 
-interface InterviewType {
-    id: number;
-    title: string;
-}
-
 export interface MentorInformation {
     email: string;
     firstName: string;
     lastName: string;
-    interviewTypes: InterviewType[];
+    interviewTypeIDs: { value: number; label: string }[];
     password: string;
 }
 
 export interface MentorInformationState {
     mentorInformation: MentorInformation;
     setMentorInformation: (info: Partial<MentorInformation>) => void;
-    removeInterviewType: (id: number) => void;
 }
 
 const createMentorInformationSlice: StateCreator<MentorInformationState> = (set) => ({
@@ -24,7 +18,7 @@ const createMentorInformationSlice: StateCreator<MentorInformationState> = (set)
         email: '',
         firstName: '',
         lastName: '',
-        interviewTypes: [],
+        interviewTypeIDs: [],
         password: '',
     },
     setMentorInformation: (info) => set((state) => ({
@@ -33,12 +27,6 @@ const createMentorInformationSlice: StateCreator<MentorInformationState> = (set)
             ...info,
         },
     })),
-    removeInterviewType: (id) => set((state) => ({
-        mentorInformation: {
-            ...state.mentorInformation,
-            interviewTypes: state.mentorInformation.interviewTypes.filter((item) => item.id !== id),
-        },
-    })),
-})
+});
 
 export default createMentorInformationSlice;

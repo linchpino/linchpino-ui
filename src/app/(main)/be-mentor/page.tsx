@@ -17,7 +17,7 @@ type Inputs = {
 
 const BeMentor = () => {
     const [activeStep, setActiveStep] = useState(1);
-    const {  setMentorInformation } = useStore();
+    const { setMentorInformation } = useStore();
     const {
         register,
         handleSubmit,
