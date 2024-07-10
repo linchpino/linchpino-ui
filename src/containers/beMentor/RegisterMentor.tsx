@@ -26,9 +26,8 @@ interface Interview {
     value: number;
     label: string;
 }
-
 interface RegisterMentorProps {
-    activeStep: number;
+    activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 

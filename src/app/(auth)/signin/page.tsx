@@ -10,6 +10,7 @@ import {Bounce, toast, ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
+import {ValidateEmailPattern} from "@/utils/helper";
 
 interface SignInForm {
     email: string;
@@ -89,7 +90,13 @@ export default function SignIn() {
                         </div>
                         <input type="text" placeholder="Your registered email address"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
-                               {...register('email', { required: "Email is required" })} />
+                               {...register('email', {
+                                   required: "Email is required",
+                                   pattern: {
+                                       value: ValidateEmailPattern,
+                                       message: "Invalid email address"
+                                   }
+                               })} />
                         {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email.message}</p>}
                     </label>
                     <label className="form-control w-full max-w-xs">

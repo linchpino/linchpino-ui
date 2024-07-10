@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
+import {ValidateEmailPattern} from "@/utils/helper";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -102,7 +103,13 @@ export default function SignUp() {
                             <div className="label">
                                 <span className="label-text">Email:</span>
                             </div>
-                            <input {...register("email")} type="email" placeholder="***@gmail.com"
+                            <input {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value: ValidateEmailPattern,
+                                    message: "Invalid email address"
+                                }
+                            })} type="email" placeholder="***@gmail.com"
                                    className="input input-bordered w-full bg-white"/>
                             {errors.email && (
                                 <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
