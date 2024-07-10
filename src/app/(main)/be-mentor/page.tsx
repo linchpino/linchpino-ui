@@ -8,6 +8,7 @@ import {empty, ValidateEmailPattern} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
 import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
+import useStore from '../../../store/store';
 
 type Inputs = {
     email:string
@@ -16,13 +17,17 @@ type Inputs = {
 
 const BeMentor = () => {
     const [activeStep, setActiveStep] = useState(1);
+    const {  setMentorInformation } = useStore();
     const {
         register,
         handleSubmit,
         watch,
         formState: {errors},
     } = useForm<Inputs>()
-    const onSubmit: SubmitHandler<Inputs> = (data) => setActiveStep(activeStep+1)
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        setMentorInformation(data);
+        setActiveStep(activeStep + 1)
+    }
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return "Sign Up"
