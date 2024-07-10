@@ -48,7 +48,7 @@ const BeMentor = () => {
                             <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
                         </div>
                         <input {...register("email", {
-                            required: "Email is required!",
+                            required: "Email is required",
                             pattern: {
                                 value: ValidateEmailPattern,
                                 message: "Invalid email address"
