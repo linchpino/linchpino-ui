@@ -80,7 +80,7 @@ export default function SignIn() {
     });
     const linkedinLogin = () => {
         setIsLoadingLinkedin(true)
-        const clientId = process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID as string;
+        const clientId ="77ealfulm14qfu";
         const redirectUri = 'http://localhost:3000/signin';
         const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=https://ui-dev.linchpino.com/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
         window.location.href = linkedinAuthUrl;
