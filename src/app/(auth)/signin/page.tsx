@@ -11,6 +11,7 @@ import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
+import {BsLinkedin} from "react-icons/bs";
 
 interface SignInForm {
     email: string;
@@ -18,8 +19,9 @@ interface SignInForm {
 }
 
 export default function SignIn() {
-    const {register, handleSubmit, formState: { errors }} = useForm<SignInForm>();
+    const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
 
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
@@ -76,15 +78,24 @@ export default function SignIn() {
             });
         }
     });
-
+    const linkedinLogin = () => {
+        setIsLoadingLinkedin(true)
+        const clientId = process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID as string;
+        const redirectUri = 'http://localhost:3000/signin';
+        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=http://localhost:3000/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+        window.location.href = linkedinAuthUrl;
+        setTimeout(()=>{
+            setIsLoadingLinkedin(false)
+        },2500)
+    };
     return (
         <>
             <Header/>
-            <div className='bg-white container pb-5 lg:pb-0'>
+            <div className='bg-white container pb-5 lg:pb-0 flex flex-col justify-center items-center'>
                 <form onSubmit={handleSubmit(onSubmit)}
-                      className="flex flex-col items-center justify-center gap-y-8 mt-14">
+                      className="flex flex-col items-center justify-center gap-y-8 mt-14 w-full max-w-xs">
                     <h1 className='text-black text-3xl'>Sign In</h1>
-                    <label className="form-control w-full max-w-xs">
+                    <label className="form-control w-full ">
                         <div className="label">
                             <span className="label-text">Email Address:</span>
                         </div>
@@ -105,27 +116,38 @@ export default function SignIn() {
                         </div>
                         <input type="password" placeholder="********"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
-                               {...register('password', { required: "Password is required" })} />
+                               {...register('password', {required: "Password is required"})} />
                         {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
                     </label>
                     <button type='submit'
                             className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
                             disabled={isLoading}>
-                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Login'}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
                     </button>
-                    <div className='flex items-center'>
-                        <Link href='/signup' className='text-[#F9A826] text-sm'>
-                            Register
-                        </Link>
-                        /
-                        <Link href='/' className='text-[#F9A826] text-sm'>
-                            Forgot Password
-                        </Link>
+                    <div className='w-full max-w-xs flex flex-col items-center'>
+                        <div className='flex items-center'>
+                            <Link href='/signup' className='text-[#F9A826] text-sm'>
+                                Register
+                            </Link>
+                            /
+                            <Link href='/' className='text-[#F9A826] text-sm'>
+                                Forgot Password
+                            </Link>
+                        </div>
+
                     </div>
                 </form>
+                <div className='flex flex-col items-center justify-center mt-8 w-full max-w-xs'>
+                    <div className="divider w-full ">OR</div>
+                    <button disabled={isLoadingLinkedin} onClick={linkedinLogin} className="btn btn-primary w-full max-w-xs">
+                        <BsLinkedin/>
+                        {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : ' Via Linkedin'}
+
+                    </button>
+                </div>
             </div>
             <Footer/>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 }
