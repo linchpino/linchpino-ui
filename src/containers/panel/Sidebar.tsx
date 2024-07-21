@@ -10,7 +10,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <aside className="sidebar shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-1/3 rounded-md p-4">
+        <div className="shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-full md:w-1/3 rounded-md p-4 max-h-80 lg:sticky ">
             <ul>
                 {links.map((link) => (
                     <li key={link.href} className={`${pathname === link.href ? 'bg-[#F9A826] text-white' : ''} p-2 my-3 rounded-md`}>
@@ -18,7 +18,7 @@ const Sidebar = () => {
                     </li>
                 ))}
             </ul>
-        </aside>
+        </div>
     );
 };
 
