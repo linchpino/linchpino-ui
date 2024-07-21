@@ -45,6 +45,7 @@ const ScheduleInterview = () => {
         try {
             setIsLoadingSendForm(true)
             const response = await axios.post(`${BASE_URL_API}interviews`, data);
+            console.log('injaaa : ',response)
             return response
         } catch (error: any) {
             throw new Error('Error sending interview data: ' + error.message);
@@ -53,7 +54,7 @@ const ScheduleInterview = () => {
     const interviewMutation = useMutation( {
         mutationFn :sendInterviewData,
         onSuccess: () => {
-            toast.success('Yes! You are logged in.', {
+            toast.success('Successful :) ! We sent you an email please check it.', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
