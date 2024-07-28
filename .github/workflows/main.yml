@@ -43,7 +43,7 @@ jobs:
               labels: ${{ steps.meta.outputs.labels }}
               
       Deploy-to-linchpino-ui-server:
-        runs-on: self-hosted
+        runs-on: ui-dev-runner
         permissions:
           contents: read
           packages: write
