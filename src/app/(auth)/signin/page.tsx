@@ -11,6 +11,7 @@ import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
+import useStore from "@/store/store";
 
 interface SignInForm {
     email: string;
@@ -20,11 +21,12 @@ interface SignInForm {
 export default function SignIn() {
     const {register, handleSubmit, formState: { errors }} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
+    const {token, setToken} = useStore();
 
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
-
+    console.log(token)
     const sendSigninForm = async (data: SignInForm) => {
         setIsLoading(true);
         try {
@@ -38,6 +40,7 @@ export default function SignIn() {
                     },
                 }
             );
+            setToken(response.data.token)
             return response.data;
         } catch (error) {
             console.error('Login failed', error);
