@@ -4,12 +4,13 @@ import Countdown from "../../components/Countdown";
 
 interface InterviewsItemProp {
     data: any;
+    isPast : boolean
 }
 
 const InterviewsItem: FC<InterviewsItemProp> = (props) => {
-    const calculateDuration = (dateFrom: string, dateTo: string) => {
-        const from = moment(dateFrom);
-        const to = moment(dateTo);
+    const calculateDuration = (fromTime: string, toTime: string) => {
+        const from = moment(fromTime);
+        const to = moment(toTime);
         const duration = moment.duration(to.diff(from));
 
         return {
@@ -19,7 +20,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
         };
     };
 
-    const duration = calculateDuration(props.data.dateFrom, props.data.dateTo);
+    const duration = calculateDuration(props.data.fromTime, props.data.toTime);
 
     const renderDuration = () => {
         const { hours, minutes, seconds } = duration;
@@ -40,14 +41,18 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
 
     return (
         <div className='rounded-md border-l-2 border-[#F9A826] shadow-lg flex flex-col mt-4 p-3 gap-y-2'>
-            <span>Mentor: {props.data.mentorName}</span>
+            <span>Mentor: {props.data.intervieweeName}</span>
             <div>
-                <span className='flex gap-x-2'>From: <Countdown targetDate={props.data.dateFrom} startDate={props.data.dateFrom} endDate={props.data.dateTo} /></span>
+                {props.isPast ?
+                    <span className='flex gap-x-2'>From: {moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
+                    :
+                    <span className='flex gap-x-2'>From: <Countdown targetDate={props.data.fromTime} startDate={props.data.fromTime} endDate={props.data.toTime} /></span>
+                }
             </div>
             <div>
-                <span>To: {renderDuration()}</span>
+                <span>Duration: {renderDuration()}</span>
             </div>
-            <span>Position: {props.data.jobPosition}</span>
+            <span>Position: {props.data.interviewType}</span>
         </div>
     );
 };
