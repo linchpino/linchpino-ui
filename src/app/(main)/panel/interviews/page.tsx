@@ -19,9 +19,10 @@ interface InterviewDataProps {
     url: string;
     queryKey: string;
     title: string;
+    isPast: boolean;
 }
 
-const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) => {
+const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast }) => {
     const { token } = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
@@ -29,6 +30,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) =
 
     const [page, setPage] = useState(0);
     const { data, isLoading, error } = useFetchData(`${url}?page=${page}`, token, queryKey);
+    console.log(data)
 
     const loadMore = () => {
         if (data && data.number < data.totalPages - 1) {
@@ -43,7 +45,6 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) =
             </div>
         );
     }
-
     if (error) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -61,7 +62,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) =
                     ) : (
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
                             {data?.content.map((interview: Interview) => (
-                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={true} />
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} />
                             ))}
                         </div>
                     )}
@@ -81,8 +82,8 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) =
 const Interviews: React.FC = () => {
     return (
         <>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" />
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/past`} queryKey="pastInterviews" title="Past Interviews" />
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}/>
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/past`} queryKey="pastInterviews" title="Past Interviews" isPast={true}/>
         </>
     );
 };
