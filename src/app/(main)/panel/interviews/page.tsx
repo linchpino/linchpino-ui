@@ -1,12 +1,11 @@
 'use client'
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PanelContentChild from "@/containers/panel/PanelContentChild";
 import InterviewsItem from "@/containers/panel/InterviewsItem";
-import {useQuery} from '@tanstack/react-query';
-import axios from 'axios';
-import {BASE_URL_API} from "@/utils/system";
-import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
+import { BASE_URL_API } from "@/utils/system";
+import useStore from "@/store/store";
+import useFetchData from "@/utils/hooks/useFetchData";
 
 type Interview = {
     intervieweeId: number;
@@ -15,27 +14,21 @@ type Interview = {
     toTime: string;
     interviewType: string;
 };
-const Interviews: React.FC = () => {
-    const {token} = useStore(state => ({
+
+interface InterviewDataProps {
+    url: string;
+    queryKey: string;
+    title: string;
+}
+
+const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title }) => {
+    const { token } = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
     }));
 
     const [page, setPage] = useState(0);
-    const fetchInterviews = async (page: number) => {
-        const response = await axios.get(`${BASE_URL_API}interviews/jobseekers/past`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    };
-
-    const {data, isLoading, error} = useQuery({
-        queryKey: ['pastInterviews', page],
-        queryFn: () => fetchInterviews(page),
-        enabled: !!token,
-    });
+    const { data, isLoading, error } = useFetchData(`${url}?page=${page}`, token, queryKey);
 
     const loadMore = () => {
         if (data && data.number < data.totalPages - 1) {
@@ -46,7 +39,7 @@ const Interviews: React.FC = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <Spinner loading={isLoading}/>
+                <Spinner loading={isLoading} />
             </div>
         );
     }
@@ -54,21 +47,24 @@ const Interviews: React.FC = () => {
     if (error) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <p className="text-red-500">Error loading interviews.</p>
+                <p className="text-red-500">Error loading {title.toLowerCase()}.</p>
             </div>
         );
     }
-
     return (
         <PanelContentChild>
             <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
-                <div className='mt-10'>
-                    <span className='text-[#F9A826]'>Past Interviews</span>
-                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                        {data?.content.map((interview: Interview) => (
-                            <InterviewsItem key={interview.intervieweeId} data={interview} isPast={true}/>
-                        ))}
-                    </div>
+                <div>
+                    <span className='text-[#F9A826]'>{title}</span>
+                    {data?.content.length === 0 ? (
+                        <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
+                    ) : (
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
+                            {data?.content.map((interview: Interview) => (
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={true} />
+                            ))}
+                        </div>
+                    )}
                     {data && data.number < data.totalPages - 1 && (
                         <button
                             onClick={loadMore}
@@ -79,6 +75,15 @@ const Interviews: React.FC = () => {
                 </div>
             </div>
         </PanelContentChild>
+    );
+};
+
+const Interviews: React.FC = () => {
+    return (
+        <>
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" />
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/past`} queryKey="pastInterviews" title="Past Interviews" />
+        </>
     );
 };
 
