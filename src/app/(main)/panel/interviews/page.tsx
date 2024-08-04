@@ -23,21 +23,19 @@ interface InterviewDataProps {
 }
 
 const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast }) => {
-    const { token,decodedToken } = useStore(state => ({
+    const { token } = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
     }));
 
     const [page, setPage] = useState(0);
     const { data, isLoading, error } = useFetchData(`${url}?page=${page}`, token, queryKey);
-    console.log(data)
 
     const loadMore = () => {
         if (data && data.number < data.totalPages - 1) {
             setPage(prev => prev + 1);
         }
     };
-    console.log(decodedToken)
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -85,13 +83,17 @@ const Interviews: React.FC = () => {
     }));
 
     const isMentor = decodedToken?.scope === "MENTOR";
-    console.log(isMentor)
+
+    const upcomingUrl = isMentor
+        ? `${BASE_URL_API}interviews/mentors/upcoming`
+        : `${BASE_URL_API}interviews/jobseekers/upcoming`;
+
     const pastUrl = isMentor
         ? `${BASE_URL_API}interviews/mentors/past`
         : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
         <>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}/>
+            <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}/>
             <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true}/>
         </>
     );
