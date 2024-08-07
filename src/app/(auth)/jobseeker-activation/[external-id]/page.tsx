@@ -1,12 +1,19 @@
 "use client"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
+import Header from "../../../../components/Header";
+import Footer from "../../../../components/Footer";
 import {z} from "zod";
 import {useState} from 'react';
+import { usePathname , useRouter} from 'next/navigation'
 import 'react-toastify/dist/ReactToastify.css';
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
+import axios from "axios";
+import {BASE_URL_API} from "@/utils/system";
+import {toastError, toastSuccess} from "@/components/CustomToast";
+import {ClipLoader} from "react-spinners";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -21,20 +28,53 @@ const schema = z.object({
 type JobseekerActivationFields = z.infer<typeof schema>;
 
 export default function JobseekerActivation() {
-    const {register, handleSubmit, formState: {errors}} = useForm<JobseekerActivationFields>({
+    const {register, handleSubmit,watch, formState: {errors}} = useForm<JobseekerActivationFields>({
         resolver: zodResolver(schema)
     });
+    const activationPathname = usePathname()
+    const router = useRouter();
+    const externalId = activationPathname.split('/').pop();
+    const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const toggleShowPassword = () => setShowPassword(prev => !prev);
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
+    const sendActivateForm = async (data: Omit<JobseekerActivationFields, 'repeat_password'> & { externalId: string|undefined}) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.put(`${BASE_URL_API}accounts/jobseeker/activation`, data);
+            toastSuccess({message: 'Registration successful!'});
+            router.push('/signin');
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400 && error.response?.data?.error) {
+                    toastError({message: error.response?.data?.error});
+                } else if (error.response?.status === 500) {
+                    toastError({message: 'An error occurred. Please try again.'});
+                }
+            } else {
+                toastError({message: 'Registration failed. Please try again.'});
+            }
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const onSubmit: SubmitHandler<JobseekerActivationFields> = async (data) => {
-        console.log(data)
+        const {repeat_password, ...dataToSubmit} = data;
+        try {
+            await sendActivateForm({...dataToSubmit, externalId});
+        } catch (error) {
+            console.error('Signup failed', error);
+        }
     };
     return (
         <>
+            <ToastContainer/>
             <Header/>
             <div className='bg-white container pb-5 lg:pb-0'>
                 <div className="flex flex-col items-center justify-center gap-y-6 mt-14">
@@ -98,12 +138,13 @@ export default function JobseekerActivation() {
                             )}
                         </label>
                         <button type="submit"
-                                className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-4 py-2 px-3 self-center'>
-                            Complete
+                                className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-4 py-2 px-3 self-center'
+                                disabled={isLoading}>
+                            {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Complete'}
                         </button>
                     </form>
                 </div>
-             </div>
+            </div>
             <Footer/>
         </>
     );
