@@ -20,9 +20,10 @@ interface InterviewDataProps {
     queryKey: string;
     title: string;
     isPast: boolean;
+    role:string;
 }
 
-const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast }) => {
+const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast,role }) => {
     const { token,decodedToken } = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
@@ -62,7 +63,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
                     ) : (
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
                             {data?.content.map((interview: Interview) => (
-                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} />
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} role={role}/>
                             ))}
                         </div>
                     )}
@@ -91,8 +92,8 @@ const Interviews: React.FC = () => {
         : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
         <>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}/>
-            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true}/>
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
+            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
         </>
     );
 };
