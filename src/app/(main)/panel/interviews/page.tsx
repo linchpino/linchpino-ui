@@ -1,35 +1,81 @@
+'use client'
+import React, {useState} from 'react';
 import PanelContentChild from "@/containers/panel/PanelContentChild";
 import InterviewsItem from "@/containers/panel/InterviewsItem";
+import {useQuery} from '@tanstack/react-query';
+import axios from 'axios';
+import {BASE_URL_API} from "@/utils/system";
+import useStore from "@/store/store";
+import Spinner from "@/components/Spinner";
 
-const Interviews = () => {
-    const fakeData = [
-        {id:1, jobPosition : 'Java', dateFrom:'2024-07-27 05:49:00', dateTo:'2024-07-27 23:59:00', mentorName:'Mahdi Tilab'},
-        {id:3, jobPosition : 'Java', dateFrom:'2024-07-27 06:45:00', dateTo:'2024-07-28 09:15:23', mentorName:'Mahdi Tilab'},
-        {id:2, jobPosition : 'Java', dateFrom:'2024-07-27 23:45:00', dateTo:'2024-07-28 00:15:00', mentorName:'Mahdi Tilab'},
-        {id:5, jobPosition : 'Java', dateFrom:'2024-07-29 23:45:00', dateTo:'2024-07-30 00:30:00', mentorName:'Mahdi Tilab'},
-        {id:4, jobPosition : 'Java', dateFrom:'2024-07-28 23:45:00', dateTo:'2024-07-28 23:59:23', mentorName:'Mahdi Tilab'},
-        {id:6, jobPosition : 'Java', dateFrom:'2024-08-10 23:45:00', dateTo:'2024-08:11 00:30:00', mentorName:'Mahdi Tilab'},
-    ]
+type Interview = {
+    intervieweeId: number;
+    intervieweeName: string;
+    fromTime: string;
+    toTime: string;
+    interviewType: string;
+};
+const Interviews: React.FC = () => {
+    const {token} = useStore(state => ({
+        token: state.token,
+        decodedToken: state.decodedToken,
+    }));
+
+    const [page, setPage] = useState(0);
+    const fetchInterviews = async (page: number) => {
+        const response = await axios.get(`${BASE_URL_API}interviews/jobseekers/past`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    };
+
+    const {data, isLoading, error} = useQuery({
+        queryKey: ['pastInterviews', page],
+        queryFn: () => fetchInterviews(page),
+        enabled: !!token,
+    });
+
+    const loadMore = () => {
+        if (data && data.number < data.totalPages - 1) {
+            setPage(prev => prev + 1);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spinner loading={isLoading}/>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <p className="text-red-500">Error loading interviews.</p>
+            </div>
+        );
+    }
+
     return (
         <PanelContentChild>
             <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
-                <div>
-                    <span className='text-[#F9A826]'>Upcoming Interview</span>
-                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                        {fakeData.map(data => (
-                            <InterviewsItem key={data.id} data={data} />
-                        ))}
-                    </div>
-                    <button className='w-full bg-[#F9A826] text-white p-2 mt-8'>Show More</button>
-                </div>
                 <div className='mt-10'>
-                    <span className='text-[#F9A826]'>Past Interview</span>
+                    <span className='text-[#F9A826]'>Past Interviews</span>
                     <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                        {fakeData.map(data => (
-                            <InterviewsItem key={data.id} data={data} />
+                        {data?.content.map((interview: Interview) => (
+                            <InterviewsItem key={interview.intervieweeId} data={interview} isPast={true}/>
                         ))}
                     </div>
-                    <button className='w-full bg-[#F9A826] text-white p-2 mt-8'>Show More</button>
+                    {data && data.number < data.totalPages - 1 && (
+                        <button
+                            onClick={loadMore}
+                            className='w-full bg-[#F9A826] text-white p-2 mt-8'>
+                            Show More
+                        </button>
+                    )}
                 </div>
             </div>
         </PanelContentChild>

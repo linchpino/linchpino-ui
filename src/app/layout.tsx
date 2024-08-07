@@ -15,6 +15,7 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="en" className="bg-white">
             <body className={`${inter.className} bg-white `}>

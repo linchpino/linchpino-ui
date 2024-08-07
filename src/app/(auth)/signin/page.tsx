@@ -11,6 +11,8 @@ import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
+import useStore from "@/store/store";
+import {useRouter} from "next/navigation";
 
 interface SignInForm {
     email: string;
@@ -18,13 +20,15 @@ interface SignInForm {
 }
 
 export default function SignIn() {
-    const {register, handleSubmit, formState: { errors }} = useForm<SignInForm>();
+    const router = useRouter()
+    const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
-
+    const {setToken} = useStore(state => ({
+        setToken: state.setToken,
+    }));
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
-
     const sendSigninForm = async (data: SignInForm) => {
         setIsLoading(true);
         try {
@@ -38,6 +42,8 @@ export default function SignIn() {
                     },
                 }
             );
+            setToken(response.data.token)
+            router.push('/panel/interviews')
             return response.data;
         } catch (error) {
             console.error('Login failed', error);
@@ -105,13 +111,13 @@ export default function SignIn() {
                         </div>
                         <input type="password" placeholder="********"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
-                               {...register('password', { required: "Password is required" })} />
+                               {...register('password', {required: "Password is required"})} />
                         {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
                     </label>
                     <button type='submit'
                             className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
                             disabled={isLoading}>
-                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Login'}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
                     </button>
                     <div className='flex items-center'>
                         <Link href='/signup' className='text-[#F9A826] text-sm'>
@@ -125,7 +131,7 @@ export default function SignIn() {
                 </form>
             </div>
             <Footer/>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 }
