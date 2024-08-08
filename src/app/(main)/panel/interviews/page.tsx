@@ -16,48 +16,15 @@ type Interview = {
     interviewType: string;
 };
 const Interviews: React.FC = () => {
-    const {token} = useStore(state => ({
-        token: state.token,
-        decodedToken: state.decodedToken,
-    }));
+    const fakeData = [
+        {intervieweeId:1,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
+        {intervieweeId:2,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
+        {intervieweeId:3,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
+        {intervieweeId:4,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
+        {intervieweeId:5,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
+        {intervieweeId:6,interviewType : 'Java',toTime:'2024-07-21 23:45:00',fromTime:'2024-07-21 23:15:00', intervieweeName:'Mahdi Tilab'},
 
-    const [page, setPage] = useState(0);
-    const fetchInterviews = async (page: number) => {
-        const response = await axios.get(`${BASE_URL_API}interviews/jobseekers/past`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    };
-
-    const {data, isLoading, error} = useQuery({
-        queryKey: ['pastInterviews', page],
-        queryFn: () => fetchInterviews(page),
-        enabled: !!token,
-    });
-
-    const loadMore = () => {
-        if (data && data.number < data.totalPages - 1) {
-            setPage(prev => prev + 1);
-        }
-    };
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spinner loading={isLoading}/>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <p className="text-red-500">Error loading interviews.</p>
-            </div>
-        );
-    }
+    ]
 
     return (
         <PanelContentChild>
@@ -65,17 +32,12 @@ const Interviews: React.FC = () => {
                 <div className='mt-10'>
                     <span className='text-[#F9A826]'>Past Interviews</span>
                     <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                        {data?.content.map((interview: Interview) => (
+                        {fakeData.map((interview: Interview) => (
                             <InterviewsItem key={interview.intervieweeId} data={interview} isPast={true}/>
                         ))}
+
                     </div>
-                    {data && data.number < data.totalPages - 1 && (
-                        <button
-                            onClick={loadMore}
-                            className='w-full bg-[#F9A826] text-white p-2 mt-8'>
-                            Show More
-                        </button>
-                    )}
+
                 </div>
             </div>
         </PanelContentChild>
