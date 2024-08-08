@@ -4,7 +4,8 @@ import Countdown from "../../components/Countdown";
 
 interface InterviewsItemProp {
     data: any;
-    isPast : boolean
+    isPast : boolean,
+    role:string
 }
 
 const InterviewsItem: FC<InterviewsItemProp> = (props) => {
@@ -41,7 +42,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
 
     return (
         <div className='rounded-md border-l-2 border-[#F9A826] shadow-lg flex flex-col mt-4 p-3 gap-y-2'>
-            <span>Mentor: {props.data.intervieweeName}</span>
+            <span>{props.role ==="MENTOR" ? 'Jobseeker ':'Mentor '}: {props.data.intervieweeName}</span>
             <div>
                 {props.isPast ?
                     <span className='flex gap-x-2'>From: {moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
