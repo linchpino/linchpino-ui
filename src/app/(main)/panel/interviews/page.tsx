@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import PanelContentChild from "@/containers/panel/PanelContentChild";
 import InterviewsItem from "@/containers/panel/InterviewsItem";
 import Spinner from "@/components/Spinner";
-import {BASE_URL_API} from "@/utils/system";
+import { BASE_URL_API } from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
 
