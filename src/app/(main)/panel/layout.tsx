@@ -1,9 +1,11 @@
+'use client'
 import Sidebar from "@/containers/panel/Sidebar";
 import {ReactNode} from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const PanelLayout = ({ children }: { children: ReactNode }) => {
+
     return(
         <div>
             <Header />
