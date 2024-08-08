@@ -45,6 +45,7 @@ const ScheduleInterview = () => {
         try {
             setIsLoadingSendForm(true)
             const response = await axios.post(`${BASE_URL_API}interviews`, data);
+            console.log('injaaa : ',response)
             return response
         } catch (error: any) {
             throw new Error('Error sending interview data: ' + error.message);
