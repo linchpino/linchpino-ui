@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
+import {useRouter} from "next/navigation";
 
 interface SignInForm {
     email: string;
@@ -19,14 +20,15 @@ interface SignInForm {
 }
 
 export default function SignIn() {
-    const {register, handleSubmit, formState: { errors }} = useForm<SignInForm>();
+    const router = useRouter()
+    const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
-    const {token, setToken} = useStore();
-
+    const {setToken} = useStore(state => ({
+        setToken: state.setToken,
+    }));
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
-    console.log(token)
     const sendSigninForm = async (data: SignInForm) => {
         setIsLoading(true);
         try {
@@ -41,6 +43,7 @@ export default function SignIn() {
                 }
             );
             setToken(response.data.token)
+            router.push('/panel/interviews')
             return response.data;
         } catch (error) {
             console.error('Login failed', error);

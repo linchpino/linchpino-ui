@@ -11,7 +11,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <aside className="sidebar shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-[15%] md:w-1/5 rounded-md p-1 lg:p-4 flex flex-col items-center md:items-start">
+        <aside className="sidebar sticky top-5 max-h-60 shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-[15%] md:w-1/5 rounded-md p-1 lg:p-4 flex flex-col items-center md:items-start">
             <ul>
                 {links.map((link) => (
                     <li key={link.href} className={`${pathname === link.href ? 'bg-[#F9A826] text-white' : ''} flex items-center justify-start p-2 my-3 rounded-md w-8 h-8 md:w-full`}>
