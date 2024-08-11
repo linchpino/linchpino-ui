@@ -9,7 +9,6 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {z} from "zod";
 import {ValidateEmailPattern} from "@/utils/helper";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
-import {ClipLoader} from "react-spinners";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {AsyncPaginate} from "react-select-async-paginate";
 
@@ -105,7 +104,9 @@ const Profile = () => {
 
     const handleInterviewChange = (selectedOptions: Interview[]) => {
         const selectedInterviews = selectedOptions.map(option => ({value: option.value, label: option.label}));
+        console.log(selectedInterviews)
     };
+    console.log(isLoading)
     return (
         <PanelContentChild>
             <h4>Profile Picture</h4>
@@ -252,6 +253,7 @@ const Profile = () => {
                                             {item.days.map(daysItem => {
                                                 return (
                                                     <div
+                                                        key={daysItem}
                                                         className='flex items-center justify-center text-sm text-white w-8 h-8 rounded-full bg-[#F9A826]'>
                                                         {daysItem}
                                                     </div>
