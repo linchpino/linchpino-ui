@@ -30,7 +30,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
 
     const [page, setPage] = useState(0);
     const { data, isLoading, error } = useFetchData(`${url}?page=${page}`, token, queryKey);
-    console.log(data)
+    console.log(page)
 
     const loadMore = () => {
         if (data && data.number < data.totalPages - 1) {
