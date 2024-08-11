@@ -20,10 +20,11 @@ interface InterviewDataProps {
     queryKey: string;
     title: string;
     isPast: boolean;
+    role:string;
 }
 
-const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast }) => {
-    const { token } = useStore(state => ({
+const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast,role }) => {
+    const { token,decodedToken } = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
     }));
@@ -37,7 +38,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
             setPage(prev => prev + 1);
         }
     };
-
+    console.log(decodedToken)
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -62,7 +63,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
                     ) : (
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
                             {data?.content.map((interview: Interview) => (
-                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} />
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} role={role}/>
                             ))}
                         </div>
                     )}
@@ -80,10 +81,19 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
 };
 
 const Interviews: React.FC = () => {
+    const { decodedToken } = useStore(state => ({
+        decodedToken: state.decodedToken,
+    }));
+
+    const isMentor = decodedToken?.scope === "MENTOR";
+    console.log(isMentor)
+    const pastUrl = isMentor
+        ? `${BASE_URL_API}interviews/mentors/past`
+        : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
         <>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}/>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/past`} queryKey="pastInterviews" title="Past Interviews" isPast={true}/>
+            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
+            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
         </>
     );
 };
