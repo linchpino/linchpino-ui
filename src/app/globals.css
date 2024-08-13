@@ -36,6 +36,22 @@
   border-radius: 5px;
   border: 1px solid #ffffff;
 }
+.profile-calendar{
+  background-color: white;
+  border: #dedede .1px solid;
+  border-radius: 7px;
+  padding:5px;
+  margin-left: 5px;
+  font-size: 14px;
+}
+.profile-timepicker{
+  background-color: white;
+  border: #dedede .1px solid;
+  border-radius: 7px;
+  padding:5px;
+  margin-left: 5px;
+  font-size: 14px;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;
