@@ -8,7 +8,7 @@ export type CombinedState = MentorInformationState & ScheduleInterviewState & Us
 const useStore = create<CombinedState>((set, get, api) => ({
     ...createMentorInformationSlice(set, get, api),
     ...createScheduleInterviewSlice(set, get, api),
-    ...createUserSlice(set, get, api),
+    ...createUserSlice(set, get, api)
 }));
 
 export default useStore;
