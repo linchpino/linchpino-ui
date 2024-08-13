@@ -15,6 +15,7 @@ type Interview = {
     interviewType: string;
 };
 
+
 interface InterviewDataProps {
     url: string;
     queryKey: string;
