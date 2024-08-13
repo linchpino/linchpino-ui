@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PanelContentChild from "@/containers/panel/PanelContentChild";
 import InterviewsItem from "@/containers/panel/InterviewsItem";
 import Spinner from "@/components/Spinner";
@@ -15,35 +15,33 @@ type Interview = {
     interviewType: string;
 };
 
+
 interface InterviewDataProps {
     url: string;
     queryKey: string;
     title: string;
     isPast: boolean;
-    role:string;
+    role: string;
 }
 
-
-const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast,role }) => {
-    const { token,decodedToken } = useStore(state => ({
+const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPast, role}) => {
+    const {token} = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
     }));
 
     const [page, setPage] = useState(0);
-    const { data, isLoading, error } = useFetchData(`${url}?page=${page}`, token, queryKey);
-    console.log(page)
+    const {data, isLoading, error} = useFetchData(`${url}?page=${page}`, token, queryKey);
 
     const loadMore = () => {
         if (data && data.number < data.totalPages - 1) {
             setPage(prev => prev + 1);
         }
     };
-    console.log(decodedToken)
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <Spinner loading={isLoading} />
+                <Spinner loading={isLoading}/>
             </div>
         );
     }
@@ -64,7 +62,8 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
                     ) : (
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
                             {data?.content.map((interview: Interview) => (
-                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast} role={role}/>
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast}
+                                                role={role}/>
                             ))}
                         </div>
                     )}
@@ -82,19 +81,23 @@ const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , is
 };
 
 const Interviews: React.FC = () => {
-    const { decodedToken } = useStore(state => ({
+    const {decodedToken} = useStore(state => ({
         decodedToken: state.decodedToken,
     }));
-
     const isMentor = decodedToken?.scope === "MENTOR";
-    console.log(isMentor)
+    const upcomingUrl = isMentor
+        ? `${BASE_URL_API}interviews/mentors/upcoming`
+        : `${BASE_URL_API}interviews/jobseekers/upcoming`;
+
     const pastUrl = isMentor
         ? `${BASE_URL_API}interviews/mentors/past`
         : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
         <>
-            <InterviewData url={`${BASE_URL_API}interviews/jobseekers/upcoming`} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
-            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true} role={isMentor? 'MENTOR' : "JOB_SEEKER"}/>
+            <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}
+                           role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
+            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true}
+                           role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
         </>
     );
 };
