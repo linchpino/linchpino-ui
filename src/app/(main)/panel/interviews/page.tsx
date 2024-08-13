@@ -23,6 +23,7 @@ interface InterviewDataProps {
     role:string;
 }
 
+
 const InterviewData: React.FC<InterviewDataProps> = ({ url, queryKey, title , isPast,role }) => {
     const { token,decodedToken } = useStore(state => ({
         token: state.token,
