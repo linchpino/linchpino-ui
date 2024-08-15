@@ -102,7 +102,7 @@ export default function SignIn() {
 
         if (code) {
             setIsLoadingLinkedin(true);
-            fetchAccessToken(code);
+            // fetchAccessToken(code);
         }
     }, [searchParams]);
 
@@ -163,7 +163,7 @@ export default function SignIn() {
     //     }
     // };
     const linkedinLogin = () => {
-        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77ealfulm14qfu&redirect_uri=http://localhost:3000/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77ealfulm14qfu&redirect_uri=https://ui-dev.linchpino.com/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
         window.location.href = linkedinAuthUrl;
     };
 
