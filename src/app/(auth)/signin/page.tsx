@@ -112,16 +112,17 @@ export default function SignIn() {
                 params: {
                     grant_type: 'authorization_code',
                     code: code,
-                    redirect_uri:process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI,
-                    client_id: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
-                    client_secret: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_SECRET,
+                    redirect_uri:"https://ui-dev.linchpino.com/signin",
+                    client_id: "77ealfulm14qfu",
+                    client_secret: "WPL_AP1.FflBvLK8JH8AQuDf.qdttHQ==",
                 },
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    // 'mode': 'no-cors'
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+                    'mode': 'no-cors'
                 },
             });
-            console.log('Access Token:', response.data.access_token);
             console.log('Access Token:', response.data.access_token);
         } catch (error) {
             console.error('Failed to get access token', error);
@@ -162,7 +163,7 @@ export default function SignIn() {
     //     }
     // };
     const linkedinLogin = () => {
-        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77ealfulm14qfu&redirect_uri=http://localhost:3000/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
         window.location.href = linkedinAuthUrl;
     };
 
