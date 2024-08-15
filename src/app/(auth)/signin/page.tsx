@@ -9,10 +9,11 @@ import {BASE_URL} from "@/utils/system";
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
+import {BsLinkedin} from "react-icons/bs";
 
 interface SignInForm {
     email: string;
@@ -21,11 +22,15 @@ interface SignInForm {
 
 export default function SignIn() {
     const router = useRouter()
+    const searchParams = useSearchParams();
+
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
     const {setToken} = useStore(state => ({
         setToken: state.setToken,
     }));
+    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
+
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
@@ -82,13 +87,91 @@ export default function SignIn() {
             });
         }
     });
+    // const linkedinLogin = () => {
+    //     setIsLoadingLinkedin(true)
+    //     const clientId ="77ealfulm14qfu";
+    //     const redirectUri = 'http://localhost:3000/signin';
+    //     const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+    //     window.location.href = linkedinAuthUrl;
+    //     setTimeout(()=>{
+    //         setIsLoadingLinkedin(false)
+    //     },2500)
+    // };
+    useEffect(() => {
+        const code = searchParams.get('code');
+
+        if (code) {
+            setIsLoadingLinkedin(true);
+            fetchAccessToken(code);
+        }
+    }, [searchParams]);
+
+    const fetchAccessToken = async (code: string) => {
+        try {
+            const response = await axios.post('https://www.linkedin.com/oauth/v2/accessToken', null, {
+                params: {
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri:process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI,
+                    client_id: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
+                    client_secret: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_SECRET,
+                },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    // 'mode': 'no-cors'
+                },
+            });
+            console.log('Access Token:', response.data.access_token);
+            console.log('Access Token:', response.data.access_token);
+        } catch (error) {
+            console.error('Failed to get access token', error);
+            toast.error('LinkedIn login failed!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        } finally {
+            setIsLoadingLinkedin(false);
+        }
+    };
+    // const fetchAccessToken = async (code: string) => {
+    //     try {
+    //         const response = await axios.get('/api/linkedin-token', {
+    //             params: { code },
+    //         });
+    //         console.log('Access Token:', response.data.access_token);
+    //     } catch (error) {
+    //         console.error('Failed to get access token', error);
+    //         toast.error('LinkedIn login failed!', {
+    //             position: "top-right",
+    //             autoClose: 5000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: "light",
+    //             transition: Bounce,
+    //         });
+    //     }
+    // };
+    const linkedinLogin = () => {
+        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+        window.location.href = linkedinAuthUrl;
+    };
 
     return (
         <>
             <Header/>
-            <div className='bg-white container pb-5 lg:pb-0'>
+            <div className='flex flex-col items-center bg-white container pb-5 lg:pb-0'>
                 <form onSubmit={handleSubmit(onSubmit)}
-                      className="flex flex-col items-center justify-center gap-y-8 mt-14">
+                      className="flex flex-col items-center justify-center gap-y-8 mt-14 w-full max-w-xs">
                     <h1 className='text-black text-3xl'>Sign In</h1>
                     <label className="form-control w-full max-w-xs">
                         <div className="label">
@@ -129,6 +212,14 @@ export default function SignIn() {
                         </Link>
                     </div>
                 </form>
+                <div className='flex flex-col items-center justify-center mt-8 w-full max-w-xs'>
+                    <div className="divider w-full ">OR</div>
+                    <button disabled={isLoadingLinkedin} onClick={linkedinLogin} className="btn btn-primary w-full max-w-xs text-white">
+                        <BsLinkedin/>
+                        {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : 'Login Via Linkedin'}
+
+                    </button>
+                </div>
             </div>
             <Footer/>
             <ToastContainer />
