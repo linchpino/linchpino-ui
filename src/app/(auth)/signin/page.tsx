@@ -102,7 +102,7 @@ export default function SignIn() {
 
         if (code) {
             setIsLoadingLinkedin(true);
-            // fetchAccessToken(code);
+            fetchAccessToken(code);
         }
     }, [searchParams]);
 
