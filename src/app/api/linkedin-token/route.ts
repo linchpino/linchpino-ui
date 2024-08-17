@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
             params: {
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: 'http://localhost:3000/signin',
-                client_id: '77ealfulm14qfu',
-                client_secret: 'WPL_AP1.FflBvLK8JH8AQuDf.qdttHQ==',
+                redirect_uri: process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI,
+                client_id: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
+                client_secret: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_SECRET,
             },
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

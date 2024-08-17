@@ -6,14 +6,15 @@ import Link from "next/link";
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import {BASE_URL} from "@/utils/system";
-import {Bounce, toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
 import {useRouter, useSearchParams} from "next/navigation";
 import {BsLinkedin} from "react-icons/bs";
+import {toastError, toastSuccess, toastInfo} from "@/components/CustomToast";
 
 interface SignInForm {
     email: string;
@@ -23,13 +24,17 @@ interface SignInForm {
 export default function SignIn() {
     const router = useRouter()
     const searchParams = useSearchParams();
+    const tokenFetchedRef = useRef(false);
+
+    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
+    const [isFetchingToken, setIsFetchingToken] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
-    const [isLoading, setIsLoading] = useState(false);
+
     const {setToken} = useStore(state => ({
         setToken: state.setToken,
     }));
-    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
 
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
@@ -51,7 +56,7 @@ export default function SignIn() {
             router.push('/panel/interviews')
             return response.data;
         } catch (error) {
-            console.error('Login failed', error);
+            toastError({message: 'Login failed. Please check your credentials.'});
             throw error;
         } finally {
             setIsLoading(false);
@@ -61,112 +66,50 @@ export default function SignIn() {
     const signinMutation = useMutation({
         mutationFn: sendSigninForm,
         onSuccess: () => {
-            toast.success('Yes! You are logged in.', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            toastSuccess({message: 'Yes! You are logged in.'});
         },
         onError: () => {
-            toast.error('Login failed. Please check your credentials.', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            toastError({message: 'Login failed. Please check your credentials.'});
         }
     });
-    // const linkedinLogin = () => {
-    //     setIsLoadingLinkedin(true)
-    //     const clientId ="77ealfulm14qfu";
-    //     const redirectUri = 'http://localhost:3000/signin';
-    //     const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
-    //     window.location.href = linkedinAuthUrl;
-    //     setTimeout(()=>{
-    //         setIsLoadingLinkedin(false)
-    //     },2500)
-    // };
+
     useEffect(() => {
         const code = searchParams.get('code');
-
-        if (code) {
+        if (code && !tokenFetchedRef.current) {
+            setIsFetchingToken(true);
             setIsLoadingLinkedin(true);
             fetchAccessToken(code);
+            tokenFetchedRef.current = true;
         }
     }, [searchParams]);
 
     const fetchAccessToken = async (code: string) => {
+        toastInfo({
+            message: 'Your authentication process with LinkedIn is in progress. Please be patient...'
+        });
+
         try {
-            const response = await axios.post('https://www.linkedin.com/oauth/v2/accessToken', null, {
-                params: {
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri:"https://ui-dev.linchpino.com/signin",
-                    client_id: "77ealfulm14qfu",
-                    client_secret: "WPL_AP1.FflBvLK8JH8AQuDf.qdttHQ==",
-                },
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-                    'mode': 'no-cors'
-                },
-            });
-            console.log('Access Token:', response.data.access_token);
+            const response = await fetch(`/api/linkedin-token?code=${code}`);
+            const data = await response.json();
+            setToken(data.access_token)
+            console.log(data)
+            toastSuccess({message: 'LinkedIn authentication successful.'});
+            router.push('/panel/interviews')
+
         } catch (error) {
-            console.error('Failed to get access token', error);
-            toast.error('LinkedIn login failed!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            toastError({message: 'LinkedIn authentication failed. Please try again.'});
+
         } finally {
+            setIsFetchingToken(false);
             setIsLoadingLinkedin(false);
         }
     };
-    // const fetchAccessToken = async (code: string) => {
-    //     try {
-    //         const response = await axios.get('/api/linkedin-token', {
-    //             params: { code },
-    //         });
-    //         console.log('Access Token:', response.data.access_token);
-    //     } catch (error) {
-    //         console.error('Failed to get access token', error);
-    //         toast.error('LinkedIn login failed!', {
-    //             position: "top-right",
-    //             autoClose: 5000,
-    //             hideProgressBar: false,
-    //             closeOnClick: true,
-    //             pauseOnHover: true,
-    //             draggable: true,
-    //             progress: undefined,
-    //             theme: "light",
-    //             transition: Bounce,
-    //         });
-    //     }
-    // };
     const linkedinLogin = () => {
-        const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77ealfulm14qfu&redirect_uri=https://ui-dev.linchpino.com/signin&state=foobar&scope=openid%20profile%20w_member_social%20email`;
-        window.location.href = linkedinAuthUrl;
+        if (!isLoadingLinkedin) {
+            const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+            window.location.href = linkedinAuthUrl;
+        }
     };
-
     return (
         <>
             <Header/>
@@ -195,13 +138,13 @@ export default function SignIn() {
                         </div>
                         <input type="password" placeholder="********"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
-                               {...register('password', { required: "Password is required" })} />
+                               {...register('password', {required: "Password is required"})} />
                         {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
                     </label>
                     <button type='submit'
                             className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
                             disabled={isLoading}>
-                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Login'}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
                     </button>
                     <div className='flex items-center'>
                         <Link href='/signup' className='text-[#F9A826] text-sm'>
@@ -215,7 +158,8 @@ export default function SignIn() {
                 </form>
                 <div className='flex flex-col items-center justify-center mt-8 w-full max-w-xs'>
                     <div className="divider w-full ">OR</div>
-                    <button disabled={isLoadingLinkedin} onClick={linkedinLogin} className="btn btn-primary w-full max-w-xs text-white">
+                    <button disabled={isLoadingLinkedin} onClick={linkedinLogin}
+                            className="btn btn-primary w-full max-w-xs text-white">
                         <BsLinkedin/>
                         {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : 'Login Via Linkedin'}
 
@@ -223,7 +167,15 @@ export default function SignIn() {
                 </div>
             </div>
             <Footer/>
-            <ToastContainer />
+            {isFetchingToken &&
+                <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className=" flex flex-col items-center justify-center">
+                        <ClipLoader size={60} color={"#fff"}/>
+                        <p className="text-white mt-4">Processing your LinkedIn authentication...</p>
+                    </div>
+                </div>
+            }
+            <ToastContainer/>
         </>
-    );
+    )
 }
