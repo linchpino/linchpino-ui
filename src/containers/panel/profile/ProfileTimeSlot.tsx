@@ -6,7 +6,7 @@ import gregorian_en from "react-date-object/locales/gregorian_en";
 import Select from "react-select";
 import "react-multi-date-picker/styles/colors/yellow.css"
 
-const ProfileTimeSlot =() =>{
+const ProfileTimeSlot = () => {
     const timeCards = [
         {id: 1, start: "2024-08-10", duration: "30 min", repeat: "no", days: ["Su", "Mo", "Tu", "We", "Th"]},
         {id: 2, start: "2024-08-11", duration: "60 min", repeat: "1 week", days: ["Su", "Mo", "Tu", "We", "Th"]},
@@ -21,13 +21,13 @@ const ProfileTimeSlot =() =>{
         {id: 5, time: "60 min"},
     ]
     const days = [
-        {id: 1, day: "Sun"},
-        {id: 2, day: "Mon"},
-        {id: 3, day: "Tue"},
-        {id: 4, day: "Wed"},
-        {id: 5, day: "Thu"},
-        {id: 6, day: "Fri"},
-        {id: 7, day: "Sat"},
+        {id: 1, day: "Su"},
+        {id: 2, day: "Mo"},
+        {id: 3, day: "Tu"},
+        {id: 4, day: "We"},
+        {id: 5, day: "Th"},
+        {id: 6, day: "Fr"},
+        {id: 7, day: "Sa"},
     ]
     const options = [
         {value: 'day', label: 'Day'},
@@ -37,17 +37,25 @@ const ProfileTimeSlot =() =>{
 
     const [selectedStart, setSelectedStart] = useState()
     const [selectedDuration, setSelectedDuration] = useState("");
-    const [selectedDay, setSelectedDay] = useState("");
-    const [selectedRepeat, setSelectedRepeat] = useState({value:"",label:""});
+    const [selectedDay, setSelectedDay] = useState<string[]>([]);
+    const [selectedRepeat, setSelectedRepeat] = useState({value: "", label: ""});
 
     const modalRef = useRef<HTMLDialogElement>(null);
-console.log(selectedRepeat)
     const handleLoginClick = () => {
         if (modalRef.current) {
             modalRef.current.showModal();
         }
     };
-    return(
+    const handleSelectDay = (day: string) => {
+        const isDaySelected = selectedDay.includes(day);
+        if (isDaySelected) {
+            setSelectedDay(prevState => prevState.filter(selected => selected !== day));
+        } else {
+            setSelectedDay(prevState => [...prevState, day]);
+        }
+    }
+    console.log("1", selectedDay)
+    return (
         <>
             <div className='flex gap-x-2 mt-8'>
                 <h4>Time Slot</h4>
@@ -56,23 +64,24 @@ console.log(selectedRepeat)
                 </button>
             </div>
             <dialog ref={modalRef} id="modal"
-                    className="modal">
-                <div className="modal-box max-w-lg bg-white flex flex-col items-center">
+                    className="modal ">
+                <div
+                    className={`modal-box min-h-[65%] pb-8 max-w-lg bg-white flex flex-col items-center`}>
                     <form method="dialog">
                         <button
                             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
                         </button>
                     </form>
                     <div
-                        className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-10 lg:mb-0 container p-3">
+                        className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-4 lg:mb-0 container p-3  ">
                         <h1 className='text-xl text-center text-[#000]'>Add Time Slot</h1>
-                        <div className='flex flex-col items-center justify-center mt-4 gap-y-5'>
+                        <div className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat.value === "week" ?'gap-y-6':'gap-y-8'}`}>
                             <div className='flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2'>
                                 <span className='text-sm'>Start: </span>
                                 <DatePicker
-                                    containerClassName='w-full sm:w-1/2'
-                                    inputClass='profile-calendar w-full'
-                                    className='yellow '
+                                    containerClassName='w-full sm:w-1/2 '
+                                    inputClass='profile-calendar w-full '
+                                    className='yellow z-20'
                                     value={selectedStart}
                                     //@ts-ignore
                                     onChange={setSelectedStart}
@@ -82,13 +91,13 @@ console.log(selectedRepeat)
                                     placeholder='Date'
                                 />
                                 <DatePicker
-                                    containerClassName='w-full sm:w-1/2'
-                                    inputClass='profile-timepicker w-full'
+                                    containerClassName='w-full sm:w-1/2 '
+                                    inputClass='profile-timepicker w-full '
                                     disableDayPicker
                                     format="HH:mm:ss"
                                     placeholder='Time'
                                     plugins={[
-                                        <TimePicker />
+                                        <TimePicker/>
                                     ]}
                                     calendar={gregorian}
                                     locale={gregorian_en}
@@ -137,9 +146,14 @@ console.log(selectedRepeat)
                                     <span className='text-sm'>On: </span>
                                     <div className='flex gap-x-2 ml-2 justify-center flex-wrap mt-2 sm:mt-0 gap-y-2'>
                                         {days.map(daysItem => {
+                                            const isSelected = selectedDay.includes(daysItem.day);
                                             return (
-                                                <button onClick={() => setSelectedDay(daysItem.day)} key={daysItem.id}
-                                                        className={`p-2 min-w-12 text-xs rounded-3xl flex items-center justify-center border-[.1px] ${selectedDay === daysItem.day && 'text-[#F2A926]'} ${selectedDay === daysItem.day && 'border-[#F2A926]'} `}>
+                                                <button
+                                                    className={` py-2 min-w-[3rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${
+                                                        isSelected && 'border-[#F2A926] text-[#F2A926]'
+                                                    }`}
+                                                    onClick={() => handleSelectDay(daysItem.day)}
+                                                    key={daysItem.id}>
                                                     {daysItem.day}
                                                 </button>
                                             )
@@ -152,12 +166,12 @@ console.log(selectedRepeat)
                     </div>
 
                     <button
-                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]`}>
+                        className={`btn btn-sm w-full md:w-2/3 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]  ${selectedRepeat.value !== "week" &&'mt-2'}`}>
                         Add
                     </button>
                 </div>
             </dialog>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6 mt-4'>
+            <div className={`grid grid-cols-1 lg:grid-cols-2 gap-x-6 mt-4 gap-y-6`}>
                 {timeCards.map(item => {
                     return (
                         <div key={item.id} className="relative bg-white rounded-lg card shadow-xl text-xs lg:text-sm">
@@ -170,10 +184,12 @@ console.log(selectedRepeat)
                                     <span>Duration: {item.duration}</span>
                                 </div>
                                 {item.repeat !== 'no' &&
-                                    <div className='flex md:flex-row flex-col justify-between items-center mt-2 gap-x-2 gap-y-2'>
+                                    <div
+                                        className='flex md:flex-row flex-col justify-between items-center mt-2 gap-x-2 gap-y-2'>
                                         <span className='text-sm'>Repeat <span
                                             className='text-[1rem] text-gray-700'>{item.repeat}</span> in </span>
-                                        <div className='flex flex-wrap gap-x-2 justify-center md:justify-start items-center md:w-[15rem]'>
+                                        <div
+                                            className='flex flex-wrap gap-x-2 justify-center md:justify-start items-center md:w-[15rem]'>
                                             {item.days.map(daysItem => {
                                                 return (
                                                     <div
