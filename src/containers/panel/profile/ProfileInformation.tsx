@@ -202,6 +202,13 @@ const ProfileInformation = () => {
                                 className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
                         )}
                     </label>
+                    <label className="w-full md:col-span-2">
+                        <div className="label">
+                            <span className="label-text">Bio:</span>
+                        </div>
+                        <textarea className="textarea textarea-bordered w-full bg-white" placeholder="Your Details ..." {...register("firstName")}/>
+
+                    </label>
                 </div>
             </form>
         </>
