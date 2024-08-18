@@ -1,12 +1,12 @@
 'use client'
-import React, { useState, useRef } from "react";
+import React, {useState, useRef} from "react";
 import axios from "axios";
-import { BASE_URL_API } from "@/utils/system";
+import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
-import { toastSuccess, toastError } from "@/components/CustomToast";
+import {toastSuccess, toastError} from "@/components/CustomToast";
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
-import { FaCamera } from 'react-icons/fa';
+import {ToastContainer} from 'react-toastify';
+import {FaCamera} from 'react-icons/fa';
 
 const ProfilePicture: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -14,7 +14,7 @@ const ProfilePicture: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const { token } = useStore(state => ({
+    const {token} = useStore(state => ({
         token: state.token,
     }));
 
@@ -41,15 +41,15 @@ const ProfilePicture: React.FC = () => {
             });
 
             if (response.status === 200 || response.status === 201) {
-                toastSuccess({ message: "Upload successful!" });
+                toastSuccess({message: "Upload successful!"});
             } else {
                 const errorMessage = response.data.error || "Upload failed with unexpected status!";
-                toastError({ message: errorMessage });
+                toastError({message: errorMessage});
             }
         } catch (error) {
             // @ts-ignore
             const errorMessage = error.response?.data?.error || error.message || "Upload failed!";
-            toastError({ message: errorMessage });
+            toastError({message: errorMessage});
             console.error("Upload failed:", error);
         } finally {
             setLoading(false);
@@ -59,7 +59,7 @@ const ProfilePicture: React.FC = () => {
     const handleRemove = () => {
         setSelectedFile(null);
         setPreview("");
-        toastSuccess({ message: "Picture removed successfully!" });
+        toastSuccess({message: "Picture removed successfully!"});
     };
 
     const handleChoosePicture = () => {
@@ -75,15 +75,15 @@ const ProfilePicture: React.FC = () => {
                 <div className="avatar mt-3 relative w-36">
                     <div className="flex w-36 h-36 rounded-xl bg-gray-200 items-center justify-center">
                         {preview ?
-                            <img src={preview} alt="Profile" className="rounded-xl" />
+                            <img src={preview} alt="Profile" className="rounded-xl"/>
                             :
-                            <div className='flex items-center justify-center'>
-                                <FaCamera className="text-gray-400 text-4xl" />
-                            </div>
+                            <FaCamera className="text-gray-400 text-4xl mx-auto mt-12"/>
                         }
                         {loading && (
-                            <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center rounded-xl">
-                                <div className="w-10 h-10 border-4 border-gray-300 border-t-4 border-t-white rounded-full animate-spin"></div>
+                            <div
+                                className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center rounded-xl">
+                                <div
+                                    className="w-10 h-10 border-4 border-gray-300 border-t-4 border-t-white rounded-full animate-spin"></div>
                             </div>
                         )}
                     </div>
@@ -110,7 +110,7 @@ const ProfilePicture: React.FC = () => {
                     Remove Picture
                 </button>
             </div>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 }
