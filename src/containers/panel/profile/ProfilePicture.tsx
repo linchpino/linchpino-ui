@@ -45,12 +45,13 @@ const ProfilePicture: React.FC = () => {
             } else {
                 const errorMessage = response.data.error || "Upload failed with unexpected status!";
                 toastError({message: errorMessage});
+                setPreview("");
             }
         } catch (error) {
             // @ts-ignore
             const errorMessage = error.response?.data?.error || error.message || "Upload failed!";
             toastError({message: errorMessage});
-            console.error("Upload failed:", error);
+            setPreview("");
         } finally {
             setLoading(false);
         }
