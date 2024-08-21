@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
-import {BASE_URL} from "@/utils/system";
+import {BASE_URL, BASE_URL_API} from "@/utils/system";
 import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +15,7 @@ import useStore from "@/store/store";
 import {useRouter, useSearchParams} from "next/navigation";
 import {BsLinkedin} from "react-icons/bs";
 import {toastError, toastSuccess, toastInfo} from "@/components/CustomToast";
+import useUserStore from "@/store/userSlice";
 
 interface SignInForm {
     email: string;
@@ -22,7 +23,7 @@ interface SignInForm {
 }
 
 export default function SignIn() {
-    const router = useRouter()
+    const router = useRouter();
     const searchParams = useSearchParams();
     const tokenFetchedRef = useRef(false);
 
@@ -32,13 +33,16 @@ export default function SignIn() {
 
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
 
-    const {setToken} = useStore(state => ({
+    const {setToken} = useStore((state: { setToken: any; }) => ({
         setToken: state.setToken,
     }));
-
+    const {setUser} = useStore((state: { setUser: any }) => ({
+        setUser: state.setUser,
+    }));
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
+
     const sendSigninForm = async (data: SignInForm) => {
         setIsLoading(true);
         try {
@@ -52,8 +56,8 @@ export default function SignIn() {
                     },
                 }
             );
-            setToken(response.data.token)
-            router.push('/panel/interviews')
+            setToken(response.data.token);
+            router.push('/panel/interviews');
             return response.data;
         } catch (error) {
             toastError({message: 'Login failed. Please check your credentials.'});
@@ -84,32 +88,58 @@ export default function SignIn() {
     }, [searchParams]);
 
     const fetchAccessToken = async (code: string) => {
-        toastInfo({
-            message: 'Your authentication process with LinkedIn is in progress. Please be patient...'
-        });
-
+        toastInfo({message: 'Your authentication process with LinkedIn is in progress. Please be patient...'});
         try {
-            const response = await fetch(`/api/linkedin-token?code=${code}`);
-            const data = await response.json();
-            setToken(data.access_token)
-            console.log(data)
-            toastSuccess({message: 'LinkedIn authentication successful.'});
-            router.push('/panel/interviews')
-
+            const tokenResponse = await fetch(`/api/linkedin-token?code=${code}`);
+            const tokenData = await tokenResponse.json();
+            const accessToken = tokenData.access_token;
+            setToken(accessToken);
+            await fetchUserProfile(accessToken);
         } catch (error) {
-            toastError({message: 'LinkedIn authentication failed. Please try again.'});
-
+            if (error instanceof Error) {
+                const message = error.message || 'LinkedIn authentication failed. Please try again.';
+                toastError({message});
+            } else {
+                toastError({message: 'An unexpected error occurred. Please try again.'});
+            }
         } finally {
             setIsFetchingToken(false);
             setIsLoadingLinkedin(false);
         }
     };
+    const fetchUserProfile = async (accessToken: string) => {
+        try {
+            const response = await axios.get(`${BASE_URL_API}accounts/profile`, {
+                headers: {Authorization: `Bearer ${accessToken}`},
+            });
+            setUser(response.data);
+            toastSuccess({message: 'LinkedIn authentication successful.'});
+            router.push('/panel/profile');
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400 && error.response?.data?.error) {
+                    toastError({message: error.response.data.error});
+                } else if (error.response?.status === 500) {
+                    toastError({message: 'An error occurred. Please try again.'});
+                } else {
+                    toastError({message: 'Failed to fetch user profile. Please try again.'});
+                }
+            } else if (error instanceof Error) {
+                toastError({message: error.message || 'An unexpected error occurred. Please try again.'});
+            } else {
+                toastError({message: 'An unexpected error occurred. Please try again.'});
+            }
+        }
+    }
+
+
     const linkedinLogin = () => {
         if (!isLoadingLinkedin) {
             const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
             window.location.href = linkedinAuthUrl;
         }
     };
+
     return (
         <>
             <Header/>
