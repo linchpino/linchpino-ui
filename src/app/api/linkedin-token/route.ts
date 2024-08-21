@@ -4,6 +4,7 @@ import axios from 'axios';
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const code = searchParams.get('code');
+    const redirectUri = searchParams.get('redirect_uri') ;
 
     if (!code) {
         return NextResponse.json({ error: 'Code is missing' }, { status: 400 });
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
             params: {
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI,
+                redirect_uri: redirectUri,
                 client_id: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
                 client_secret: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_SECRET,
             },
