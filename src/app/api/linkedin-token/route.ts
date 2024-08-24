@@ -4,8 +4,7 @@ import axios from 'axios';
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const code = searchParams.get('code');
-    const redirectUri = searchParams.get('redirect_uri') ;
-
+    const redirectUri = searchParams.get('redirect_uri');
     if (!code) {
         return NextResponse.json({ error: 'Code is missing' }, { status: 400 });
     }
@@ -23,7 +22,6 @@ export async function GET(req: NextRequest) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-
         return NextResponse.json(response.data, { status: 200 });
     } catch (error) {
         console.error('Error fetching LinkedIn token:', error);

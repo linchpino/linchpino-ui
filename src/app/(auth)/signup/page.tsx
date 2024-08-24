@@ -51,7 +51,8 @@ export default function SignUp() {
     const {setUser} = useStore((state: { setUser: any }) => ({
         setUser: state.setUser,
     }));
-
+    const {clearToken} = useStore((state: { clearToken: any }) => ({clearToken:state.clearToken}))
+    const {token} = useStore((state: { token: any }) => ({token:state.token}))
     const toggleShowPassword = () => setShowPassword(prev => !prev);
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
@@ -93,18 +94,19 @@ export default function SignUp() {
         if (code && !tokenFetchedRef.current) {
             setIsFetchingToken(true);
             setIsLoadingLinkedin(true);
-            fetchAccessToken(code,redirectURL);
+            fetchAccessToken(code, redirectURL);
             tokenFetchedRef.current = true;
         }
     }, [searchParams]);
 
-    const fetchAccessToken = async (code: string, redirectUri:string) => {
+    const fetchAccessToken = async (code: string, redirectUri: string) => {
+        clearToken()
         toastInfo({message: 'Your authentication process with LinkedIn is in progress. Please be patient...'});
         try {
             const tokenResponse = await fetch(`/api/linkedin-token?code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`);
             const tokenData = await tokenResponse.json();
             const accessToken = tokenData.access_token;
-            setToken(accessToken);
+            await setToken(accessToken);
             await fetchUserProfile(accessToken);
         } catch (error) {
             if (error instanceof Error) {
@@ -118,34 +120,25 @@ export default function SignUp() {
             setIsLoadingLinkedin(false);
         }
     };
+
     const fetchUserProfile = async (accessToken: string) => {
         try {
             const response = await axios.get(`${BASE_URL_API}accounts/profile`, {
                 headers: {Authorization: `Bearer ${accessToken}`},
             });
-            setUser(response.data);
-            toastSuccess({message: 'LinkedIn authentication successful.'});
-            router.push('/panel/profile');
+            console.log(response)
+            // setUser(response.data);
+            // toastSuccess({message: 'LinkedIn authentication successful.'});
+            // router.push('/panel/profile');
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response?.status === 400 && error.response?.data?.error) {
-                    toastError({message: error.response.data.error});
-                } else if (error.response?.status === 500) {
-                    toastError({message: 'An error occurred. Please try again.'});
-                } else {
-                    toastError({message: 'Failed to fetch user profile. Please try again.'});
-                }
-            } else if (error instanceof Error) {
-                toastError({message: error.message || 'An unexpected error occurred. Please try again.'});
-            } else {
-                toastError({message: 'An unexpected error occurred. Please try again.'});
-            }
+
         }
     }
 
     const linkedinSignup = () => {
         if (!isLoadingLinkedin) {
             const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI_SIGNUP}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+            setIsLoadingLinkedin(true)
             window.location.href = linkedinAuthUrl;
         }
     };

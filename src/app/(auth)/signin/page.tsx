@@ -94,8 +94,6 @@ export default function SignIn() {
             const tokenResponse = await fetch(`/api/linkedin-token?code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`);
             const tokenData = await tokenResponse.json();
             const accessToken = tokenData.access_token;
-            console.log(accessToken)
-            setToken(accessToken);
             await fetchUserProfile(accessToken);
         } catch (error) {
             if (error instanceof Error) {
@@ -114,7 +112,6 @@ export default function SignIn() {
             const response = await axios.get(`${BASE_URL_API}accounts/profile`, {
                 headers: {Authorization: `Bearer ${accessToken}`},
             });
-            console.log(response)
             setUser(response.data);
             toastSuccess({message: 'LinkedIn authentication successful.'});
             router.push('/panel/profile');
@@ -138,6 +135,7 @@ export default function SignIn() {
     const linkedinLogin = () => {
         if (!isLoadingLinkedin) {
             const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+            setIsLoadingLinkedin(true)
             window.location.href = linkedinAuthUrl;
         }
     };
