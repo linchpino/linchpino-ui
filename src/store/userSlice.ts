@@ -14,7 +14,6 @@ interface User {
 
 export interface UserState {
     token: string | null;
-    decodedToken: Record<string, any> | null;
     user: User | null;
     setToken: (token: string | null) => void;
     setUser: (user: User) => void;
@@ -24,21 +23,10 @@ export interface UserState {
 
 const createUserSlice: StateCreator<UserState> = (set) => ({
     token: null,
-    decodedToken: null,
     user: null,
-    setToken: (token: string | null) => {
-        let decodedToken = null;
-        if (token) {
-            try {
-                decodedToken = JSON.parse(atob(token.split('.')[1]));
-            } catch (error) {
-                console.error('Failed to decode token', error);
-            }
-        }
-        set({ token, decodedToken });
-    },
+    setToken: (token: string | null) => set({ token }),
     setUser: (user: User) => set({ user }),
-    clearToken: () => set({ token: null, decodedToken: null }),
+    clearToken: () => set({ token: null }),
     clearUser: () => set({ user: null }),
 });
 
@@ -49,7 +37,6 @@ const useUserStore = persist(
         storage: createJSONStorage(() => localStorage),
         partialize: (state) => ({
             token: state.token,
-            decodedToken: state.decodedToken,
             user: state.user,
         }),
     }

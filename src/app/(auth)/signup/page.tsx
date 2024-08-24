@@ -8,12 +8,14 @@ import {z} from "zod";
 import axios from "axios";
 import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
-import {toastError, toastSuccess} from "@/components/CustomToast";
+import {toastError, toastInfo, toastSuccess} from "@/components/CustomToast";
 import {BsEyeFill, BsEyeSlashFill, BsLinkedin} from "react-icons/bs"
 import {ValidateEmailPattern} from "@/utils/helper";
+import {useRouter, useSearchParams} from "next/navigation";
+import useStore from "@/store/store";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -32,12 +34,25 @@ export default function SignUp() {
     const {register, handleSubmit, formState: {errors}} = useForm<SignUpFields>({
         resolver: zodResolver(schema)
     });
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
 
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const tokenFetchedRef = useRef(false);
+
+    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
+    const [isFetchingToken, setIsFetchingToken] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
+    const {setToken} = useStore((state: { setToken: any; }) => ({
+        setToken: state.setToken,
+    }));
+    const {setUser} = useStore((state: { setUser: any }) => ({
+        setUser: state.setUser,
+    }));
+    const {clearToken} = useStore((state: { clearToken: any }) => ({clearToken:state.clearToken}))
+    const {token} = useStore((state: { token: any }) => ({token:state.token}))
     const toggleShowPassword = () => setShowPassword(prev => !prev);
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
@@ -72,6 +87,62 @@ export default function SignUp() {
             console.error('Signup failed', error);
         }
     };
+
+    useEffect(() => {
+        const redirectURL = String(process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI_SIGNUP || '');
+        const code = searchParams.get('code');
+        if (code && !tokenFetchedRef.current) {
+            setIsFetchingToken(true);
+            setIsLoadingLinkedin(true);
+            fetchAccessToken(code, redirectURL);
+            tokenFetchedRef.current = true;
+        }
+    }, [searchParams]);
+
+    const fetchAccessToken = async (code: string, redirectUri: string) => {
+        clearToken()
+        toastInfo({message: 'Your authentication process with LinkedIn is in progress. Please be patient...'});
+        try {
+            const tokenResponse = await fetch(`/api/linkedin-token?code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`);
+            const tokenData = await tokenResponse.json();
+            const accessToken = tokenData.access_token;
+            await setToken(accessToken);
+            await fetchUserProfile(accessToken);
+        } catch (error) {
+            if (error instanceof Error) {
+                const message = error.message || 'LinkedIn authentication failed. Please try again.';
+                toastError({message});
+            } else {
+                toastError({message: 'An unexpected error occurred. Please try again.'});
+            }
+        } finally {
+            setIsFetchingToken(false);
+            setIsLoadingLinkedin(false);
+        }
+    };
+
+    const fetchUserProfile = async (accessToken: string) => {
+        try {
+            const response = await axios.get(`${BASE_URL_API}accounts/profile`, {
+                headers: {Authorization: `Bearer ${accessToken}`},
+            });
+            console.log(response)
+            // setUser(response.data);
+            // toastSuccess({message: 'LinkedIn authentication successful.'});
+            // router.push('/panel/profile');
+        } catch (error) {
+
+        }
+    }
+
+    const linkedinSignup = () => {
+        if (!isLoadingLinkedin) {
+            const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI_SIGNUP}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+            setIsLoadingLinkedin(true)
+            window.location.href = linkedinAuthUrl;
+        }
+    };
+
     return (
         <>
             <Header/>
@@ -175,7 +246,7 @@ export default function SignUp() {
                     </div>
                     <div className='flex flex-col items-center justify-center mt-2 w-full max-w-xs'>
                         <div className="divider w-full ">OR</div>
-                        <button disabled={isLoadingLinkedin}
+                        <button disabled={isLoadingLinkedin} onClick={linkedinSignup}
                                 className="btn btn-primary w-full max-w-xs text-white">
                             <BsLinkedin/>
                             {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : 'Signup Via Linkedin'}
@@ -184,6 +255,14 @@ export default function SignUp() {
                     </div>
                 </div>
             </div>
+            {isFetchingToken &&
+                <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className=" flex flex-col items-center justify-center">
+                        <ClipLoader size={60} color={"#fff"}/>
+                        <p className="text-white mt-4">Processing your LinkedIn authentication...</p>
+                    </div>
+                </div>
+            }
             <ToastContainer/>
             <Footer/>
         </>

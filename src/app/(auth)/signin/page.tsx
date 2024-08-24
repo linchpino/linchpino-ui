@@ -15,7 +15,7 @@ import useStore from "@/store/store";
 import {useRouter, useSearchParams} from "next/navigation";
 import {BsLinkedin} from "react-icons/bs";
 import {toastError, toastSuccess, toastInfo} from "@/components/CustomToast";
-import useUserStore from "@/store/userSlice";
+
 
 interface SignInForm {
     email: string;
@@ -78,22 +78,22 @@ export default function SignIn() {
     });
 
     useEffect(() => {
+        const redirectURL = String(process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI || '');
         const code = searchParams.get('code');
         if (code && !tokenFetchedRef.current) {
             setIsFetchingToken(true);
             setIsLoadingLinkedin(true);
-            fetchAccessToken(code);
+            fetchAccessToken(code,redirectURL);
             tokenFetchedRef.current = true;
         }
     }, [searchParams]);
 
-    const fetchAccessToken = async (code: string) => {
+    const fetchAccessToken = async (code: string, redirectUri:string ) => {
         toastInfo({message: 'Your authentication process with LinkedIn is in progress. Please be patient...'});
         try {
-            const tokenResponse = await fetch(`/api/linkedin-token?code=${code}`);
+            const tokenResponse = await fetch(`/api/linkedin-token?code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`);
             const tokenData = await tokenResponse.json();
             const accessToken = tokenData.access_token;
-            setToken(accessToken);
             await fetchUserProfile(accessToken);
         } catch (error) {
             if (error instanceof Error) {
@@ -132,10 +132,10 @@ export default function SignIn() {
         }
     }
 
-
     const linkedinLogin = () => {
         if (!isLoadingLinkedin) {
             const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
+            setIsLoadingLinkedin(true)
             window.location.href = linkedinAuthUrl;
         }
     };
