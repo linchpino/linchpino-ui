@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import axios from 'axios';
 
 export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
+    const {searchParams} = new URL(req.url);
     const code = searchParams.get('code');
 
     if (!code) {
-        return NextResponse.json({ error: 'Code is missing' }, { status: 400 });
+        return NextResponse.json({error: 'Code is missing'}, {status: 400});
     }
 
     try {
@@ -19,13 +19,15 @@ export async function GET(req: NextRequest) {
                 client_secret: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_SECRET,
             },
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Cache-Control': 'no-store',
+                'Pragma': 'no-cache'
             },
         });
 
-        return NextResponse.json(response.data, { status: 200 });
+        return NextResponse.json(response.data, {status: 200});
     } catch (error) {
         console.error('Error fetching LinkedIn token:', error);
-        return NextResponse.json({ error: 'Failed to fetch LinkedIn token' }, { status: 500 });
+        return NextResponse.json({error: 'Failed to fetch LinkedIn token'}, {status: 500});
     }
 }
