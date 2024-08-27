@@ -7,6 +7,7 @@ import {toastSuccess, toastError} from "@/components/CustomToast";
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from 'react-toastify';
 import {FaCamera} from 'react-icons/fa';
+import {empty} from "@/utils/helper";
 
 const ProfilePicture: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -46,12 +47,14 @@ const ProfilePicture: React.FC = () => {
                 const errorMessage = response.data.error || "Upload failed with unexpected status!";
                 toastError({message: errorMessage});
                 setPreview("");
+                setSelectedFile(null)
             }
         } catch (error) {
             // @ts-ignore
             const errorMessage = error.response?.data?.error || error.message || "Upload failed!";
             toastError({message: errorMessage});
             setPreview("");
+            setSelectedFile(null)
         } finally {
             setLoading(false);
         }
@@ -103,13 +106,15 @@ const ProfilePicture: React.FC = () => {
                 >
                     Choose Picture
                 </button>
-                <button
-                    onClick={handleRemove}
-                    disabled={loading}
-                    className={`btn btn-outline btn-error btn-sm xs:w-32 w-28 px-2 rounded-md shadow-md text-xs hover:bg-[#F9A945] mt-3 md:mt-0 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
-                >
-                    Remove Picture
-                </button>
+                {!empty(selectedFile) &&
+                    <button
+                        onClick={handleRemove}
+                        disabled={loading}
+                        className={`btn btn-outline btn-error btn-sm xs:w-32 w-28 px-2 rounded-md shadow-md text-xs hover:bg-[#F9A945] mt-3 md:mt-0 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
+                    >
+                        Remove Picture
+                    </button>
+                }
             </div>
             <ToastContainer/>
         </>
