@@ -1,4 +1,4 @@
-import {toast, Bounce, ToastOptions} from 'react-toastify';
+import { toast, Bounce, ToastOptions } from 'react-toastify';
 
 type CustomToastProps = {
     message: string;
@@ -55,7 +55,29 @@ export const toastSuccess = ({
     });
 };
 
-const CustomToast = ({message, position, autoClose, hideProgressBar, closeOnClick, pauseOnHover, draggable, theme}: CustomToastProps) => {
+export const toastInfo = ({
+                              message,
+                              position = "top-right",
+                              autoClose = 5000,
+                              hideProgressBar = false,
+                              closeOnClick = true,
+                              pauseOnHover = true,
+                              draggable = true,
+                              theme = "light",
+                          }: CustomToastProps): void => {
+    toast.info(message, {
+        position,
+        autoClose,
+        hideProgressBar,
+        closeOnClick,
+        pauseOnHover,
+        draggable,
+        theme,
+        transition: Bounce,
+    });
+};
+
+const CustomToast = ({ message, position, autoClose, hideProgressBar, closeOnClick, pauseOnHover, draggable, theme }: CustomToastProps) => {
     return null;
 };
 

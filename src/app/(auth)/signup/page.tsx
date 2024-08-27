@@ -12,7 +12,7 @@ import {useState} from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
-import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
+import {BsEyeFill, BsEyeSlashFill, BsLinkedin} from "react-icons/bs"
 import {ValidateEmailPattern} from "@/utils/helper";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
@@ -33,6 +33,8 @@ export default function SignUp() {
         resolver: zodResolver(schema)
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
+
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
@@ -170,6 +172,15 @@ export default function SignUp() {
                         <Link href='/' className='text-[#F9A826] text-sm'>
                             Forgot Password
                         </Link>
+                    </div>
+                    <div className='flex flex-col items-center justify-center mt-2 w-full max-w-xs'>
+                        <div className="divider w-full ">OR</div>
+                        <button disabled={isLoadingLinkedin}
+                                className="btn btn-primary w-full max-w-xs text-white">
+                            <BsLinkedin/>
+                            {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : 'Signup Via Linkedin'}
+
+                        </button>
                     </div>
                 </div>
             </div>
