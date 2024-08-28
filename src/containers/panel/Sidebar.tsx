@@ -8,6 +8,7 @@ const Sidebar = () => {
     const links = [
         { href: '/panel/interviews', label: 'Interviews',icon:<BsPersonVcard size={20}/>},
         { href: '/panel/profile', label: 'Profile',icon:<BsFillPersonFill size={20}/>},
+        { href: '/panel/job-position', label: 'Job Position',icon:<BsFillPersonFill size={20}/>},
     ];
 
     return (
