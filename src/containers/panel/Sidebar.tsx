@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {BsFillPersonFill,BsPersonVcard} from 'react-icons/bs'
+import {BsFillPersonFill,BsPersonVcard,BsCardHeading} from 'react-icons/bs'
 
 const Sidebar = () => {
     const pathname = usePathname();
@@ -9,6 +9,7 @@ const Sidebar = () => {
         { href: '/panel/interviews', label: 'Interviews',icon:<BsPersonVcard size={20}/>},
         { href: '/panel/profile', label: 'Profile',icon:<BsFillPersonFill size={20}/>},
         { href: '/panel/job-position', label: 'Job Position',icon:<BsFillPersonFill size={20}/>},
+        { href: '/panel/interview-type', label: 'Interview Type',icon:<BsCardHeading size={20}/>},
     ];
 
     return (
