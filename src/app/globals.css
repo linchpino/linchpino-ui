@@ -8,13 +8,6 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 .mentor-scroll-bar {
   scrollbar-width: auto;
   scrollbar-color: #0b3fc0;
@@ -35,6 +28,25 @@
   background-color: #F9A826;
   border-radius: 5px;
   border: 1px solid #ffffff;
+}
+.profile-calendar{
+  background-color: white;
+  border: #dedede .1px solid;
+  border-radius: 7px;
+  padding:5px;
+  margin-left: 5px;
+  font-size: 14px;
+}
+.profile-timepicker{
+  background-color: white;
+  border: #dedede .1px solid;
+  border-radius: 7px;
+  padding:5px;
+  margin-left: 5px;
+  font-size: 14px;
+}
+.rmdp-time-picker div input{
+  background-color: white;
 }
 @layer utilities {
   .text-balance {

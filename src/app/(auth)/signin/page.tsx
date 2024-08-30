@@ -111,13 +111,13 @@ export default function SignIn() {
                         </div>
                         <input type="password" placeholder="********"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
-                               {...register('password', { required: "Password is required" })} />
+                               {...register('password', {required: "Password is required"})} />
                         {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
                     </label>
                     <button type='submit'
                             className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
                             disabled={isLoading}>
-                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Login'}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
                     </button>
                     <div className='flex items-center'>
                         <Link href='/signup' className='text-[#F9A826] text-sm'>
@@ -131,7 +131,7 @@ export default function SignIn() {
                 </form>
             </div>
             <Footer/>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 }
