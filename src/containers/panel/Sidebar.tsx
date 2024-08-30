@@ -10,6 +10,7 @@ const Sidebar = () => {
         { href: '/panel/interviews', label: 'Interviews',icon:<BsPersonVcard size={20}/>},
         { href: '/panel/profile', label: 'Profile',icon:<BsFillPersonFill size={20}/>},
         { href: '/panel/job-position', label: 'Job Position',icon:<FaLaptopCode size={20}/>},
+        { href: '/panel/interview-type', label: 'Interview Type',icon:<FaLaptopCode size={20}/>},
     ];
 
     return (
