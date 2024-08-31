@@ -10,6 +10,9 @@ import {toastError, toastSuccess} from '@/components/CustomToast';
 import {AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
+import {AsyncPaginate} from "react-select-async-paginate";
+import {useLoadJob} from "@/utils/hooks/useLoadJob";
+import {empty} from "@/utils/helper";
 
 interface InterviewType {
     id: number;
@@ -37,29 +40,26 @@ const fetchInterviewTypes = async (token: string | null, page: number, name: str
     });
     return data;
 };
-
 const addInterviewType = async (newInterviewType: { jobPositionId: number, name: string }, token: string | null) => {
-    const {data} = await axios.post(`${BASE_URL_API}interviewtypes/search`, newInterviewType, {
+    const {data} = await axios.post(`${BASE_URL_API}admin/interviewtypes`, newInterviewType, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
     return data;
 };
-
 const editInterviewType = async (updatedInterviewType: {
     id: number;
     jobPositionId: number;
     name: string
 }, token: string | null) => {
-    const {data} = await axios.put(`${BASE_URL_API}admin/interviewtypes/${updatedInterviewType.id}`, {name: updatedInterviewType.name}, {
+    const {data} = await axios.put(`${BASE_URL_API}admin/interviewtypes/${updatedInterviewType.id.toString()}`, {name: updatedInterviewType.name}, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
     return data;
 };
-
 const deleteInterviewType = async (id: number, token: string | null) => {
     const {data} = await axios.delete(`${BASE_URL_API}admin/interviewtypes/${id}`, {
         headers: {
@@ -82,6 +82,7 @@ const InterviewType = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isLastPage, setIsLastPage] = useState(false);
     const [isLoadingAction, setIsLoadingAction] = useState(false);
+    const [isOpenJobBox, setIsOpenJobBox] = useState(false);
 
     const inputRef = useCallback((node: HTMLInputElement) => {
         if (node !== null && isModalOpen && !isDeleteMode) {
@@ -92,7 +93,7 @@ const InterviewType = () => {
     const {token} = useStore(state => ({
         token: state.token,
     }));
-
+    const {loadJobOptions, jobValue, setJobValue} = useLoadJob();
     const {data: interviewTypesData, isLoading} = useQuery({
         queryKey: ['interviewTypes', currentPage, searchTerm],
         queryFn: () => fetchInterviewTypes(token, currentPage, searchTerm),
@@ -112,6 +113,7 @@ const InterviewType = () => {
         }) => addInterviewType(newInterviewType, token),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['interviewTypes']});
+            setJobValue(null)
             toastSuccess({message: 'Interview Type added successfully'});
             closeModal();
         },
@@ -119,7 +121,6 @@ const InterviewType = () => {
             toastError({message: error.message || 'Failed to add interview type'});
         }
     });
-
     const editMutation = useMutation({
         mutationFn: (updatedInterviewType: {
             id: number;
@@ -135,7 +136,6 @@ const InterviewType = () => {
             toastError({message: error.message || 'Failed to update interview type'});
         }
     });
-
     const deleteMutation = useMutation({
         mutationFn: () => deleteInterviewType(selectedInterviewType!.id, token),
         onSuccess: () => {
@@ -151,18 +151,18 @@ const InterviewType = () => {
     const handleAddOrEdit = () => {
         setIsLoadingAction(true);
         if (selectedInterviewType) {
-            editMutation.mutate({id: selectedInterviewType.id, jobPositionId: selectedJobPositionId!, name: newName}, {
+            editMutation.mutate({ id: selectedInterviewType.id, jobPositionId: selectedJobPositionId!, name: newName }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({queryKey: ['interviewTypes']});
+                    queryClient.invalidateQueries({ queryKey: ['interviewTypes'] });
                     closeModal();
                     setIsLoadingAction(false);
                 },
                 onError: () => setIsLoadingAction(false)
             });
         } else {
-            addMutation.mutate({jobPositionId: selectedJobPositionId!, name: newName}, {
+            addMutation.mutate({ jobPositionId: jobValue?.value!, name: newName }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({queryKey: ['interviewTypes']});
+                    queryClient.invalidateQueries({ queryKey: ['interviewTypes'] });
                     closeModal();
                     setIsLoadingAction(false);
                 },
@@ -182,7 +182,6 @@ const InterviewType = () => {
             onError: () => setIsLoadingAction(false)
         });
     };
-
     const openModal = (interviewType: InterviewType | null = null, deleteMode: boolean = false) => {
         setSelectedInterviewType(interviewType);
         setNewName(interviewType ? interviewType.title : '');
@@ -190,7 +189,6 @@ const InterviewType = () => {
         setIsDeleteMode(deleteMode);
         setIsModalOpen(true);
     };
-
     const closeModal = () => {
         setSelectedInterviewType(null);
         setNewName('');
@@ -198,7 +196,6 @@ const InterviewType = () => {
         setIsModalOpen(false);
         setIsDeleteMode(false);
     };
-
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
         setCurrentPage(0);
@@ -292,8 +289,8 @@ const InterviewType = () => {
                     </div>
                 )}
                 {isModalOpen && (
-                    <div className="modal modal-open" data-theme="light">
-                        <div className="modal-box">
+                    <div className={`modal modal-open`} data-theme="light">
+                        <div className={`modal-box ${isOpenJobBox && 'h-[450px]'}`}>
                             <form method="dialog">
                                 <button onClick={closeModal}
                                         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
@@ -301,9 +298,32 @@ const InterviewType = () => {
                             </form>
                             {!isDeleteMode ? (
                                 <>
-                                    <h3 className="text-lg text-center">
+                                    <h3 className="text-lg text-center mt-3">
                                         {selectedInterviewType ? 'Edit Interview Type' : 'Add Interview Type'}
                                     </h3>
+                                    <AsyncPaginate
+                                        classNames={{
+                                            control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
+                                            container: () => "text-sm rounded w-full text-gray-400 ",
+                                            menu: () => "bg-gray-100 rounded border py-2",
+                                            option: ({isSelected, isFocused}) =>
+                                                isSelected
+                                                    ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
+                                                    : isFocused
+                                                        ? "bg-gray-200 px-4 py-2"
+                                                        : "px-4 py-2",
+                                        }}
+                                        value={jobValue}
+                                        onChange={(e) => setJobValue(e)}
+                                        //@ts-ignore
+                                        loadOptions={loadJobOptions}
+                                        unstyled
+                                        placeholder="Job Position"
+                                        //@ts-ignore
+                                        additional={{page: 0}}
+                                        onMenuOpen={() => setIsOpenJobBox(true)}
+                                        onMenuClose={() => setIsOpenJobBox(false)}
+                                    />
                                     <input
                                         ref={inputRef}
                                         type="text"
@@ -322,7 +342,7 @@ const InterviewType = () => {
                                         <button
                                             className="btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
                                             onClick={handleAddOrEdit}
-                                            disabled={isLoadingAction}
+                                            disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
                                         >
                                             {isLoadingAction ? (
                                                 <PulseLoader color="#FFFFFF" size={5}/>
