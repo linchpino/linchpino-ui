@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
     return (
         <>
-            <Header/>
+            {/*<Header/>*/}
             <div className='bg-white  pb-5 lg:pb-0 overflow-x-hidden container'>
                 <JobSearchSection/>
                 <BeMentor/>
@@ -19,7 +19,7 @@ export default function Home() {
                 <MasterArt/>
                 <DonateNow/>
             </div>
-            <Footer/>
+            {/*<Footer/>*/}
         </>
     );
 }

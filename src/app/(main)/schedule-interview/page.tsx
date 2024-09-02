@@ -157,7 +157,6 @@ const ScheduleInterview = () => {
 
     return (
         <Suspense>
-            <Header/>
             <div className='bg-white p-6 sm:container text-center flex flex-col gap-y-9 items-center'>
                 <p className='text-black text-2xl mt-9'>{renderStepperTitle()}</p>
                 <div className='w-full flex items-center justify-center'>
@@ -188,8 +187,6 @@ const ScheduleInterview = () => {
                 {renderCurrentStepComponent()}
 
             </div>
-            <Footer/>
-
         </Suspense>
     )
 }

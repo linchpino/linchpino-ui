@@ -3,7 +3,7 @@ import {BsFacebook, BsLinkedin, BsTwitter, BsYoutube, BsInstagram} from 'react-i
 
 export default function Footer() {
     return (
-        <div className='hidden lg:flex flex-col gap-y-10 mt-10 w-full bg-[#E7ECFF] pt-12 px-24 pb-10'>
+        <div className='hidden lg:flex flex-col gap-y-10 mt-10 w-full bg-[#E7ECFF] pt-12 px-24 pb-10 '>
             <div className='flex justify-between items-center'>
                 <p>
                     ©2024 Linchpino

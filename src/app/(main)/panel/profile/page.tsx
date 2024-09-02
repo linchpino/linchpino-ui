@@ -8,11 +8,11 @@ import ProfileTimeSlot from "@/containers/panel/profile/ProfileTimeSlot";
 const Profile = () => {
 
     return (
-        <PanelContentChild>
+        <>
             <ProfilePicture/>
             <ProfileInformation/>
             <ProfileTimeSlot/>
-        </PanelContentChild>
+        </>
     );
 };
 

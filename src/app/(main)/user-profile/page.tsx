@@ -28,7 +28,7 @@ const UserProfile = () => {
                     id: 2,
                     mounth: 'June',
                     day: '5',
-                    time: [ {id: 2, available: "13:00 - 13:30"}]
+                    time: [{id: 2, available: "13:00 - 13:30"}]
                 },
                 {
                     id: 3,
@@ -93,13 +93,10 @@ const UserProfile = () => {
             ]
         },
     ]
-    const [activeDate , setActiveDate]=useState(null)
+    const [activeDate, setActiveDate] = useState(null)
     const [activeTime, setActiveTime] = useState(null);
-    console.log(activeDate)
-    console.log(timeData)
     return (
         <div>
-            <Header/>
             <div
                 className='flex flex-col relative gap-x-12 lg:flex-row justify-between items-start bg-white container py-28'>
                 <div
@@ -175,7 +172,8 @@ const UserProfile = () => {
                         <div className="divider divider-warning mt-8">Book a session</div>
                         <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5'>
                             {fakeInterviewData.map((interViewDataItem, interViewDataIndex) => (
-                                <div className="flex flex-col sm:flex-row items-center justify-between w-full" key={interViewDataIndex}>
+                                <div className="flex flex-col sm:flex-row items-center justify-between w-full"
+                                     key={interViewDataIndex}>
                                     <div className='ml-2 flex flex-col items=center sm:items-start'>
                                         <p className="font-bold text-gray-900 ">{interViewDataItem.title}</p>
                                         <p className="font-medium text-gray-500 text-[.9rem]">{interViewDataItem.time}</p>
@@ -212,9 +210,11 @@ const UserProfile = () => {
                                                                 setTimeData(timeslotItem.time)
                                                                 setActiveTime(null)
                                                             }}
-                                                                 className="flex flex-col items-center justify-center text-center m-auto left-0 right-0 top-4 bottom-0 absolute h-12">
-                                                                <span className={`text-xs xs:text-sm ${timeslotItem.id === activeDate ? 'text-black' : 'text-gray-400'}`}>{timeslotItem.mounth}</span>
-                                                                <span className={`text-sm xs:text-md mt-1 ${timeslotItem.id === activeDate ? 'text-black' : 'text-gray-400'}`}>{timeslotItem.day}</span>
+                                                                    className="flex flex-col items-center justify-center text-center m-auto left-0 right-0 top-4 bottom-0 absolute h-12">
+                                                                <span
+                                                                    className={`text-xs xs:text-sm ${timeslotItem.id === activeDate ? 'text-black' : 'text-gray-400'}`}>{timeslotItem.mounth}</span>
+                                                                <span
+                                                                    className={`text-sm xs:text-md mt-1 ${timeslotItem.id === activeDate ? 'text-black' : 'text-gray-400'}`}>{timeslotItem.day}</span>
                                                             </button>
                                                         </buttom>
                                                     ))}
@@ -222,8 +222,9 @@ const UserProfile = () => {
                                                 <p className='mt-5 text-gray-700'>Available time for 4 June : </p>
                                                 <div className='grid grid-cols-1 xs:grid-cols-2 mt-5 gap-y-5 gap-x-4'>
                                                     {timeData.map((timeDataItem, timeDataIndex) => (
-                                                        <button onClick={() => setActiveTime(timeDataItem.id)} key={timeDataItem.id}
-                                                             className={`${timeDataItem.id === activeTime ? 'bg-[#fff1db]' : 'bg-white'} shadow-lg ring-1 ring-black/5 rounded-md flex items-center p-3 ${timeDataItem.id === activeTime && 'border-black border-[1px]'}`}>
+                                                        <button onClick={() => setActiveTime(timeDataItem.id)}
+                                                                key={timeDataItem.id}
+                                                                className={`${timeDataItem.id === activeTime ? 'bg-[#fff1db]' : 'bg-white'} shadow-lg ring-1 ring-black/5 rounded-md flex items-center p-3 ${timeDataItem.id === activeTime && 'border-black border-[1px]'}`}>
                                                             <BsClock
                                                                 color={`${timeDataItem.id === activeTime ? '#000000' : '#cacaca'}`}
                                                                 className="w-5 h-5"/>
@@ -235,7 +236,7 @@ const UserProfile = () => {
                                             <div className='flex items-center justify-between w-full mt-8'>
                                                 <form method="dialog">
                                                     <button
-                                                            className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                                                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                                                         Cancel
                                                     </button>
                                                 </form>
@@ -252,7 +253,6 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </div>
 
     )
