@@ -27,7 +27,7 @@ const fetchInterviewTypes = async (token: string | null, page: number, name: str
 }> => {
     const params: any = {
         page,
-        sort: 'desc'
+        sort: 'createdOn,desc'
     };
     if (name) {
         params.name = name;
