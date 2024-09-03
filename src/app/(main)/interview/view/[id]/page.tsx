@@ -75,7 +75,6 @@ const JoinInterview = () => {
 
     return (
         <>
-            <Header/>
             <div className="py-16 text-center m-6">
                 {isCheck && !errorMessage && (
                     <p className="mt-4 text-[#F2A926]">Checking your request...</p>
@@ -91,7 +90,6 @@ const JoinInterview = () => {
                     </div>
                 </div>
             )}
-            <Footer/>
         </>
     );
 }

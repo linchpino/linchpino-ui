@@ -1,29 +1,24 @@
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
-import "./globals.css";
-import QueryProvider from "@/app/QueryProvider";
-import React from "react";
+'use client'
+import Sidebar from "@/containers/panel/Sidebar";
+import {ReactNode, Suspense} from "react";
+import Loading from "@/app/loading";
+import PanelContentChild from "@/containers/panel/PanelContentChild";
 
-const inter = Inter({subsets: ["latin"]});
-
-export const metadata: Metadata = {
-    title: "Linchpino System",
-    description: "Powered by Linchpino",
-};
-
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+const PanelLayout = ({children}: { children: ReactNode }) => {
 
     return (
-        <html lang="en" className="bg-white">
-            <body className={`${inter.className} bg-white `}>
-                <QueryProvider>
-                    {children}
-                </QueryProvider>
-            </body>
-        </html>
-    );
+        <div>
+            <div className='flex gap-x-4 sm:gap-x-8 p-6 sm:container mt-6 relative'>
+                <Sidebar/>
+                <div className='shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-[85%] md:w-4/5 rounded-md'>
+                    <Suspense fallback={<Loading/>}>
+                        <PanelContentChild>
+                            {children}
+                        </PanelContentChild>
+                    </Suspense>
+                </div>
+            </div>
+        </div>
+    )
 }
+export default PanelLayout
