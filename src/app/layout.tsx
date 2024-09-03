@@ -1,24 +1,27 @@
-'use client'
-import Sidebar from "@/containers/panel/Sidebar";
-import {ReactNode, Suspense} from "react";
+import './globals.css';
+import QueryProvider from '@/app/QueryProvider';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import {Suspense} from "react";
 import Loading from "@/app/loading";
-import PanelContentChild from "@/containers/panel/PanelContentChild";
 
-const PanelLayout = ({children}: { children: ReactNode }) => {
-
+export default function RootLayout({
+                                       children,
+                                   }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <div>
-            <div className='flex gap-x-4 sm:gap-x-8 p-6 sm:container mt-6 relative'>
-                <Sidebar/>
-                <div className='shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-[85%] md:w-4/5 rounded-md'>
-                    <Suspense fallback={<Loading/>}>
-                        <PanelContentChild>
-                            {children}
-                        </PanelContentChild>
-                    </Suspense>
-                </div>
+        <html lang="en" className="bg-white">
+        <body className="bg-white">
+        <QueryProvider>
+            <div className='min-h-screen flex flex-col justify-between'>
+                <Header/>
+                <Suspense fallback={<Loading/>}>
+                    {children}
+                </Suspense>
+                <Footer/>
             </div>
-        </div>
-    )
+        </QueryProvider>
+        </body>
+        </html>
+    );
 }
-export default PanelLayout
