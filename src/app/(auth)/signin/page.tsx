@@ -1,7 +1,5 @@
 'use client'
 import {SubmitHandler, useForm} from 'react-hook-form';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
@@ -85,7 +83,6 @@ export default function SignIn() {
 
     return (
         <>
-            <Header/>
             <div className='bg-white container pb-5 lg:pb-0'>
                 <form onSubmit={handleSubmit(onSubmit)}
                       className="flex flex-col items-center justify-center gap-y-8 mt-14">
@@ -130,7 +127,6 @@ export default function SignIn() {
                     </div>
                 </form>
             </div>
-            <Footer/>
             <ToastContainer/>
         </>
     );

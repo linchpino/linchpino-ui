@@ -3,7 +3,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
-import PanelContentChild from "@/containers/panel/PanelContentChild";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import {toastError, toastSuccess} from '@/components/CustomToast';
@@ -13,6 +12,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import {AsyncPaginate} from "react-select-async-paginate";
 import {useLoadJob} from "@/utils/hooks/useLoadJob";
 import {empty} from "@/utils/helper";
+import {ToastContainer} from "react-toastify";
 
 interface InterviewType {
     id: number;
@@ -151,18 +151,18 @@ const InterviewType = () => {
     const handleAddOrEdit = () => {
         setIsLoadingAction(true);
         if (selectedInterviewType) {
-            editMutation.mutate({ id: selectedInterviewType.id, jobPositionId: selectedJobPositionId!, name: newName }, {
+            editMutation.mutate({id: selectedInterviewType.id, jobPositionId: selectedJobPositionId!, name: newName}, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['interviewTypes'] });
+                    queryClient.invalidateQueries({queryKey: ['interviewTypes']});
                     closeModal();
                     setIsLoadingAction(false);
                 },
                 onError: () => setIsLoadingAction(false)
             });
         } else {
-            addMutation.mutate({ jobPositionId: jobValue?.value!, name: newName }, {
+            addMutation.mutate({jobPositionId: jobValue?.value!, name: newName}, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['interviewTypes'] });
+                    queryClient.invalidateQueries({queryKey: ['interviewTypes']});
                     closeModal();
                     setIsLoadingAction(false);
                 },
@@ -210,179 +210,179 @@ const InterviewType = () => {
     const totalPages = interviewTypesData?.totalPages || 0;
 
     return (
-        <PanelContentChild>
-            <div className="mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-                    <h1 className="text-md font-bold">Interview Types</h1>
-                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
-                        <input
-                            type="text"
-                            placeholder="Search by name"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            className="input input-bordered w-full max-w-xs h-8 text-sm bg-white"
-                        />
-                        <button
-                            className="btn btn-sm w-full md:w-24 bg-[#F9A826] text-white border-none md:ml-4 font-medium text-xs"
-                            onClick={() => openModal()}
-                        >
-                            Add New
-                        </button>
-                    </div>
+        <div className="mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+                <h1 className="text-md font-bold">Interview Types</h1>
+                <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
+                    <input
+                        type="text"
+                        placeholder="Search by name"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="input input-bordered w-full max-w-xs h-8 text-sm bg-white"
+                    />
+                    <button
+                        className="btn btn-sm w-full md:w-24 bg-[#F9A826] text-white border-none md:ml-4 font-medium text-xs"
+                        onClick={() => openModal()}
+                    >
+                        Add New
+                    </button>
                 </div>
-                <div className="overflow-x-auto">
-                    {isLoading ? (
-                        <div className="flex justify-center items-center">
-                            <Spinner loading={isLoading}/>
-                        </div>
-                    ) : (
-                        <table className="table w-full mt-4">
-                            <thead>
-                            <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
-                                <th>Name</th>
-                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl">Actions</th>
+            </div>
+            <div className="overflow-x-auto">
+                {isLoading ? (
+                    <div className="flex justify-center items-center">
+                        <Spinner loading={isLoading}/>
+                    </div>
+                ) : (
+                    <table className="table w-full mt-4">
+                        <thead>
+                        <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
+                            <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
+                            <th>Name</th>
+                            <th className="w-16 text-center rounded-tl-none rounded-tr-xl">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {interviewTypesData?.content.map((interviewType, index) => (
+                            <tr key={interviewType.id}
+                                className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
+                                <td>{(currentPage) * itemsPerPage + index + 1}</td>
+                                <td>{interviewType.title}</td>
+                                <td className="flex justify-center">
+                                    <button
+                                        className="btn btn-ghost text-blue-500 text-lg p-1 px-3"
+                                        onClick={() => openModal(interviewType)}
+                                        aria-label="Edit"
+                                    >
+                                        <AiOutlineEdit/>
+                                    </button>
+                                    <button
+                                        className="btn btn-ghost text-red-500 text-lg p-1 ml-1 px-3"
+                                        onClick={() => openModal(interviewType, true)}
+                                        aria-label="Delete"
+                                    >
+                                        <AiOutlineDelete/>
+                                    </button>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {interviewTypesData?.content.map((interviewType, index) => (
-                                <tr key={interviewType.id}
-                                    className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
-                                    <td>{(currentPage) * itemsPerPage + index + 1}</td>
-                                    <td>{interviewType.title}</td>
-                                    <td className="flex justify-center">
-                                        <button
-                                            className="btn btn-ghost text-blue-500 text-lg p-1 px-3"
-                                            onClick={() => openModal(interviewType)}
-                                            aria-label="Edit"
-                                        >
-                                            <AiOutlineEdit/>
-                                        </button>
-                                        <button
-                                            className="btn btn-ghost text-red-500 text-lg p-1 ml-1 px-3"
-                                            onClick={() => openModal(interviewType, true)}
-                                            aria-label="Delete"
-                                        >
-                                            <AiOutlineDelete/>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-                {!isLoading && (
-                    <div className="flex justify-center mt-4">
-                        <div className="flex gap-x-2">
-                            {[...Array(totalPages)].map((_, index) => (
-                                <button
-                                    key={index}
-                                    className={`btn ${currentPage === index ? 'bg-[#111B47] border-none text-white' : 'hover:text-white text-[#111B47] border-[#111B47] border-[.1px] bg-white'}`}
-                                    onClick={() => setCurrentPage(index)}
-                                    disabled={isLastPage && index + 1 > totalPages}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                {isModalOpen && (
-                    <div className={`modal modal-open`} data-theme="light">
-                        <div className={`modal-box ${isOpenJobBox && 'h-[450px]'}`}>
-                            <form method="dialog">
-                                <button onClick={closeModal}
-                                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
-                                </button>
-                            </form>
-                            {!isDeleteMode ? (
-                                <>
-                                    <h3 className="text-lg text-center mt-3">
-                                        {selectedInterviewType ? 'Edit Interview Type' : 'Add Interview Type'}
-                                    </h3>
-                                    <AsyncPaginate
-                                        classNames={{
-                                            control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
-                                            container: () => "text-sm rounded w-full text-gray-400 ",
-                                            menu: () => "bg-gray-100 rounded border py-2",
-                                            option: ({isSelected, isFocused}) =>
-                                                isSelected
-                                                    ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
-                                                    : isFocused
-                                                        ? "bg-gray-200 px-4 py-2"
-                                                        : "px-4 py-2",
-                                        }}
-                                        value={jobValue}
-                                        onChange={(e) => setJobValue(e)}
-                                        //@ts-ignore
-                                        loadOptions={loadJobOptions}
-                                        unstyled
-                                        placeholder="Job Position"
-                                        //@ts-ignore
-                                        additional={{page: 0}}
-                                        onMenuOpen={() => setIsOpenJobBox(true)}
-                                        onMenuClose={() => setIsOpenJobBox(false)}
-                                    />
-                                    <input
-                                        ref={inputRef}
-                                        type="text"
-                                        placeholder="Interview Type Name"
-                                        value={newName}
-                                        onChange={(e) => setNewName(e.target.value)}
-                                        className="input input-bordered w-full my-4 h-10"
-                                    />
-                                    <div className="modal-action">
-                                        <button
-                                            className="btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
-                                            onClick={handleAddOrEdit}
-                                            disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
-                                        >
-                                            {isLoadingAction ? (
-                                                <PulseLoader color="#FFFFFF" size={5}/>
-                                            ) : (
-                                                (selectedInterviewType ? 'Save' : 'Add')
-                                            )}
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <h3 className="text-center text-lg mt-4">
-                                        Are you sure you want to delete this interview type?
-                                    </h3>
-                                    <div className="modal-action">
-                                        <button
-                                            className="btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="btn btn-error btn-sm font-light text-[.9rem] text-white"
-                                            onClick={handleDelete}
-                                            disabled={isLoadingAction}
-                                        >
-                                            {isLoadingAction ? (
-                                                <PulseLoader color="#FFFFFF" size={5}/>
-                                            ) : (
-                                                'Delete'
-                                            )}
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
+                        ))}
+                        </tbody>
+                    </table>
                 )}
             </div>
-        </PanelContentChild>
+            {!isLoading && (
+                <div className="flex justify-center mt-4">
+                    <div className="flex gap-x-2">
+                        {[...Array(totalPages)].map((_, index) => (
+                            <button
+                                key={index}
+                                className={`btn ${currentPage === index ? 'bg-[#111B47] border-none text-white' : 'hover:text-white text-[#111B47] border-[#111B47] border-[.1px] bg-white'}`}
+                                onClick={() => setCurrentPage(index)}
+                                disabled={isLastPage && index + 1 > totalPages}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {isModalOpen && (
+                <div className={`modal modal-open`} data-theme="light">
+                    <div className={`modal-box ${isOpenJobBox && 'h-[450px]'}`}>
+                        <form method="dialog">
+                            <button onClick={closeModal}
+                                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                            </button>
+                        </form>
+                        {!isDeleteMode ? (
+                            <>
+                                <h3 className="text-lg text-center mt-3">
+                                    {selectedInterviewType ? 'Edit Interview Type' : 'Add Interview Type'}
+                                </h3>
+                                <AsyncPaginate
+                                    classNames={{
+                                        control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
+                                        container: () => "text-sm rounded w-full text-gray-400 ",
+                                        menu: () => "bg-gray-100 rounded border py-2",
+                                        option: ({isSelected, isFocused}) =>
+                                            isSelected
+                                                ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
+                                                : isFocused
+                                                    ? "bg-gray-200 px-4 py-2"
+                                                    : "px-4 py-2",
+                                    }}
+                                    value={jobValue}
+                                    onChange={(e) => setJobValue(e)}
+                                    //@ts-ignore
+                                    loadOptions={loadJobOptions}
+                                    unstyled
+                                    placeholder="Job Position"
+                                    //@ts-ignore
+                                    additional={{page: 0}}
+                                    onMenuOpen={() => setIsOpenJobBox(true)}
+                                    onMenuClose={() => setIsOpenJobBox(false)}
+                                />
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    placeholder="Interview Type Name"
+                                    value={newName}
+                                    onChange={(e) => setNewName(e.target.value)}
+                                    className="input input-bordered w-full my-4 h-10"
+                                />
+                                <div className="modal-action">
+                                    <button
+                                        className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                        onClick={closeModal}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="w-20 btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
+                                        onClick={handleAddOrEdit}
+                                        disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
+                                    >
+                                        {isLoadingAction ? (
+                                            <PulseLoader color="#FFFFFF" size={5}/>
+                                        ) : (
+                                            (selectedInterviewType ? 'Save' : 'Add')
+                                        )}
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <h3 className="text-center text-lg mt-4">
+                                    Are you sure you want to delete this interview type?
+                                </h3>
+                                <div className="modal-action">
+                                    <button
+                                        className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                        onClick={closeModal}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="w-20 btn btn-error btn-sm font-light text-[.9rem] text-white"
+                                        onClick={handleDelete}
+                                        disabled={isLoadingAction}
+                                    >
+                                        {isLoadingAction ? (
+                                            <PulseLoader color="#FFFFFF" size={5}/>
+                                        ) : (
+                                            'Delete'
+                                        )}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+            <ToastContainer/>
+
+        </div>
     )
 }
 

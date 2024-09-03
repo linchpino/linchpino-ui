@@ -1,8 +1,6 @@
 "use client"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 import {z} from "zod";
 import axios from "axios";
@@ -72,7 +70,6 @@ export default function SignUp() {
     };
     return (
         <>
-            <Header/>
             <div className='bg-white container pb-5 lg:pb-0'>
                 <div className="flex flex-col items-center justify-center gap-y-8 mt-14">
                     <h1 className='text-black text-3xl'>Sign Up</h1>
@@ -174,7 +171,6 @@ export default function SignUp() {
                 </div>
             </div>
             <ToastContainer/>
-            <Footer/>
         </>
     );
 }
