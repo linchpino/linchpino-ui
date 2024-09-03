@@ -1,5 +1,5 @@
 'use client'
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 import PanelContentChild from "@/containers/panel/PanelContentChild";
@@ -22,6 +22,7 @@ const fetchJobPositions = async (token: string | null, page: number, name: strin
 }> => {
     const params: any = {
         page,
+        sort: 'desc'
     };
     if (name) {
         params.name = name;
@@ -32,7 +33,7 @@ const fetchJobPositions = async (token: string | null, page: number, name: strin
         },
         params,
     });
-    return data;
+    return data
 };
 
 const addJobPosition = async (newJobPosition: { title: string }, token: string | null) => {
@@ -52,7 +53,6 @@ const editJobPosition = async (updatedJobPosition: { id: number; title: string }
     });
     return data;
 };
-
 const deleteJobPosition = async (id: number, token: string | null) => {
     const {data} = await axios.delete(`${BASE_URL_API}admin/jobposition/${id}`, {
         headers: {
@@ -70,10 +70,16 @@ const JobPosition = () => {
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage,setItemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [isLastPage, setIsLastPage] = useState(false);
     const [isLoadingAction, setIsLoadingAction] = useState(false);
+
+    const inputRef = useCallback((node: HTMLInputElement) => {
+        if (node !== null && isModalOpen && !isDeleteMode) {
+            node.focus();
+        }
+    }, [isModalOpen, isDeleteMode]);
 
     const {token} = useStore(state => ({
         token: state.token,
@@ -94,8 +100,8 @@ const JobPosition = () => {
         mutationFn: (newJobPosition: { title: string }) => addJobPosition(newJobPosition, token),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['jobPositions']});
-            closeModal();
             toastSuccess({message: 'Job Position added successfully'});
+            closeModal();
         },
         onError: (error: any) => {
             toastError({message: error.message || 'Failed to add job position'});
@@ -105,8 +111,8 @@ const JobPosition = () => {
         mutationFn: (updatedJobPosition: { id: number; title: string }) => editJobPosition(updatedJobPosition, token),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['jobPositions']});
-            closeModal();
             toastSuccess({message: 'Job Position updated successfully'});
+            closeModal();
         },
         onError: (error: any) => {
             toastError({message: error.message || 'Failed to update job position'});
@@ -124,7 +130,7 @@ const JobPosition = () => {
         }
     });
 
-    const handleAddOrEdit = () => {
+    const handleAddOrEdit = () =>{
         setIsLoadingAction(true);
         if (selectedJobPosition) {
             editMutation.mutate({ id: selectedJobPosition.id, title: newTitle }, {
@@ -146,7 +152,6 @@ const JobPosition = () => {
             });
         }
     };
-
     const handleDelete = () => {
         setIsLoadingAction(true);
         deleteMutation.mutate(undefined, {
@@ -164,7 +169,6 @@ const JobPosition = () => {
         setIsDeleteMode(deleteMode);
         setIsModalOpen(true);
     };
-
     const closeModal = () => {
         setSelectedJobPosition(null);
         setNewTitle('');
@@ -214,10 +218,10 @@ const JobPosition = () => {
                     ) : (
                         <table className="table w-full mt-4">
                             <thead>
-                            <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white'>
+                            <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
                                 <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
                                 <th>Title</th>
-                                <th className="w-16 rounded-tl-none rounded-tr-xl ">Actions</th>
+                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl ">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -229,14 +233,14 @@ const JobPosition = () => {
                                         <td>{jobPosition.title}</td>
                                         <td className="flex justify-center">
                                             <button
-                                                className="btn btn-ghost text-blue-500 text-lg p-1"
+                                                className="btn btn-ghost text-blue-500 text-lg p-1 px-3"
                                                 onClick={() => openModal(jobPosition)}
                                                 aria-label="Edit"
                                             >
                                                 <AiOutlineEdit/>
                                             </button>
                                             <button
-                                                className="btn btn-ghost text-red-500 text-lg p-1 ml-2"
+                                                className="btn btn-ghost text-red-500 text-lg p-1 ml-1 px-3"
                                                 onClick={() => openModal(jobPosition, true)}
                                                 aria-label="Delete"
                                             >
@@ -272,12 +276,16 @@ const JobPosition = () => {
                 {isModalOpen && (
                     <div className="modal modal-open" data-theme="light">
                         <div className="modal-box">
+                            <form method="dialog">
+                                <button onClick={closeModal} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                            </form>
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center">
                                         {selectedJobPosition ? 'Edit Job Position' : 'Add Job Position'}
                                     </h3>
                                     <input
+                                        ref={inputRef}
                                         type="text"
                                         placeholder="Job Title"
                                         value={newTitle}
@@ -285,6 +293,12 @@ const JobPosition = () => {
                                         className="input input-bordered w-full my-4 h-10"
                                     />
                                     <div className="modal-action">
+                                        <button
+                                            className="btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                            onClick={closeModal}
+                                        >
+                                            Cancel
+                                        </button>
                                         <button
                                             className="btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
                                             onClick={handleAddOrEdit}
@@ -296,22 +310,22 @@ const JobPosition = () => {
                                                 (selectedJobPosition ? 'Save' : 'Add')
                                             )}
                                         </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 className="text-center text-lg mt-4">
+                                        Are you sure you want to delete this job position?
+                                    </h3>
+                                    <div className="modal-action">
                                         <button
                                             className="btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                             onClick={closeModal}
                                         >
                                             Cancel
                                         </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <h3 className="text-center text-lg">
-                                        Are you sure you want to delete this job position?
-                                    </h3>
-                                    <div className="modal-action">
                                         <button
-                                            className="btn btn-error btn-sm font-light text-[.9rem] "
+                                            className="btn btn-error btn-sm font-light text-[.9rem] text-white"
                                             onClick={handleDelete}
                                             disabled={isLoadingAction}
                                         >
@@ -321,12 +335,7 @@ const JobPosition = () => {
                                                 'Delete'
                                             )}
                                         </button>
-                                        <button
-                                            className="btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
+
                                     </div>
                                 </>
                             )}

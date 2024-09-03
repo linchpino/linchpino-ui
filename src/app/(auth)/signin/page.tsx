@@ -5,16 +5,14 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
-import {BASE_URL, BASE_URL_API} from "@/utils/system";
-import {ToastContainer} from "react-toastify";
+import {BASE_URL} from "@/utils/system";
+import {Bounce, toast, ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css';
-import {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
-import {useRouter, useSearchParams} from "next/navigation";
-import {BsLinkedin} from "react-icons/bs";
-import {toastError, toastSuccess} from "@/components/CustomToast";
+import {useRouter} from "next/navigation";
 
 interface SignInForm {
     email: string;
@@ -22,32 +20,15 @@ interface SignInForm {
 }
 
 export default function SignIn() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const tokenFetchedRef = useRef(false);
-
-    const [isLoadingLinkedin, setIsLoadingLinkedin] = useState(false);
-    const [isFetchingToken, setIsFetchingToken] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
+    const router = useRouter()
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
-    const {token} = useStore((state: { token: any; }) => ({
-        token: state.token,
-    }));
-    const {setToken} = useStore((state: { setToken: any; }) => ({
+    const [isLoading, setIsLoading] = useState(false);
+    const {setToken} = useStore(state => ({
         setToken: state.setToken,
-    }));
-    //@ts-ignore
-    const {setUser} = useStore((state: { setUser: any }) => ({
-        setUser: state.setUser,
-    }));
-    const {clearToken} = useStore((state: { clearToken: any }) => ({
-        clearToken: state.clearToken,
     }));
     const onSubmit: SubmitHandler<SignInForm> = data => {
         signinMutation.mutate(data);
     };
-
     const sendSigninForm = async (data: SignInForm) => {
         setIsLoading(true);
         try {
@@ -61,11 +42,11 @@ export default function SignIn() {
                     },
                 }
             );
-            setToken(response.data.token);
-            router.push('/panel/interviews');
+            setToken(response.data.token)
+            router.push('/panel/interviews')
             return response.data;
         } catch (error) {
-            toastError({message: 'Login failed. Please check your credentials.'});
+            console.error('Login failed', error);
             throw error;
         } finally {
             setIsLoading(false);
@@ -75,75 +56,39 @@ export default function SignIn() {
     const signinMutation = useMutation({
         mutationFn: sendSigninForm,
         onSuccess: () => {
-            toastSuccess({message: 'Yes! You are logged in.'});
+            toast.success('Yes! You are logged in.', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         },
         onError: () => {
-            toastError({message: 'Login failed. Please check your credentials.'});
+            toast.error('Login failed. Please check your credentials.', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         }
     });
-
-    useEffect( () => {
-        const code = searchParams.get('code');
-        if (code && !tokenFetchedRef.current) {
-            setIsFetchingToken(true);
-            setIsLoadingLinkedin(true);
-            tokenFetchedRef.current = true;
-            fetchAccessToken(code);
-        }
-    }, [searchParams]);
-    const fetchAccessToken = async (code: string) => {
-        // toastInfo({message: 'Your authentication process with LinkedIn is in progress. Please be patient...'});
-        try {
-            const tokenResponse = await fetch(`/api/linkedin-token?code=${code}`);
-            const tokenData = await tokenResponse.json();
-            const accessToken = tokenData.access_token;
-            setToken(accessToken)
-            setTimeout(() => {
-                fetchUserProfile(accessToken);
-            }, 1000)
-
-        } catch (error) {
-            if (error instanceof Error) {
-                const message = error.message || 'LinkedIn authentication failed. Please try again.';
-                toastError({message});
-            } else {
-                toastError({message: 'An unexpected error occurred. Please try again.'});
-            }
-        } finally {
-            setIsFetchingToken(false);
-            setIsLoadingLinkedin(false);
-        }
-    };
-    const fetchUserProfile = async (accessToken: string) => {
-        try {
-            const userProfileResponse = await axios.get(`${BASE_URL_API}accounts/profile`, {
-                headers: {
-                    'Authorization': `Bearer AQWxyyAwc2QaWsJEAQUAasZAREZs8epac5RW_rNSPu-XeULr_0x-wu7_jfFVISP13lhz1eb-SV9DR1Du4jK1sdF7U8TuDa0We5nSq6MpnWuNaKRL22l4ZKa8GxYDKPBrXXaEfwVUhmgedifpuHnmA2HdpyKwnWBG8tqFzWO6C7m_TsxrAIbV-Lx0h7qEPOulqLmM8QRnJSJKL2MjDs51cD_ZHd-wm66YuHnznMWAotC3CCKFjsGcMo0oV2Jp4-P27uRZ_wGjEI6FXf3XO7dm-TzXkt-Gtfzwh6XfSwzWItAT3C80hox-_Rc8aLtFYiELKEee9zad3f6CMfghwqhm-35jDIFfqQ`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            setUser(userProfileResponse.data);
-            toastSuccess({message: 'LinkedIn authentication successful.'});
-            router.push('/panel/profile');
-        } catch (error) {
-            //@ts-ignore
-            toastError({message: error.message || 'An unexpected error occurred. Please try again.'});
-        }
-    };
-
-    const linkedinLogin = () => {
-        if (!isLoadingLinkedin) {
-            const linkedinAuthUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI}&state=foobar&scope=openid%20profile%20w_member_social%20email`;
-            window.location.href = linkedinAuthUrl;
-        }
-    };
 
     return (
         <>
             <Header/>
-            <div className='flex flex-col items-center bg-white container pb-5 lg:pb-0'>
+            <div className='bg-white container pb-5 lg:pb-0'>
                 <form onSubmit={handleSubmit(onSubmit)}
-                      className="flex flex-col items-center justify-center gap-y-8 mt-14 w-full max-w-xs">
+                      className="flex flex-col items-center justify-center gap-y-8 mt-14">
                     <h1 className='text-black text-3xl'>Sign In</h1>
                     <label className="form-control w-full max-w-xs">
                         <div className="label">
@@ -184,26 +129,9 @@ export default function SignIn() {
                         </Link>
                     </div>
                 </form>
-                <div className='flex flex-col items-center justify-center mt-8 w-full max-w-xs'>
-                    <div className="divider w-full ">OR</div>
-                    <button disabled={isLoadingLinkedin} onClick={linkedinLogin}
-                            className="btn btn-primary w-full max-w-xs text-white">
-                        <BsLinkedin/>
-                        {isLoadingLinkedin ? <ClipLoader size={24} color={"#fff"}/> : 'Login Via Linkedin'}
-
-                    </button>
-                </div>
             </div>
             <Footer/>
-            {isFetchingToken &&
-                <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className=" flex flex-col items-center justify-center">
-                        <ClipLoader size={60} color={"#fff"}/>
-                        <p className="text-white mt-4">Processing your LinkedIn authentication...</p>
-                    </div>
-                </div>
-            }
             <ToastContainer/>
         </>
-    )
+    );
 }
