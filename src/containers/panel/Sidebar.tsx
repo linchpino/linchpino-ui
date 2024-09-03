@@ -9,8 +9,6 @@ const Sidebar = () => {
     const links = [
         { href: '/panel/interviews', label: 'Interviews',icon:<BsPersonVcard size={20}/>},
         { href: '/panel/profile', label: 'Profile',icon:<BsFillPersonFill size={20}/>},
-        { href: '/panel/job-position', label: 'Job Position',icon:<FaLaptopCode size={20}/>},
-        { href: '/panel/users', label: 'Users',icon:<BsPeopleFill size={20}/>},
     ];
 
     return (
