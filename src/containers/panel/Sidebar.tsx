@@ -1,16 +1,19 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey} from 'react-icons/bs'
-import { FaLaptopCode } from "react-icons/fa";
+import {usePathname} from 'next/navigation';
+import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey, BsCalendar3Week} from 'react-icons/bs'
+import {FaLaptopCode} from "react-icons/fa";
 
 const Sidebar = () => {
     const pathname = usePathname();
     const links = [
-        { href: '/panel/interviews', label: 'Interviews',icon:<BsPersonVcard size={20}/>},
-        { href: '/panel/profile', label: 'Profile',icon:<BsFillPersonFill size={20}/>},
-        { href: '/panel/job-position', label: 'Job Position',icon:<FaLaptopCode size={20}/>},
-        { href: '/panel/change-password', label: 'Change Password',icon:<BsKey size={20}/>},
+        {href: '/panel/interviews', label: 'Interviews', icon: <BsPersonVcard size={20}/>},
+        {href: '/panel/profile', label: 'Profile', icon: <BsFillPersonFill size={20}/>},
+        {href: '/panel/users', label: 'Users', icon: <BsPeopleFill size={20}/>},
+        {href: '/panel/job-position', label: 'Job Position', icon: <FaLaptopCode size={20}/>},
+        {href: '/panel/interview-type', label: 'Interview Type', icon: <BsCalendar3Week size={20}/>},
+        {href: '/panel/change-password', label: 'Change Password', icon: <BsKey size={20}/>},
+
     ];
 
     return (
