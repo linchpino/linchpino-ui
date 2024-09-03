@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {BsFillPersonFill,BsPersonVcard , BsKey} from 'react-icons/bs'
+import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey} from 'react-icons/bs'
 import { FaLaptopCode } from "react-icons/fa";
 
 const Sidebar = () => {
