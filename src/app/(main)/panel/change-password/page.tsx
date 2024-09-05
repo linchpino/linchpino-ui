@@ -5,6 +5,7 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import PanelContentChild from "../../../../containers/panel/PanelContentChild";
+import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
@@ -41,7 +42,7 @@ const ChangePasswrod = () => {
     };
 
     return (
-        <PanelContentChild>
+        <ProtectedPage>
             <div className="mx-auto w-full">
                 <div className="flex text-left">
                     <h1 className="text-md font-bold">Change Password</h1>
@@ -124,16 +125,16 @@ const ChangePasswrod = () => {
                             </div>
                         )}
                     </label>
-                        <button
-                            type="submit"
-                            className="btn btn-primary bg-[#F9A826] text-white border-none px-6 py-2 mt-8 hover:bg-[#e39620] w-full max-w-[28rem]"
-                        >
-                            Change Password
-                        </button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary bg-[#F9A826] text-white border-none px-6 py-2 mt-8 hover:bg-[#e39620] w-full max-w-[28rem]"
+                    >
+                        Change Password
+                    </button>
 
                 </form>
             </div>
-        </PanelContentChild>
+        </ProtectedPage>
     );
 };
 

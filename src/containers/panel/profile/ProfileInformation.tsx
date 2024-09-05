@@ -97,7 +97,6 @@ const ProfileInformation = () => {
         const selectedInterviews = selectedOptions.map(option => ({value: option.value, label: option.label}));
         console.log(selectedInterviews)
     };
-    console.log(isLoading)
     return (
         <>
             <h4 className='mt-8'>Your Information</h4>
@@ -206,7 +205,8 @@ const ProfileInformation = () => {
                         <div className="label">
                             <span className="label-text">Bio:</span>
                         </div>
-                        <textarea className="textarea textarea-bordered w-full bg-white" placeholder="Your Details ..." {...register("firstName")}/>
+                        <textarea className="textarea textarea-bordered w-full bg-white"
+                                  placeholder="Your Details ..." {...register("firstName")}/>
 
                     </label>
                 </div>

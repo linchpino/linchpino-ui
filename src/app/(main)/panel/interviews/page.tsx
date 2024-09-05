@@ -5,6 +5,7 @@ import Spinner from "@/components/Spinner";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
+import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 
 type Interview = {
     intervieweeId: number;
@@ -52,28 +53,31 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         );
     }
     return (
-        <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
-            <div>
-                <span className='text-[#F9A826]'>{title}</span>
-                {data?.content.length === 0 ? (
-                    <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
-                ) : (
-                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                        {data?.content.map((interview: Interview) => (
-                            <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast}
-                                            role={role}/>
-                        ))}
-                    </div>
-                )}
-                {data && data.number < data.totalPages - 1 && (
-                    <button
-                        onClick={loadMore}
-                        className='w-full bg-[#F9A826] text-white p-2 mt-8'>
-                        Show More
-                    </button>
-                )}
+        <ProtectedPage>
+            <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
+                <div>
+                    <span className='text-[#F9A826]'>{title}</span>
+                    {data?.content.length === 0 ? (
+                        <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
+                    ) : (
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
+                            {data?.content.map((interview: Interview) => (
+                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast}
+                                                role={role}/>
+                            ))}
+                        </div>
+                    )}
+                    {data && data.number < data.totalPages - 1 && (
+                        <button
+                            onClick={loadMore}
+                            className='w-full bg-[#F9A826] text-white p-2 mt-8'>
+                            Show More
+                        </button>
+                    )}
+                </div>
             </div>
-        </div>
+
+        </ProtectedPage>
     );
 };
 
