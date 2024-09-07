@@ -90,6 +90,7 @@ export default function SignIn() {
                     externalId: userInfo?.externalId || null,
                     avatar: userInfo?.avatar || null,
                 });
+                setUserRoles(userInfo?.type)
                 router.push('/panel/profile');
 
             } catch (error) {
