@@ -73,9 +73,9 @@ const Sidebar = () => {
                         ))}
                     <li className="w-full flex justify-center md:text-sm lg:text-[.9rem] xl:text-[1rem]">
                         <button onClick={() => setIsModalOpen(true)}
-                                className={`flex gap-x-2 items-center justify-start ${pathname === '/panel/logout' ? 'bg-[#F9A826] text-white' : ''} px-2 my-2 rounded-md w-8 h-8 md:h-10 md:w-full cursor-pointer ${pathname !== '/panel/logout' && 'hover:bg-orange-100'}`}>
+                                className={`flex gap-x-2 items-center justify-start ${pathname === '/panel/signout' ? 'bg-[#F9A826] text-white' : ''} px-2 my-2 rounded-md w-8 h-8 md:h-10 md:w-full cursor-pointer ${pathname !== '/panel/signout' && 'hover:bg-orange-100'}`}>
                             <BsBoxArrowRight size={20}/>
-                            <span className='hidden md:flex'>Logout</span>
+                            <span className='hidden md:flex'>Sign Out</span>
                         </button>
                     </li>
                 </ul>
