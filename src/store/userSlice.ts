@@ -57,11 +57,12 @@ const useUserStore = persist(
     createUserSlice,
     {
         name: 'userToken',
-        storage: createJSONStorage(() => sessionStorage),
+        storage: createJSONStorage(() => localStorage),
         partialize: (state) => ({
             token: state.token,
             decodedToken: state.decodedToken,
             userInfo: state.userInfo,
+            userRoles: state.userRoles
         }),
     }
 );
