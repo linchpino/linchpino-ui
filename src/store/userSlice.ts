@@ -1,9 +1,11 @@
-import { StateCreator } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import {StateCreator} from 'zustand';
+import {persist, createJSONStorage} from 'zustand/middleware';
 
 export interface UserState {
     token: string | null;
     decodedToken: Record<string, any> | null;
+    userRoles: [],
+    setUserRoles: (userRoles: string[] | null) => void;
     userInfo: {
         id: number | null;
         firstName: string | null;
@@ -32,7 +34,9 @@ const createUserSlice: StateCreator<UserState> = (set) => ({
     token: null,
     decodedToken: null,
     userInfo: null,
-    setUserInfo: (userInfo: any) => set({ userInfo }),
+    userRoles: [],
+    setUserInfo: (userInfo: any) => set({userInfo}),
+    setUserRoles: (userRoles: any) => set({userRoles}),
     setToken: (token: string | null) => {
         let decodedToken = null;
         if (token) {
@@ -42,10 +46,10 @@ const createUserSlice: StateCreator<UserState> = (set) => ({
                 console.error('Failed to decode token', error);
             }
         }
-        set({ token, decodedToken });
+        set({token, decodedToken});
     },
     clearToken: () => {
-        set({ token: null, decodedToken: null, userInfo: null });
+        set({token: null, decodedToken: null, userInfo: null});
     },
 });
 
@@ -53,7 +57,7 @@ const useUserStore = persist(
     createUserSlice,
     {
         name: 'userToken',
-        storage: createJSONStorage(() => localStorage),
+        storage: createJSONStorage(() => sessionStorage),
         partialize: (state) => ({
             token: state.token,
             decodedToken: state.decodedToken,

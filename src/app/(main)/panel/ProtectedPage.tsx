@@ -1,36 +1,39 @@
-'use client'
 import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import useStore from "@/store/store";
+import CrudSkeleton from '@/components/seletonLoading/CrudSkeleon';
 
 interface PrivatePageProps {
     children: React.ReactNode;
 }
 
 export default function PrivatePage({children}: PrivatePageProps) {
-    const {userInfo} = useStore(state => state);
+    const {userRoles, token} = useStore(state => ({
+        userRoles: state.userRoles,
+        token: state.token,
+    }));
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
-    console.log('1', userInfo);
-
+    console.log(userRoles)
     useEffect(() => {
-        console.log('2', userInfo);
-
         const checkAccess = () => {
-            if (!userInfo) {
-                // router.push('/signin');
-                return;
-            }
+            if (!userRoles || userRoles.length === 0) return; // صبر برای بارگذاری `userRoles`
             const allowedRoles = ['ADMIN', 'JOB_SEEKER', 'MENTOR'];
-            // @ts-ignore
-            if (!userInfo?.type?.some(role => allowedRoles.includes(role))) {
-                console.log('Access denied');
-                // router.push('/404');
-                return;
+            if (!userRoles.some((role: string) => allowedRoles.includes(role))) {
+                router.push('/404'); // هدایت به 404 اگر دسترسی ندارند
+            } else {
+                setLoading(false); // پایان نمایش لودینگ
             }
         };
 
-        checkAccess();
-    }, [userInfo, router]);
+        if (userRoles.length > 0) {
+            checkAccess(); // چک دسترسی پس از لود شدن `userRoles`
+        }
+    }, [userRoles, router]);
+
+    if (loading || userRoles.length === 0) {
+        return <CrudSkeleton />; // نمایش اسکلتون در زمان لود شدن
+    }
 
     return (
         <>{children}</>

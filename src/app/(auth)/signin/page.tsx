@@ -37,9 +37,10 @@ export default function SignIn() {
     const router = useRouter()
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
-    const {setToken, setUserInfo, userInfo} = useStore(state => ({
+    const {setToken, setUserInfo, userInfo,setUserRoles} = useStore(state => ({
         setToken: state.setToken,
         setUserInfo: state.setUserInfo,
+        setUserRoles: state.setUserRoles,
         userInfo: state.userInfo,
     }));
 

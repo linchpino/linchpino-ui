@@ -6,6 +6,7 @@ import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {useRouter} from "next/navigation";
 
 type Interview = {
     intervieweeId: number;
@@ -29,6 +30,8 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         token: state.token,
         decodedToken: state.decodedToken,
     }));
+
+
 
     const [page, setPage] = useState(0);
     const {data, isLoading, error} = useFetchData(`${url}?page=${page}`, token, queryKey);
@@ -85,7 +88,9 @@ const Interviews: React.FC = () => {
     const {decodedToken} = useStore(state => ({
         decodedToken: state.decodedToken,
     }));
+    const router= useRouter()
     const isMentor = decodedToken?.scope === "MENTOR";
+
     const upcomingUrl = isMentor
         ? `${BASE_URL_API}interviews/mentors/upcoming`
         : `${BASE_URL_API}interviews/jobseekers/upcoming`;
