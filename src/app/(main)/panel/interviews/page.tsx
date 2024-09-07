@@ -30,9 +30,6 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         token: state.token,
         decodedToken: state.decodedToken,
     }));
-
-
-
     const [page, setPage] = useState(0);
     const {data, isLoading, error} = useFetchData(`${url}?page=${page}`, token, queryKey);
 
@@ -56,7 +53,6 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         );
     }
     return (
-        <ProtectedPage>
             <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
                 <div>
                     <span className='text-[#F9A826]'>{title}</span>
@@ -79,8 +75,6 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
                     )}
                 </div>
             </div>
-
-        </ProtectedPage>
     );
 };
 
@@ -99,12 +93,12 @@ const Interviews: React.FC = () => {
         ? `${BASE_URL_API}interviews/mentors/past`
         : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
-        <>
+        <ProtectedPage>
             <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
             <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
-        </>
+        </ProtectedPage>
     );
 };
 

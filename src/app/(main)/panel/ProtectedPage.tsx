@@ -35,7 +35,6 @@ const PrivatePage: React.FC<PrivatePageProps> = ({children}) => {
             const allowedRoles = roleBasedAccess[pathname] || [];
             //@ts-ignore
             if (!allowedRoles.some((role: string) => userInfo.type.includes(role))) {
-                console.log('er')
                 router.push('/not-found');
             } else {
                 setLoading(false);
