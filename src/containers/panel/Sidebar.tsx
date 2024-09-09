@@ -86,7 +86,6 @@ const Sidebar = () => {
                 onClose={() => setIsModalOpen(false)}
             />
         </>
-
     );
 };
 

@@ -5,6 +5,14 @@ import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import Select, {MultiValue, SingleValue} from "react-select";
 import "react-multi-date-picker/styles/colors/yellow.css";
+import {useMutation} from "@tanstack/react-query";
+import {toastError, toastSuccess} from "@/components/CustomToast";
+import axios from "axios";
+import useStore from "@/store/store";
+import {formatDateTime} from "@/utils/helper";
+import PulseLoader from "react-spinners/PulseLoader";
+import {BASE_URL_API} from "@/utils/system";
+import {BsPlus} from 'react-icons/bs'
 
 type TimeCard = {
     id: number;
@@ -13,78 +21,76 @@ type TimeCard = {
     repeat: string;
     days: string[];
 };
-
 type DurationOption = {
     id: number;
-    time: string;
+    time: number;
 };
-
 type DayOption = {
     id: number;
     day: string;
+    value: string;
 };
-
 type RepeatOption = {
     value: string;
     label: string;
 };
 
 const ProfileTimeSlot: React.FC = () => {
+    const currentDate = new Date();
+
     const timeCards: TimeCard[] = [
         {id: 1, start: "2024-08-10", duration: "30 min", repeat: "no", days: ["Su", "Mo", "Tu", "We", "Th"]},
         {id: 2, start: "2024-08-11", duration: "60 min", repeat: "1 week", days: ["Su", "Mo", "Tu", "We", "Th"]},
         {id: 3, start: "2024-08-13", duration: "15 min", repeat: "1 week", days: ["Su", "We", "Th"]},
         {id: 4, start: "2024-08-14", duration: "45 min", repeat: "2 week", days: ["Su"]},
     ];
-
     const duration: DurationOption[] = [
-        {id: 1, time: "15 min"},
-        {id: 2, time: "20 min"},
-        {id: 3, time: "30 min"},
-        {id: 4, time: "45 min"},
-        {id: 5, time: "60 min"},
+        {id: 1, time: 15},
+        {id: 2, time: 20},
+        {id: 3, time: 30},
+        {id: 4, time: 45},
+        {id: 5, time: 60},
     ];
-
     const days: DayOption[] = [
-        {id: 1, day: "Su"},
-        {id: 2, day: "Mo"},
-        {id: 3, day: "Tu"},
-        {id: 4, day: "We"},
-        {id: 5, day: "Th"},
-        {id: 6, day: "Fr"},
-        {id: 7, day: "Sa"},
+        {id: 1, day: "Su", value: "SUNDAY"},
+        {id: 2, day: "Mo", value: "MONDAY"},
+        {id: 3, day: "Tu", value: "TUESDAY"},
+        {id: 4, day: "We", value: "WEDNESDAY"},
+        {id: 5, day: "Th", value: "THURSDAY"},
+        {id: 6, day: "Fr", value: "FRIDAY"},
+        {id: 7, day: "Sa", value: "SATURDAY"},
     ];
-
     const repeatOptions: RepeatOption[] = [
-        {value: "day", label: "Day"},
-        {value: "week", label: "Week"},
-        {value: "month", label: "Month"},
+        {value: "DAILY", label: "Day"},
+        {value: "WEEKLY", label: "Week"},
+        {value: "MONTHLY", label: "Month"},
     ];
 
-    const [selectedStart, setSelectedStart] = useState<Date | null>(null);
-    const [selectedDuration, setSelectedDuration] = useState<string>("");
+    const [selectedStart, setSelectedStart] = useState<Date | null>(currentDate);
+    const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(currentDate);
+    const [selectedEnd, setSelectedEnd] = useState<Date | null>(currentDate);
+    const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(currentDate);
+    const [selectedDuration, setSelectedDuration] = useState<number>(15);
     const [selectedDay, setSelectedDay] = useState<string[]>([]);
-    const [selectedRepeat, setSelectedRepeat] = useState<SingleValue<RepeatOption>>(null);
+    const [selectedInterval, setSelectedInterval] = useState("");
+    const [selectedRepeat, setSelectedRepeat] = useState<SingleValue<RepeatOption>>(repeatOptions[0]);
     const [selectedDaysOfMonth, setSelectedDaysOfMonth] = useState<number[]>([]);
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
 
     const modalRef = useRef<HTMLDialogElement>(null);
 
-
     const handleMenuOpen = () => {
-        setIsMenuOpen(true);
+        setIsOpenAddModal(true);
     };
-
     const handleMenuClose = () => {
-        setIsMenuOpen(false);
+        setIsOpenAddModal(false);
     };
-
     const handleLoginClick = () => {
         if (modalRef.current) {
             modalRef.current.showModal();
         }
     };
-
     const handleSelectDay = (day: string) => {
         const isDaySelected = selectedDay.includes(day);
         if (isDaySelected) {
@@ -93,24 +99,68 @@ const ProfileTimeSlot: React.FC = () => {
             setSelectedDay(prevState => [...prevState, day]);
         }
     };
-
     const handleSelectDaysOfMonth = (selectedOptions: MultiValue<{ value: number; label: string }>) => {
         setSelectedDaysOfMonth(selectedOptions.map(option => option.value));
     };
 
     const dayOfMonthOptions = Array.from({length: 31}, (_, i) => ({value: i + 1, label: `${i + 1}`}));
 
+    const {token,} = useStore(state => ({
+        token: state.token,
+    }));
+    const addTimeSlot = async (timeSlotData: any) => {
+        const response = await axios.post(`${BASE_URL_API}accounts/mentors/schedule`, timeSlotData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    };
+    const mutation = useMutation({
+        mutationFn: addTimeSlot,
+        onSuccess: () => {
+            toastSuccess({message: "Time slot added successfully!"});
+            setIsOpenAddModal(false)
+        },
+        onError: (error: any) => {
+            console.log(error)
+            toastError({message: error.response.data.error || 'Error adding time slot!'});
+        },
+        onSettled: () => {
+            setLoading(false);
+        },
+    });
+    const sendTimeSlot = () => {
+        setLoading(true);
+
+        const formattedStartTime = formatDateTime(selectedStart || currentDate);
+        const formattedEndTime = formatDateTime(selectedEnd || currentDate);
+        let timeSlotData: any = {
+            startTime: formattedStartTime,
+            duration: selectedDuration,
+            recurrenceType: selectedRepeat?.value,
+            interval: +selectedInterval,
+            endTime: formattedEndTime,
+        };
+        if (selectedRepeat?.value === "WEEKLY") {
+            timeSlotData.weekDays = selectedDay;
+        } else if (selectedRepeat?.value === "MONTHLY") {
+            timeSlotData.monthDays = selectedDaysOfMonth;
+        }
+        mutation.mutate(timeSlotData);
+    };
     return (
         <>
             <div className="flex gap-x-2 mt-8">
                 <h4>Time Slot</h4>
                 <button onClick={handleLoginClick}
-                        className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">+
+                        className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
+                    <BsPlus/>
                 </button>
             </div>
-            <dialog ref={modalRef} id="modal" className="modal">
+            <dialog ref={modalRef} id="modal" className={`modal ${isOpenAddModal && 'h-screen'}`}>
                 <div
-                    className={`modal-box ${isMenuOpen && 'h-[100%]'} min-h-[65%] pb-8 max-w-lg bg-white flex flex-col items-center`}>
+                    className={`modal-box ${isOpenAddModal && 'h-[100%]'} min-h-[65%] pb-8 max-w-lg bg-white flex flex-col items-center`}>
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
@@ -139,12 +189,45 @@ const ProfileTimeSlot: React.FC = () => {
                                     disableDayPicker
                                     format="HH:mm"
                                     placeholder="Time"
+                                    value={selectedStartTime}
+                                    //@ts-ignore
+                                    onChange={setSelectedStartTime}
                                     plugins={[<TimePicker hideSeconds/>]}
                                     calendar={gregorian}
                                     locale={gregorian_en}
                                     calendarPosition="bottom-right"
                                 />
                             </div>
+                            <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
+                                <span className="text-sm">End: </span>
+                                <DatePicker
+                                    containerClassName="w-full sm:w-1/2"
+                                    inputClass="profile-calendar w-full"
+                                    className="yellow z-20"
+                                    value={selectedEnd}
+                                    //@ts-ignore
+                                    onChange={setSelectedEnd}
+                                    calendar={gregorian}
+                                    locale={gregorian_en}
+                                    calendarPosition="bottom-right"
+                                    placeholder="Date"
+                                />
+                                <DatePicker
+                                    containerClassName="w-full sm:w-1/2"
+                                    inputClass="profile-timepicker w-full"
+                                    disableDayPicker
+                                    format="HH:mm"
+                                    placeholder="Time"
+                                    value={selectedEndTime}
+                                    //@ts-ignore
+                                    onChange={setSelectedEndTime}
+                                    plugins={[<TimePicker hideSeconds/>]}
+                                    calendar={gregorian}
+                                    locale={gregorian_en}
+                                    calendarPosition="bottom-right"
+                                />
+                            </div>
+
                             <div className="flex items-center w-full flex-col sm:flex-row">
                                 <span className="text-sm">Duration: </span>
                                 <div className="flex gap-x-2 ml-2 flex-wrap justify-center gap-y-3 mt-2 sm:mt-0">
@@ -154,20 +237,24 @@ const ProfileTimeSlot: React.FC = () => {
                                             key={durationItem.id}
                                             className={`p-2 min-w-[3.9rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${selectedDuration === durationItem.time && 'text-[#F2A926] border-[#F2A926]'}`}
                                         >
-                                            {durationItem.time}
+                                            {durationItem.time} min
                                         </button>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex items-center w-full gap-x-2 flex-col sm:flex-row gap-y-3">
-                                <span className="text-sm">Repeat every: </span>
-                                <input type="text" placeholder="number of..."
-                                       className="input input-bordered w-full sm:w-1/3 input-sm h-[2.4rem] text-xs bg-white"/>
+                                <span className="text-sm">Repeat: </span>
+                                <input value={selectedInterval}
+                                       onChange={(e) => setSelectedInterval(e.target.value)}
+                                       type='number'
+                                       inputMode='numeric'
+                                       placeholder="Number of..."
+                                       className="input input-bordered w-full sm:w-1/2 input-sm h-[2.4rem] text-xs bg-white"/>
                                 <Select
                                     unstyled
                                     classNames={{
                                         control: () => "border border-gray-300 w-full rounded-lg h-[20px] text-xs px-3 mr-2",
-                                        container: () => "text-xs rounded w-full sm:w-1/3 text-[#000000]",
+                                        container: () => "text-xs rounded w-full sm:w-1/2 text-[#000000]",
                                         menu: () => "bg-gray-100 rounded border py-2",
                                         option: ({isSelected, isFocused}) =>
                                             isSelected
@@ -181,16 +268,16 @@ const ProfileTimeSlot: React.FC = () => {
                                     onChange={setSelectedRepeat}
                                 />
                             </div>
-                            {selectedRepeat?.value === "week" && (
+                            {selectedRepeat?.value === "WEEKLY" && (
                                 <div className="flex items-center w-full flex-col sm:flex-row">
                                     <span className="text-sm">On: </span>
                                     <div className="flex gap-x-2 ml-2 justify-center flex-wrap mt-2 sm:mt-0 gap-y-2">
                                         {days.map(daysItem => {
-                                            const isSelected = selectedDay.includes(daysItem.day);
+                                            const isSelected = selectedDay.includes(daysItem.value);
                                             return (
                                                 <button
                                                     className={`py-2 min-w-[3rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${isSelected ? "border-[#F2A926] text-[#F2A926]" : ""}`}
-                                                    onClick={() => handleSelectDay(daysItem.day)}
+                                                    onClick={() => handleSelectDay(daysItem.value)}
                                                     key={daysItem.id}
                                                 >
                                                     {daysItem.day}
@@ -200,7 +287,7 @@ const ProfileTimeSlot: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            {selectedRepeat?.value === "month" && (
+                            {selectedRepeat?.value === "MONTHLY" && (
                                 <div className="flex items-center w-full flex-col sm:flex-row gap-y-3">
                                     <span className="text-sm">Days of month: </span>
                                     <Select
@@ -226,8 +313,14 @@ const ProfileTimeSlot: React.FC = () => {
                                 </div>
                             )}
                             <button
+                                disabled={loading}
+                                onClick={sendTimeSlot}
                                 className={`btn btn-sm w-full md:w-2/3 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]  ${selectedRepeat?.value !== "week" && 'mt-2'}`}>
-                                Add
+                                {loading ? (
+                                    <PulseLoader color="#FFFFFF" size={5}/>
+                                ) : (
+                                    'Add'
+                                )}
                             </button>
                         </div>
 

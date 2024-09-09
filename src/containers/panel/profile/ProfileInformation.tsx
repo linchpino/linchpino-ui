@@ -15,12 +15,7 @@ const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
-    repeat_password: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
-}).refine((data) => data.password === data.repeat_password, {
-    message: "Passwords don't match",
-    path: ["repeat_password"],
-});
+})
 type SignUpFields = z.infer<typeof schema>;
 
 interface Interview {
@@ -33,10 +28,6 @@ const ProfileInformation = () => {
         resolver: zodResolver(schema)
     });
     const [isLoading, setIsLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-    const toggleShowPassword = () => setShowPassword(prev => !prev);
-    const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
     const sendSignupForm = async (data: Omit<SignUpFields, 'repeat_password'> & { type: number }) => {
         setIsLoading(true);
@@ -62,7 +53,7 @@ const ProfileInformation = () => {
     };
 
     const onSubmit: SubmitHandler<SignUpFields> = async (data) => {
-        const {repeat_password, ...dataToSubmit} = data;
+        const {...dataToSubmit} = data;
         try {
             await sendSignupForm({...dataToSubmit, type: 1});
         } catch (error) {
@@ -163,43 +154,6 @@ const ProfileInformation = () => {
                             loadOptions={loadInterview}
                             additional={{page: 0}}
                         />
-                    </label>
-                    <label className="w-full">
-                        <div className="label">
-                            <span className="label-text">Password:</span>
-                        </div>
-                        <div className="flex items-center justify-between relative">
-                            <input {...register("password")} type={showPassword ? "text" : "password"}
-                                   placeholder="********"
-                                   className="input input-bordered w-full bg-white pr-8 "/>
-                            <button type="button" onClick={toggleShowPassword}
-                                    className="absolute right-3 flex items-center text-gray-700">
-                                {showPassword ? <BsEyeSlashFill color="#686868"/> :
-                                    <BsEyeFill color="#686868"/>}
-                            </button>
-                        </div>
-                        {errors.password && (
-                            <div className="text-red-500 text-sm mt-1">{errors.password.message}</div>
-                        )}
-                    </label>
-                    <label className="w-full">
-                        <div className="label">
-                            <span className="label-text">Re-Password:</span>
-                        </div>
-                        <div className="flex items-center justify-between relative">
-                            <input {...register("repeat_password")}
-                                   type={showRepeatPassword ? "text" : "password"} placeholder="********"
-                                   className="input input-bordered w-full bg-white pr-8"/>
-                            <button type="button" onClick={toggleShowRepeatPassword}
-                                    className="absolute right-3 flex items-center text-gray-700">
-                                {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :
-                                    <BsEyeFill color="#686868"/>}
-                            </button>
-                        </div>
-                        {errors.repeat_password && (
-                            <div
-                                className="text-red-500 text-sm mt-1">{errors.repeat_password.message}</div>
-                        )}
                     </label>
                     <label className="w-full md:col-span-2">
                         <div className="label">
