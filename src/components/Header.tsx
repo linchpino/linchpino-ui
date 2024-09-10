@@ -23,12 +23,26 @@ const Header: React.FC<Props> = () => {
     ]
     const [activeRate, setActiveRate] = useState(4)
     const rateData = [
-        {id: 1, rate: 'very-bad', icon: <BsEmojiAngry size={'100%'} className={`${activeRate ===1 && `fill-[#F9A826]`}`}/>},
-        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={`${activeRate ===2 && `fill-[#F9A826]`}`}/>},
-        {id: 3, rate: 'normal', icon: <BsEmojiNeutral size={'100%'} className={`${activeRate ===3 && `fill-[#F9A826]`}`}/>},
-        {id: 4, rate: 'good', icon: <BsEmojiSmile size={'100%'} className={`${activeRate ===4 && `fill-[#F9A826]`}`}/>},
         {
-            id: 5, rate: 'very-good', icon: <BsEmojiHeartEyes size={'100%'} className={`${activeRate ===5 && `fill-[#F9A826]`}`}/>
+            id: 1,
+            rate: 'very-bad',
+            icon: <BsEmojiAngry size={'100%'} className={`${activeRate === 1 && `fill-[#F9A826]`}`}/>
+        },
+        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={`${activeRate === 2 && `fill-[#F9A826]`}`}/>},
+        {
+            id: 3,
+            rate: 'normal',
+            icon: <BsEmojiNeutral size={'100%'} className={`${activeRate === 3 && `fill-[#F9A826]`}`}/>
+        },
+        {
+            id: 4,
+            rate: 'good',
+            icon: <BsEmojiSmile size={'100%'} className={`${activeRate === 4 && `fill-[#F9A826]`}`}/>
+        },
+        {
+            id: 5,
+            rate: 'very-good',
+            icon: <BsEmojiHeartEyes size={'100%'} className={`${activeRate === 5 && `fill-[#F9A826]`}`}/>
         },
     ]
     const [comment, setComment] = useState('')
@@ -199,7 +213,6 @@ const Header: React.FC<Props> = () => {
                 </div>
             </div>
         </>
-
     );
 }
 export default Header;

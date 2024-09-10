@@ -1,9 +1,31 @@
-import { StateCreator } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import {StateCreator} from 'zustand';
+import {persist, createJSONStorage} from 'zustand/middleware';
 
 export interface UserState {
     token: string | null;
     decodedToken: Record<string, any> | null;
+    userRoles: [],
+    setUserRoles: (userRoles: string[] | null) => void;
+    userInfo: {
+        id: number | null;
+        firstName: string | null;
+        lastName: string | null;
+        email: string | null;
+        type: string[] | null;
+        status: string | null;
+        externalId: string | null;
+        avatar: string | null;
+    } | null;
+    setUserInfo: (userInfo: {
+        id: number | null;
+        firstName: string | null;
+        lastName: string | null;
+        email: string | null;
+        type: string[] | null;
+        status: string | null;
+        externalId: string | null;
+        avatar: string | null;
+    } | null) => void;
     setToken: (token: string | null) => void;
     clearToken: () => void;
 }
@@ -11,6 +33,10 @@ export interface UserState {
 const createUserSlice: StateCreator<UserState> = (set) => ({
     token: null,
     decodedToken: null,
+    userInfo: null,
+    userRoles: [],
+    setUserInfo: (userInfo: any) => set({userInfo}),
+    setUserRoles: (userRoles: any) => set({userRoles}),
     setToken: (token: string | null) => {
         let decodedToken = null;
         if (token) {
@@ -20,10 +46,10 @@ const createUserSlice: StateCreator<UserState> = (set) => ({
                 console.error('Failed to decode token', error);
             }
         }
-        set({ token, decodedToken });
+        set({token, decodedToken});
     },
     clearToken: () => {
-        set({ token: null, decodedToken: null });
+        set({token: null, decodedToken: null, userInfo: null});
     },
 });
 
@@ -35,6 +61,8 @@ const useUserStore = persist(
         partialize: (state) => ({
             token: state.token,
             decodedToken: state.decodedToken,
+            userInfo: state.userInfo,
+            userRoles: state.userRoles
         }),
     }
 );
