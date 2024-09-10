@@ -226,6 +226,7 @@ const Header: React.FC<Props> = () => {
                 </div>
             </div>
         </>
+
     );
 }
 export default Header;
