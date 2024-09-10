@@ -62,11 +62,12 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                             const isoDate=!empty(mentorItem.from) ?  moment(mentorItem.from).format('ddd, D MMMM YYYY, HH:mm') : ""
                             return <MentorListItem
                                 key={mentorItem.mentorId}
-                                availableTimeFrom={mentorItem.from}
-                                availableTimeTo={mentorItem.to}
+                                availableTimeFrom={mentorItem.validWindow?.start}
+                                availableTimeTo={mentorItem.validWindow?.end}
                                 title={mentorFullName}
                                 onSelect={() => {
-                                    setScheduleInterviewItem('timeSlotId', mentorItem.timeSlotId);
+                                    setScheduleInterviewItem('startTime', mentorItem.validWindow?.start);
+                                    setScheduleInterviewItem('endTime', mentorItem.validWindow?.end);
                                     setScheduleInterviewItem('mentorAccountId', mentorItem.mentorId);
                                     setScheduleInterviewItem('mentorName', mentorFullName);
                                     setScheduleInterviewItem('isoDate', isoDate);
