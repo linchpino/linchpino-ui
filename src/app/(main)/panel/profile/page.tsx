@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React from "react";
 import ProfilePicture from "@/containers/panel/profile/ProfilePicture";
 import ProfileInformation from "@/containers/panel/profile/ProfileInformation";
