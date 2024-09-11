@@ -86,8 +86,9 @@ const Sidebar = () => {
                 onClose={() => setIsModalOpen(false)}
             />
         </>
-
     );
 };
 
 export default Sidebar;
+
+
