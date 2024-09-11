@@ -25,7 +25,7 @@ const JoinInterview = () => {
     const {
         data,
         error
-    } = useFetchData(`${BASE_URL_API}interviews${interviewId}/validity`, token, 'interviewValidity');
+    } = useFetchData(`${BASE_URL_API}interviews/${interviewId}/validity`, token, 'interviewValidity');
 
     useEffect(() => {
         if (error) {
