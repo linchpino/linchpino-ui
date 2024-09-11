@@ -1,5 +1,5 @@
 'use client'
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect} from "react";
 import {
     BsFillPersonFill,
     BsEmojiAngry,
@@ -7,9 +7,11 @@ import {
     BsEmojiNeutral,
     BsEmojiSmile,
     BsEmojiHeartEyes
-} from 'react-icons/bs'
+} from 'react-icons/bs';
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import useStore from "@/store/store";
 
 interface Props {
 }
@@ -20,50 +22,64 @@ const Header: React.FC<Props> = () => {
         {id: 2, name: "Blog"},
         {id: 3, name: "About Us"},
         {id: 4, name: "Contact Us"},
-    ]
-    const [activeRate, setActiveRate] = useState(4)
+    ];
+
+    const {token} = useStore(state => ({
+        token: state.token,
+    }));
+    const [activeRate, setActiveRate] = useState(4);
     const rateData = [
         {
             id: 1,
             rate: 'very-bad',
-            icon: <BsEmojiAngry size={'100%'} className={`${activeRate === 1 && `fill-[#F9A826]`}`}/>
+            icon: <BsEmojiAngry size={'100%'} className={activeRate === 1 ? 'fill-[#F9A826]' : ''} />
         },
-        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={`${activeRate === 2 && `fill-[#F9A826]`}`}/>},
+        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={activeRate === 2 ? 'fill-[#F9A826]' : ''} />},
         {
             id: 3,
             rate: 'normal',
-            icon: <BsEmojiNeutral size={'100%'} className={`${activeRate === 3 && `fill-[#F9A826]`}`}/>
+            icon: <BsEmojiNeutral size={'100%'} className={activeRate === 3 ? 'fill-[#F9A826]' : ''} />
         },
         {
             id: 4,
             rate: 'good',
-            icon: <BsEmojiSmile size={'100%'} className={`${activeRate === 4 && `fill-[#F9A826]`}`}/>
+            icon: <BsEmojiSmile size={'100%'} className={activeRate === 4 ? 'fill-[#F9A826]' : ''} />
         },
         {
             id: 5,
             rate: 'very-good',
-            icon: <BsEmojiHeartEyes size={'100%'} className={`${activeRate === 5 && `fill-[#F9A826]`}`}/>
+            icon: <BsEmojiHeartEyes size={'100%'} className={activeRate === 5 ? 'fill-[#F9A826]' : ''} />
         },
-    ]
-    const [comment, setComment] = useState('')
+    ];
+    const [comment, setComment] = useState('');
     const [isNavOpen, setIsNavOpen] = useState(false);
     const modalRef = useRef<HTMLDialogElement>(null);
+
+    const pathname = usePathname();
 
     const handleLoginClick = () => {
         if (modalRef.current) {
             modalRef.current.showModal();
         }
     };
+
     return (
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
-                <button onClick={handleLoginClick} className="flex items-end">
+                <Link href='/' className="flex items-end">
                     <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
                         <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
                         <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
                     </div>
-                </button>
+                </Link>
+                {/*<button onClick={handleLoginClick} className="flex items-end">*/}
+                {/*    <Image src="/Logo.svg" alt='logo' width={103} height={130}/>*/}
+                {/*    <div className='ml-4 hidden lg:flex lg:flex-col'>*/}
+                {/*        <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>*/}
+                {/*        <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>*/}
+                {/*    </div>*/}
+                {/*</button>*/}
                 <dialog ref={modalRef} id="modal"
                         className="modal">
                     <div className="modal-box max-w-lg bg-white flex flex-col items-center">
@@ -74,14 +90,13 @@ const Header: React.FC<Props> = () => {
                         </form>
                         <div
                             className="flex flex-col py-6 items-center justify-center w-full border-[.6px] rounded-md mt-10 mb-10 lg:mb-0 container p-3">
-                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the
-                                interview</h1>
+                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the interview</h1>
                             <div className='flex flex-col text-center w-full max-w-xs'>
                                 <span className='mt-10'>What is your feeling?</span>
                                 <div className="flex mt-3 justify-between">
                                     {rateData.map((item => {
                                         return (
-                                            <div key={item.id} className="tooltip tooltip-bottom "
+                                            <div key={item.id} className="tooltip tooltip-bottom"
                                                  data-tip={item.rate}>
                                                 <button className='w-10 xs:w-12' onClick={() => setActiveRate(item.id)}>
                                                     {item.icon}
@@ -101,7 +116,6 @@ const Header: React.FC<Props> = () => {
                                     Send
                                 </button>
                             </div>
-
                         </div>
                     </div>
                 </dialog>
@@ -110,13 +124,13 @@ const Header: React.FC<Props> = () => {
                         <div className='flex flex-col '>
                             <button type="button"
                                     className="HAMBURGER-ICON space-y-2"
-                                    onClick={() => setIsNavOpen((prev) => !prev)} // toggle isNavOpen state on click
+                                    onClick={() => setIsNavOpen((prev) => !prev)}
                             >
                                 <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
                                 <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
                                 <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
                             </button>
-                            <Link href="/signin">
+                            <Link href={token ? '/panel/profile' : '/signin'}>
                                 <BsFillPersonFill className="mt-4 w-11 h-11 pr-2"/>
                             </Link>
 
@@ -126,7 +140,6 @@ const Header: React.FC<Props> = () => {
                     <div className='DESKTOP-MENU hidden lg:flex flex-col justify-end '>
                         <div className='flex justify-end gap-6'>
                             {linkData.map(linkItem => {
-                                // @ts-ignore
                                 return (
                                     <button key={linkItem.id}>
                                         {linkItem.name}
@@ -146,9 +159,9 @@ const Header: React.FC<Props> = () => {
                                           clipRule="evenodd"/>
                                 </svg>
                             </div>
-                            <Link href='/signin'
+                            <Link href={token ? '/panel/profile' : '/signin'}
                                   className='btn btn-warning py-3 px-5 bg-[#F9A826] text-white rounded-md shadow-md'>
-                                SignIn / Register
+                                {token? 'Panel' : 'SignIn / Register'}
                             </Link>
                         </div>
                     </div>
@@ -213,6 +226,7 @@ const Header: React.FC<Props> = () => {
                 </div>
             </div>
         </>
+
     );
 }
 export default Header;

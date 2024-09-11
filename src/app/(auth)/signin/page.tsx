@@ -37,7 +37,7 @@ export default function SignIn() {
     const router = useRouter()
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
-    const {setToken, setUserInfo, userInfo,setUserRoles} = useStore(state => ({
+    const {setToken, setUserInfo, userInfo, setUserRoles} = useStore(state => ({
         setToken: state.setToken,
         setUserInfo: state.setUserInfo,
         setUserRoles: state.setUserRoles,
@@ -90,7 +90,7 @@ export default function SignIn() {
                     externalId: userInfo?.externalId || null,
                     avatar: userInfo?.avatar || null,
                 });
-                setUserRoles(userInfo?.type)
+                setUserRoles(userInfo.type)
                 router.push('/panel/profile');
 
             } catch (error) {
