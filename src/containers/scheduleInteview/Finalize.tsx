@@ -12,7 +12,7 @@ const Finalize: FC<Inputs> = (props) => {
     const {children} = props
     const now = new DateObject()
     const {scheduleInterview, setScheduleInterviewItem} = useStore();
-
+    console.log(scheduleInterview)
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
             <p className="text-[20px] text-[#F9A826]">{now.format("dddd DD MMMM YYYY HH:mm")}</p>
@@ -27,7 +27,7 @@ const Finalize: FC<Inputs> = (props) => {
                     />
                 </div>
                 <h6 className='text-[#F9A826] text-[14px]'>{scheduleInterview.mentorName}</h6>
-                <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly/>
+                {/*<Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly/>*/}
             </div>
             {children}
         </div>
