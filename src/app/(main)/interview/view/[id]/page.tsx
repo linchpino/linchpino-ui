@@ -1,7 +1,5 @@
 'use client'
-import Header from "../../../../../components/Header";
 import React, {useEffect, useState} from "react";
-import Footer from "../../../../../components/Footer";
 import Spinner from "@/components/Spinner";
 import {useRouter, usePathname} from "next/navigation";
 import useStore from "@/store/store";
@@ -24,7 +22,10 @@ const JoinInterview = () => {
         token: state.token,
     }));
 
-    const {data, isLoading, error} = useFetchData(`${BASE_URL_API}interviews/${interviewId}/validity`, token, 'interviewValidity');
+    const {
+        data,
+        error
+    } = useFetchData(`${BASE_URL_API}interviews${interviewId}/validity`, token, 'interviewValidity');
 
     useEffect(() => {
         if (error) {
@@ -76,9 +77,6 @@ const JoinInterview = () => {
     return (
         <>
             <div className="py-16 text-center m-6">
-                {isCheck && !errorMessage && (
-                    <p className="mt-4 text-[#F2A926]">Checking your request...</p>
-                )}
                 {errorMessage && <ErrorBox errorMessage={errorMessage}/>}
                 {!errorMessage && message && <MessageBox message={message}/>}
             </div>
