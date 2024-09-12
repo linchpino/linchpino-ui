@@ -1,8 +1,6 @@
 "use client"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
 import {z} from "zod";
 import {useState} from 'react';
 import { usePathname , useRouter} from 'next/navigation'
@@ -75,7 +73,6 @@ export default function JobseekerActivation() {
     return (
         <>
             <ToastContainer/>
-            <Header/>
             <div className='bg-white container pb-5 lg:pb-0'>
                 <div className="flex flex-col items-center justify-center gap-y-6 mt-14">
                     <h1 className='text-black text-3xl text-center'>Activate Your Account</h1>
@@ -145,7 +142,6 @@ export default function JobseekerActivation() {
                     </form>
                 </div>
             </div>
-            <Footer/>
         </>
     );
 }

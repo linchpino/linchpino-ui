@@ -99,7 +99,6 @@ const UserProfile = () => {
     console.log(timeData)
     return (
         <div>
-            <Header/>
             <div
                 className='flex flex-col relative gap-x-12 lg:flex-row justify-between items-start bg-white container py-28'>
                 <div
@@ -252,7 +251,6 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </div>
 
     )

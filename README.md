@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Linchpino 🚀
 
-## Getting Started
+Linchpino is a powerful tool built to streamline and manage scheduling and interview processes efficiently. This project leverages cutting-edge web technologies to deliver a seamless user experience.
 
-First, run the development server:
+## Technologies Used 🛠️
+
+- **Next.js** (v14) - React framework for server-side rendering and static site generation.
+- **React Query** (v5) - For data fetching, caching, and synchronization between server and client.
+- **Zustand** - Lightweight state management library.
+- **Axios** - HTTP client for making API requests.
+- **DaisyUI** - Tailwind CSS components for quick UI development.
+- **Toast Notifications** - Custom toast messages for user interaction feedback.
+
+## Features ✨
+
+- **Role-based Access Control** with Protected Pages.
+- **Custom Loading Skeletons** based on user role and page content.
+- **API Integration** with full support for token-based authentication.
+- **Custom Error Handling** for 404, 400, 401, and 500 server errors.
+
+## Installation 🛠️
+
+To get started with the project, clone the repository and install the dependencies:
+
+```bash
+git clone https://github.com/your-username/linchpino.git
+cd linchpino
+npm install
+
+## Configuration ⚙️
+
+Create a `.env.development` file in the root of the project to configure your environment variables. 
+
+Add the following line to the `.env.development` file to set your API URL:
+
+```bash
+NEXT_PUBLIC_API_URL=https://api-dev.linchpino.com/
+
+## Configuration ⚙️
+
+Create a `.env.development` file in the root of the project to configure your environment variables. 
+
+Add the following line to the `.env.development` file to set your API URL:
+
+```bash
+NEXT_PUBLIC_API_URL=https://api-dev.linchpino.com/
+
+## Running the Development Server 🚀
+
+Navigate to the project directory and start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Building for Production 🏗️
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To prepare the project for production, use the following commands:
 
-## Learn More
+```bash
+npm run build
+npm run start
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing 🤝
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+We welcome contributions to this project! Feel free to fork this repository, make changes, and create pull requests. Your contributions are always appreciated.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

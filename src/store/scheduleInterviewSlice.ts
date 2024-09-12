@@ -1,9 +1,10 @@
-import { StateCreator } from 'zustand';
+import {StateCreator} from 'zustand';
 
 export type ScheduleInterviewDetails = {
     jobPositionId: number | string | null;
     interviewTypeId: number | string | null;
-    timeSlotId: string | null;
+    startTime: string | null;
+    endTime: string | null;
     mentorAccountId: number | string | null;
     jobSeekerEmail: string | null;
     mentorName: string | null;
@@ -22,7 +23,8 @@ const createScheduleInterviewSlice: StateCreator<ScheduleInterviewState> = (set)
     scheduleInterview: {
         jobPositionId: null,
         interviewTypeId: null,
-        timeSlotId: null,
+        startTime: null,
+        endTime: null,
         mentorAccountId: null,
         jobSeekerEmail: null,
         mentorName: null,
@@ -40,7 +42,8 @@ const createScheduleInterviewSlice: StateCreator<ScheduleInterviewState> = (set)
             scheduleInterview: {
                 jobPositionId: null,
                 interviewTypeId: null,
-                timeSlotId: null,
+                startTime: null,
+                endTime: null,
                 mentorAccountId: null,
                 jobSeekerEmail: null,
                 mentorName: null,
