@@ -4,6 +4,6 @@ services:
     image: ghcr.io/linchpino/linchpino-ui:docker-custom-setting
     container_name: linchpino-ui
     restart: unless-stopped
-    command: "npm run start"
+    command: "next start"
     ports:
       - "8083:3000"
