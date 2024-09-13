@@ -6,6 +6,8 @@ import MasterArt from "@/containers/home/MasterArt";
 import DonateNow from "@/containers/home/DonateNow";
 
 export default function Home() {
+
+
     return (
         <>
             <div className='bg-white  pb-5 lg:pb-0 overflow-x-hidden container'>
