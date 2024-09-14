@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {usePathname, useRouter} from 'next/navigation';
-import useStore from "@/store/store";
+import React, { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Cookies from 'js-cookie';
 import CrudSkeleton from '@/components/skeletonLoading/CrudSkeleon';
 import ProfileSkeleton from '@/components/skeletonLoading/ProfileSkeleton';
-import InterviewsSkeleton from "@/components/skeletonLoading/InterviewsSkeleton";
-import PasswordChangeSkeleton from "@/components/skeletonLoading/PasswordChangeSkeleton";
+import InterviewsSkeleton from '@/components/skeletonLoading/InterviewsSkeleton';
+import PasswordChangeSkeleton from '@/components/skeletonLoading/PasswordChangeSkeleton';
 
 interface PrivatePageProps {
     children: React.ReactNode;
@@ -19,48 +19,70 @@ const roleBasedAccess = {
     '/panel/change-password': ['ADMIN', 'JOB_SEEKER', 'MENTOR'],
 };
 
-const PrivatePage: React.FC<PrivatePageProps> = ({children}) => {
-    const {userInfo} = useStore(state => ({
-        userInfo: state.userInfo,
-    }));
-    const [loading, setLoading] = useState(true);
+const PrivatePage: React.FC<PrivatePageProps> = ({ children }) => {
     const router = useRouter();
     const pathname = usePathname();
 
-    useEffect(() => {
-        const checkAccess = () => {
-            if (!userInfo) return;
+    const [loading, setLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
 
-            //@ts-ignore
-            const allowedRoles = roleBasedAccess[pathname] || [];
-            //@ts-ignore
-            if (!allowedRoles.some((role: string) => userInfo.type.includes(role))) {
-                console.log('er')
-                router.push('/not-found');
-            } else {
-                setLoading(false);
+    useEffect(() => {
+        setIsMounted(true);
+
+        const token = Cookies.get('token');
+        const expiresAt = Cookies.get('expiresAt');
+        const userInfoFromCookie = Cookies.get('userInfo');
+        const userInfo = userInfoFromCookie ? JSON.parse(userInfoFromCookie) : null;
+        const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+        // @ts-ignore
+        console.log(new Date().getTime() >= expiresAtDate.getTime())
+        console.log(token)
+        console.log(userInfo)
+        const checkAccess = () => {
+            if (!token || !expiresAt || !expiresAtDate || new Date().getTime() >= expiresAtDate.getTime()) {
+                Cookies.remove('token');
+                Cookies.remove('expiresAt');
+                Cookies.remove('userInfo');
+                router.push('/');
+                return;
             }
+
+            if (!userInfo) {
+                router.push('/');
+                return;
+            }
+
+            // @ts-ignore
+            const allowedRoles = roleBasedAccess[pathname] || [];
+            if (!allowedRoles.some((role: string) => userInfo.type.includes(role))) {
+                router.push('/not-found');
+                return;
+            }
+
+            setLoading(false);
         };
 
-        checkAccess();
-    }, [userInfo, router, pathname]);
+        if (isMounted) {
+            checkAccess();
+        }
+    }, [router, pathname, isMounted]);
 
-    if (loading || !userInfo) {
+    if (!isMounted) return null;
+
+    if (loading) {
         switch (pathname) {
             case '/panel/profile':
-                return <ProfileSkeleton/>;
+                return <ProfileSkeleton />;
             case '/panel/interviews':
-                return <InterviewsSkeleton/>;
+                return <InterviewsSkeleton />;
             case '/panel/change-password':
-                return <PasswordChangeSkeleton/>;
+                return <PasswordChangeSkeleton />;
             default:
-                return <CrudSkeleton/>;
+                return <CrudSkeleton />;
         }
     }
 
-    return (
-        <>{children}</>
-    );
+    return <>{children}</>;
 };
 
 export default PrivatePage;

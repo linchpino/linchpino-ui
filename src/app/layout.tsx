@@ -8,12 +8,13 @@ import Loading from "@/app/loading";
 
 export default function RootLayout({
                                        children,
-                                   }: Readonly<{ children: React.ReactNode }>) {
+                                   }: { children: React.ReactNode }) {
+
     return (
         <html lang="en" className="bg-white">
         <body className="bg-white">
         <QueryProvider>
-            <div className='min-h-screen flex flex-col justify-between'>
+            <div className="min-h-screen flex flex-col justify-between">
                 <Header/>
                 <Suspense fallback={<Loading/>}>
                     {children}

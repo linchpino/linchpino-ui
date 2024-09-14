@@ -1,10 +1,36 @@
-'use client'
+'use client';
+import {useState, useEffect} from 'react';
+import {useRouter} from 'next/navigation';
 import Sidebar from "@/containers/panel/Sidebar";
 import {ReactNode, Suspense} from "react";
 import Loading from "@/app/(main)/panel/loading";
 import PanelContentChild from "@/containers/panel/PanelContentChild";
+import Cookies from 'js-cookie';
 
 const PanelLayout = ({children}: { children: ReactNode }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        const expiresAt = Cookies.get('expiresAt');
+        const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+        const currentDate = new Date();
+
+        if (!token || (expiresAtDate && expiresAtDate < currentDate)) {
+            router.push('/');
+            return;
+        }
+        setIsAuthenticated(true);
+    }, [router]);
+
+    if (isAuthenticated === null) {
+        return <div/>;
+    }
+
+    if (!isAuthenticated) {
+        return null;
+    }
 
     return (
         <div>
@@ -19,6 +45,7 @@ const PanelLayout = ({children}: { children: ReactNode }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
-export default PanelLayout
+
+export default PanelLayout;
