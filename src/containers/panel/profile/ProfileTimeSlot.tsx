@@ -5,7 +5,7 @@ import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import Select, {MultiValue, SingleValue} from "react-select";
 import "react-multi-date-picker/styles/colors/yellow.css";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation,useQueryClient} from "@tanstack/react-query";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import axios from "axios";
 import useStore from "@/store/store";
@@ -13,6 +13,7 @@ import {formatDateTime} from "@/utils/helper";
 import PulseLoader from "react-spinners/PulseLoader";
 import {BASE_URL_API} from "@/utils/system";
 import {BsPlus} from 'react-icons/bs'
+import moment from "moment/moment";
 
 type TimeCard = {
     id: number;
@@ -35,7 +36,22 @@ type RepeatOption = {
     label: string;
 };
 
-const ProfileTimeSlot: React.FC = () => {
+interface ProfileTimeSlotProps {
+    startTime: string;
+    endTime: string;
+    durationTime: number;
+    accountId: number;
+    recurrenceType: string;
+    interval: number;
+    weekDays: string[];
+    monthDays: number[];
+}
+
+const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, durationTime, accountId, recurrenceType, interval, weekDays, monthDays}) => {
+    const formattedStartTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+    const formattedEndTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+    const queryClient = useQueryClient();
+
     const currentDate = new Date();
 
     const timeCards: TimeCard[] = [
@@ -118,7 +134,9 @@ const ProfileTimeSlot: React.FC = () => {
     };
     const mutation = useMutation({
         mutationFn: addTimeSlot,
+
         onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['profileData']});
             toastSuccess({message: "Time slot added successfully!"});
             setIsOpenAddModal(false)
         },
@@ -129,6 +147,7 @@ const ProfileTimeSlot: React.FC = () => {
         onSettled: () => {
             setLoading(false);
         },
+
     });
     const sendTimeSlot = () => {
         setLoading(true);
@@ -152,7 +171,7 @@ const ProfileTimeSlot: React.FC = () => {
     return (
         <>
             <div className="flex gap-x-2 mt-8">
-                <h4>Time Slot</h4>
+                <h4>Schedule</h4>
                 <button onClick={handleLoginClick}
                         className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
                     <BsPlus/>
@@ -166,7 +185,7 @@ const ProfileTimeSlot: React.FC = () => {
                     </form>
                     <div
                         className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-4 lg:mb-0 container p-3">
-                        <h1 className="text-xl text-center text-[#000]">Add Time Slot</h1>
+                        <h1 className="text-xl text-center text-[#000]">Add Schedule</h1>
                         <div
                             className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat?.value === "week" ? 'gap-y-6' : 'gap-y-8'}`}>
                             <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
@@ -243,7 +262,7 @@ const ProfileTimeSlot: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex items-center w-full gap-x-2 flex-col sm:flex-row gap-y-3">
-                                <span className="text-sm">Repeat: </span>
+                                <span className="text-sm">Interval: </span>
                                 <input value={selectedInterval}
                                        onChange={(e) => setSelectedInterval(e.target.value)}
                                        type='number'
@@ -328,39 +347,54 @@ const ProfileTimeSlot: React.FC = () => {
                 </div>
             </dialog>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 mt-4 gap-y-6">
-                {timeCards.map(item => {
-                    return (
-                        <div key={item.id} className="relative bg-white rounded-lg card shadow-xl text-xs lg:text-sm">
-                            <div
-                                className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
-                            <div className="card-body px-4 py-6 flex flex-col">
-                                <div
-                                    className={`flex ${item.repeat === 'no' ? 'flex-col' : 'flex-col md:flex-row'} ${item.repeat === 'no' && 'gap-y-3'} w-full justify-between items-center`}>
-                                    <span>Start: {item.start}</span>
-                                    <span>Duration: {item.duration}</span>
-                                </div>
-                                {item.repeat !== 'no' && (
-                                    <div
-                                        className='flex md:flex-row flex-col justify-between items-center mt-2 gap-x-2 gap-y-2'>
-                                        <span className='text-sm'>Repeat <span
-                                            className='text-[1rem] text-gray-700'>{item.repeat}</span> in </span>
-                                        <div
-                                            className='flex flex-wrap gap-x-2 justify-center md:justify-start items-center md:w-[15rem]'>
-                                            {item.days.map(daysItem => (
-                                                <div key={daysItem}
-                                                     className='flex items-center justify-center text-sm font-light text-white w-8 h-8 rounded-full bg-[#F9A826]'>
-                                                    {daysItem}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+            <div className="grid grid-cols-1 gap-x-6 mt-4 gap-y-6">
+                <div className="relative bg-white rounded-lg shadow-xl text-xs sm:text-sm md:text-base lg:text-sm">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
+                    <div className="card-body px-4 sm:px-6 py-6 flex flex-col">
+                        <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <span className="font-medium text-gray-700">Start Time:</span>
+                                <span className="ml-0 sm:ml-2">{formattedStartTime}</span>
+                            </p>
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <span className="font-medium text-gray-700">End Time:</span>
+                                <span className="ml-0 sm:ml-2">{formattedEndTime}</span>
+                            </p>
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <span className="font-medium text-gray-700">Duration:</span>
+                                <span className="ml-0 sm:ml-2">{durationTime} minutes</span>
+                            </p>
+                            {/*<p className="flex flex-col sm:flex-row items-start sm:items-center">*/}
+                            {/*    <span className="font-medium text-gray-700">Account ID:</span>*/}
+                            {/*    <span className="ml-0 sm:ml-2">{accountId}</span>*/}
+                            {/*</p>*/}
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <span className="font-medium text-gray-700">Recurrence Type:</span>
+                                <span className="ml-0 sm:ml-2">{recurrenceType}</span>
+                            </p>
+                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <span className="font-medium text-gray-700">Interval:</span>
+                                <span className="ml-0 sm:ml-2">{interval}</span>
+                            </p>
+                            {weekDays.length > 0 && (
+                                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                    <span className="font-medium text-gray-700">Week Days:</span>
+                                    <span className="ml-0 sm:ml-2">{weekDays.join(', ')}</span>
+                                </p>
+                            )}
+                            {monthDays.length > 0 && (
+                                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                    <span className="font-medium text-gray-700">Month Days:</span>
+                                    <span className="ml-0 sm:ml-2">{monthDays.join(', ')}</span>
+                                </p>
+                            )}
                         </div>
-                    )
-                })}
+                    </div>
+                </div>
             </div>
+
+
         </>
     );
 };
