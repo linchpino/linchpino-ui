@@ -52,7 +52,11 @@ jobs:
           - name: Connect to linchpino-UI on GCP instance
             env:
               PR_NUMBER: ${{ github.event.number }}
+              ALLMYSECRETS: ${{ toJson(secrets) }}
+              ALLMYVARS: ${{ toJSON(vars) }}
             run: |
+              echo $ALLMYSECRETS > /opt/linchpino-ui/.env
+              echo $ALLMYVARS >> /opt/linchpino-ui/.env
               cd /opt/linchpino-ui
               sudo git reset --hard
               sudo git fetch --all
