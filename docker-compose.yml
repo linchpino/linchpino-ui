@@ -7,3 +7,5 @@ services:
     command: "npm run dev"
     ports:
       - "8083:3000"
+    env_file:
+      - ./.env
