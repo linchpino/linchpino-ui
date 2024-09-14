@@ -57,6 +57,7 @@ jobs:
             run: |
               echo $ALLMYSECRETS > /opt/linchpino-ui/.env
               echo $ALLMYVARS >> /opt/linchpino-ui/.env
+              sudo sed -i "s/[{|}]//g" /opt/linchpino-ui/.env && sudo sed -i "s/\": /=/g" /opt/linchpino-ui/.env && sudo sed -i "s/[\"]//g" /opt/linchpino-ui/.env && sudo sed -i "s/,/\\n/g" /opt/linchpino-ui/.env && sudo sed -i "s/^ //g" /opt/linchpino-ui/.env 
               cd /opt/linchpino-ui
               sudo git reset --hard
               sudo git fetch --all
