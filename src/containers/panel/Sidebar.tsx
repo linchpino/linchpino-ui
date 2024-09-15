@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey, BsCalendar3Week, BsBoxArrowRight} from 'react-icons/bs';
 import {FaLaptopCode, FaSignOutAlt} from 'react-icons/fa';
 import useStore from '@/store/store';
@@ -12,6 +12,10 @@ const Sidebar = () => {
     const pathname = usePathname();
     const {userInfo} = useStore(state => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const links = [
         {
@@ -57,8 +61,7 @@ const Sidebar = () => {
             <aside
                 className="sidebar sticky top-5 h-fit shadow-[0px_10px_25px_-5px_rgba(0,0,0,0.3)] w-[15%] md:w-1/5 rounded-md p-1 md:p-3 flex flex-col items-center md:items-start">
                 <ul className="w-full flex flex-col items-center">
-                    {links
-                        .filter(link => userInfo?.type?.some(role => link.roles.includes(role)))
+                    {isClient && links.filter(link => userInfo?.type?.some(role => link.roles.includes(role)))
                         .map(link => (
                             <li key={link.href}
                                 className="w-full flex justify-center md:text-sm lg:text-[.9rem] xl:text-[1rem]">

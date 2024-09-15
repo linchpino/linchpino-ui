@@ -17,12 +17,13 @@ export function middleware(request: NextRequest) {
     const {token} = useStore(state => ({
         setToken: state.token,
     }));
-    const userRoles = JSON.parse(token).roles || [];
+    console.log(token)
+    const userRoles = JSON.parse(token).type || [];
 
     // @ts-ignore
     const allowedRoles = roleBasedAccess[path];
     if (allowedRoles && !allowedRoles.some((role: any) => userRoles.includes(role))) {
-        return NextResponse.redirect('/404');
+        return NextResponse.redirect('/not-found');
     }
 
     return NextResponse.next();

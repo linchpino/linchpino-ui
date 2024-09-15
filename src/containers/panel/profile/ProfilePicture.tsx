@@ -1,5 +1,5 @@
 'use client'
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
@@ -8,16 +8,49 @@ import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from 'react-toastify';
 import {FaCamera} from 'react-icons/fa';
 import {empty} from "@/utils/helper";
+import PulseLoader from "react-spinners/PulseLoader";
 
-const ProfilePicture: React.FC = () => {
+interface ProfilePictureProps {
+    avatar: string | null;
+}
+
+const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+    const [imageLoading, setImageLoading] = useState<boolean>(true);
     const {token} = useStore(state => ({
         token: state.token,
     }));
+
+    useEffect(() => {
+        if (avatar) {
+            const fetchProfileImage = async () => {
+                setImageLoading(true);
+
+                try {
+                    const response = await axios.get(`${BASE_URL_API}files/image/${avatar}`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                        },
+                        responseType: 'blob',
+                    });
+
+                    if (response.status === 200) {
+                        const imageUrl = URL.createObjectURL(response.data);
+                        setPreview(imageUrl);
+                    }
+                } catch (error) {
+                    console.error("Error fetching profile image:", error);
+                } finally {
+                    setImageLoading(false);
+                }
+            };
+
+            fetchProfileImage();
+        }
+    }, [avatar, token]);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -47,14 +80,14 @@ const ProfilePicture: React.FC = () => {
                 const errorMessage = response.data.error || "Upload failed with unexpected status!";
                 toastError({message: errorMessage});
                 setPreview("");
-                setSelectedFile(null)
+                setSelectedFile(null);
             }
         } catch (error) {
             // @ts-ignore
             const errorMessage = error.response?.data?.error || error.message || "Upload failed!";
             toastError({message: errorMessage});
             setPreview("");
-            setSelectedFile(null)
+            setSelectedFile(null);
         } finally {
             setLoading(false);
         }
@@ -78,16 +111,20 @@ const ProfilePicture: React.FC = () => {
             <div className='flex flex-col md:flex-row items-center gap-x-8'>
                 <div className="avatar mt-3 relative w-36">
                     <div className="flex w-36 h-36 rounded-xl bg-gray-200 items-center justify-center">
-                        {preview ?
-                            <img src={preview} alt="Profile" className="rounded-xl"/>
-                            :
-                            <FaCamera className="text-gray-400 text-4xl mx-auto mt-12"/>
-                        }
+                        {imageLoading ? (
+                            <div className="flex items-center justify-center">
+                                <PulseLoader size={5} color="#F9A826" className='mt-16'/>
+                            </div>
+                        ) : (
+                            preview ? (
+                                <img src={preview} alt="Profile" className="rounded-xl"/>
+                            ) : (
+                                <FaCamera className="text-gray-400 text-4xl mx-auto mt-12"/>
+                            )
+                        )}
                         {loading && (
-                            <div
-                                className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center rounded-xl">
-                                <div
-                                    className="w-10 h-10 border-4 border-gray-300 border-t-4 border-t-white rounded-full animate-spin"></div>
+                            <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center rounded-xl">
+                                <div className="w-10 h-10 border-4 border-gray-300 border-t-4 border-t-[#F9A826] rounded-full animate-spin"></div>
                             </div>
                         )}
                     </div>

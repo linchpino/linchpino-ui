@@ -1,5 +1,5 @@
 'use client'
-import React, {useRef, useState, useEffect} from "react";
+import React, {useEffect, useRef, useState, } from "react";
 import {
     BsFillPersonFill,
     BsEmojiAngry,
@@ -9,14 +9,14 @@ import {
     BsEmojiHeartEyes
 } from 'react-icons/bs';
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import useStore from "@/store/store";
 
 interface Props {
 }
 
 const Header: React.FC<Props> = () => {
+    const router = useRouter();
     const linkData = [
         {id: 1, name: "Our Services"},
         {id: 2, name: "Blog"},
@@ -27,28 +27,33 @@ const Header: React.FC<Props> = () => {
     const {token} = useStore(state => ({
         token: state.token,
     }));
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     const [activeRate, setActiveRate] = useState(4);
     const rateData = [
         {
             id: 1,
             rate: 'very-bad',
-            icon: <BsEmojiAngry size={'100%'} className={activeRate === 1 ? 'fill-[#F9A826]' : ''} />
+            icon: <BsEmojiAngry size={'100%'} className={activeRate === 1 ? 'fill-[#F9A826]' : ''}/>
         },
-        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={activeRate === 2 ? 'fill-[#F9A826]' : ''} />},
+        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={activeRate === 2 ? 'fill-[#F9A826]' : ''}/>},
         {
             id: 3,
             rate: 'normal',
-            icon: <BsEmojiNeutral size={'100%'} className={activeRate === 3 ? 'fill-[#F9A826]' : ''} />
+            icon: <BsEmojiNeutral size={'100%'} className={activeRate === 3 ? 'fill-[#F9A826]' : ''}/>
         },
         {
             id: 4,
             rate: 'good',
-            icon: <BsEmojiSmile size={'100%'} className={activeRate === 4 ? 'fill-[#F9A826]' : ''} />
+            icon: <BsEmojiSmile size={'100%'} className={activeRate === 4 ? 'fill-[#F9A826]' : ''}/>
         },
         {
             id: 5,
             rate: 'very-good',
-            icon: <BsEmojiHeartEyes size={'100%'} className={activeRate === 5 ? 'fill-[#F9A826]' : ''} />
+            icon: <BsEmojiHeartEyes size={'100%'} className={activeRate === 5 ? 'fill-[#F9A826]' : ''}/>
         },
     ];
     const [comment, setComment] = useState('');
@@ -57,22 +62,29 @@ const Header: React.FC<Props> = () => {
 
     const pathname = usePathname();
 
-    const handleLoginClick = () => {
-        if (modalRef.current) {
-            modalRef.current.showModal();
+    // const handleLoginClick = () => {
+    //     if (modalRef.current) {
+    //         modalRef.current.showModal();
+    //     }
+    // };
+    const handleLoginOrPanelClick = () => {
+        if (token) {
+            router.push('/panel/profile');
+        } else {
+            router.push('/signin');
         }
     };
 
     return (
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
-                <Link href='/' className="flex items-end">
+                <button onClick={() => router.push('/signin')} className="flex items-end">
                     <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
                         <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
                         <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
                     </div>
-                </Link>
+                </button>
                 {/*<button onClick={handleLoginClick} className="flex items-end">*/}
                 {/*    <Image src="/Logo.svg" alt='logo' width={103} height={130}/>*/}
                 {/*    <div className='ml-4 hidden lg:flex lg:flex-col'>*/}
@@ -90,7 +102,8 @@ const Header: React.FC<Props> = () => {
                         </form>
                         <div
                             className="flex flex-col py-6 items-center justify-center w-full border-[.6px] rounded-md mt-10 mb-10 lg:mb-0 container p-3">
-                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the interview</h1>
+                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the
+                                interview</h1>
                             <div className='flex flex-col text-center w-full max-w-xs'>
                                 <span className='mt-10'>What is your feeling?</span>
                                 <div className="flex mt-3 justify-between">
@@ -130,9 +143,9 @@ const Header: React.FC<Props> = () => {
                                 <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
                                 <span className="block h-0.5 w-8 animate-pulse bg-gray-600"></span>
                             </button>
-                            <Link href={token ? '/panel/profile' : '/signin'}>
+                            <button onClick={handleLoginOrPanelClick}>
                                 <BsFillPersonFill className="mt-4 w-11 h-11 pr-2"/>
-                            </Link>
+                            </button>
 
                         </div>
 
@@ -159,10 +172,10 @@ const Header: React.FC<Props> = () => {
                                           clipRule="evenodd"/>
                                 </svg>
                             </div>
-                            <Link href={token ? '/panel/profile' : '/signin'}
+                            <button onClick={handleLoginOrPanelClick}
                                   className='btn btn-warning py-3 px-5 bg-[#F9A826] text-white rounded-md shadow-md'>
-                                {token? 'Panel' : 'SignIn / Register'}
-                            </Link>
+                                {isClient ? (token ? 'Panel' : 'SignIn / Register') : 'SignIn / Register'}
+                            </button>
                         </div>
                     </div>
                 </nav>

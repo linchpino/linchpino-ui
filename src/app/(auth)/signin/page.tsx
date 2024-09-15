@@ -1,6 +1,5 @@
 'use client'
 import {SubmitHandler, useForm} from 'react-hook-form';
-import Link from "next/link";
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import {BASE_URL, BASE_URL_API} from "@/utils/system";
@@ -12,6 +11,7 @@ import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
 import {useRouter} from "next/navigation";
 import {toastError, toastSuccess} from "@/components/CustomToast";
+import Cookies from "js-cookie";
 
 interface SignInForm {
     email: string;
@@ -63,8 +63,18 @@ export default function SignIn() {
                     },
                 }
             );
-            setToken(response.data.token)
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+            const {token, expiresAt, userInfo} = response.data;
+
+            if (token && expiresAt) {
+                Cookies.set('token', token, {expires: new Date(expiresAt), secure: true, sameSite: 'Strict'});
+                Cookies.set('expiresAt', expiresAt, {expires: new Date(expiresAt), secure: true, sameSite: 'Strict'});
+            } else {
+                Cookies.remove('token');
+                Cookies.remove('expiresAt');
+            }
+
+
+            setToken(token, expiresAt);
             return response.data;
         } catch (error) {
             console.error('Login failed', error);
@@ -80,6 +90,11 @@ export default function SignIn() {
             try {
                 setIsLoading(true);
                 const userInfo = await fetchUserInfo(data.token);
+                if (userInfo) {
+                    Cookies.set('userInfo', JSON.stringify(userInfo), {expires: 7, secure: true, sameSite: 'Strict'});
+                } else {
+                    Cookies.remove('userInfo');
+                }
                 setUserInfo({
                     id: userInfo?.id || null,
                     firstName: userInfo?.firstName || null,
@@ -173,13 +188,13 @@ export default function SignIn() {
                         {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
                     </button>
                     <div className='flex items-center'>
-                        <Link href='/signup' className='text-[#F9A826] text-sm'>
+                        <button onClick={() =>router.push('/signup')} className='text-[#F9A826] text-sm'>
                             Register
-                        </Link>
+                        </button>
                         /
-                        <Link href='/' className='text-[#F9A826] text-sm'>
+                        <button onClick={() => router.push('/')} className='text-[#F9A826] text-sm'>
                             Forgot Password
-                        </Link>
+                        </button>
                     </div>
                 </form>
             </div>
