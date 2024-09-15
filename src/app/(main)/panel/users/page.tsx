@@ -45,7 +45,7 @@ const User = () => {
     const [selectedRole, setSelectedRole] = useState<number | null>(null);
     const [isLastPage, setIsLastPage] = useState(false);
 
-    const {token, } = useStore(state => ({
+    const {token,} = useStore(state => ({
         token: state.token,
     }));
 
@@ -127,18 +127,20 @@ const User = () => {
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
                                 <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
                                 <th>Name</th>
+                                <th>Email</th>
                                 <th className='w-20 rounded-tl-none rounded-tr-xl'>Role</th>
                             </tr>
                             </thead>
                             <tbody>
                             {/*@ts-ignore*/}
-                            {usersData && usersData.map((user, index) => {
+                            {usersData && usersData.content && usersData.content.map((user, index) => {
                                 const fullName = `${user.firstName} ${user.lastName}`
                                 return (
                                     <tr key={user.id}
                                         className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
                                         <td>{(currentPage) * itemsPerPage + index + 1}</td>
                                         <td>{fullName}</td>
+                                        <td>{user.email}</td>
                                         <td>{user.roles[0]}</td>
                                     </tr>
                                 )
