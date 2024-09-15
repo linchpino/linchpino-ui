@@ -7,7 +7,7 @@ import useFetchData from "@/utils/hooks/useFetchData";
 import {BASE_URL_API} from "@/utils/system";
 import moment from 'moment';
 import {AxiosError} from "axios";
-import {FiCheckCircle} from "react-icons/fi";
+import {FaHourglassEnd } from "react-icons/fa6";
 import {MdError} from "react-icons/md";
 
 const JoinInterview = () => {
@@ -45,17 +45,16 @@ const JoinInterview = () => {
     }, [data, error, router]);
 
     const message = data && !data.verifyStatus ? `
-        Hi again ;)
-        Your interview started on <span class="font-bold text-gray-600">${moment(data.interviewDateTimeStart).format('MMMM D, YYYY [at] h:mm A')}</span> 
-        and lasted for <span class="font-bold text-gray-600">${moment.duration(moment(data.interviewDateTimeEnd).diff(moment(data.interviewDateTimeStart))).humanize()}</span>.
-        It ended at <span class="font-bold text-gray-600">${moment(data.interviewDateTimeEnd).format('MMMM D, YYYY [at] h:mm A')}</span>.
-    ` : '';
+    Hi there! It looks like you're a bit early for your session scheduled on <span class="font-bold text-gray-600">${moment(data.interviewDateTimeStart).format('MMMM D, YYYY [at] h:mm A')}</span>. 
+    Your session is set to last <span class="font-bold text-gray-600">${moment.duration(moment(data.interviewDateTimeEnd).diff(moment(data.interviewDateTimeStart))).humanize()}</span>. 
+    Feel free to explore, ask any questions, or let us know if there's anything specific you'd like to prepare for. We’ll be ready to start soon!
+` : '';
 
     //@ts-ignore
     const MessageBox = ({message}) => (
-        <div className="max-w-xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
+        <div className="max-w-xl mx-auto mt-8 p-6 bg-blue-100 shadow-lg rounded-lg">
             <div className="flex items-center mb-4">
-                <FiCheckCircle className="text-green-500 text-3xl mr-2"/>
+                <FaHourglassEnd className="text-blue-500 text-3xl mr-2"/>
                 <h2 className="text-xl font-semibold text-gray-800">Interview Summary</h2>
             </div>
             <div className="text-left text-gray-700">
