@@ -1,4 +1,5 @@
-import React, { FC, useState } from "react";
+'use client'
+import React, {FC, useEffect, useState} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AsyncPaginate } from "react-select-async-paginate";
 import axios from "axios";
@@ -85,6 +86,13 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
         const selectedInterviews = selectedOptions.map(option => ({ value: option.value, label: option.label }));
         setMentorInformation({ interviewTypeIDs: selectedInterviews });
     };
+
+    useEffect(() => {
+        if (mentorInformation.interviewTypeIDs.length) {
+            // Ensure data is loaded when component mounts
+            console.log("Interview Type IDs loaded:", mentorInformation.interviewTypeIDs);
+        }
+    }, [mentorInformation.interviewTypeIDs]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>

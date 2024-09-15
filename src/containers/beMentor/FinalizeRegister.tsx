@@ -11,9 +11,13 @@ interface FinalizeRegisterProp {
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
+const MAX_LENGTH = 20;
+const shortenText = (text: string, maxLength: number) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+};
 const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     const {activeStep, setActiveStep} = props;
-    const {mentorInformation,setMentorInformation} = useStore();
+    const {mentorInformation, setMentorInformation} = useStore();
     const [isLoading, setIsLoading] = useState(false);
 
     const submitMentorInformation = async (data: any) => {
@@ -61,18 +65,19 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
-                <div className="relative h-32 w-32 mx-auto overflow-hidden">
+                <div className="relative h-32 w-32 mx-auto ">
                     <Image
-                        src="/home/2.jpg"
+                        src="/logo.svg"
                         alt="mentor-avatar"
                         layout="fill"
                         objectFit="cover"
-                        className="rounded-full"
+                        className="rounded-full bg-white "
                     />
                 </div>
-                <h6 className='text-[#F9A826] text-[14px]'>{mentorInformation.firstName} {mentorInformation.lastName}</h6>
+                <h6 className='text-[#F9A826] text-[16px] font-bold'>{mentorInformation.firstName} {mentorInformation.lastName}</h6>
                 {mentorInformation.interviewTypeIDs.map((type) => (
-                    <h6 key={type.value} className='text-[#F9A826] text-[14px]'>{type.label}</h6>
+                    <h6 key={type.value}
+                        className='text-[#F9A826] text-[14px]'>{shortenText(type.label, MAX_LENGTH)}</h6>
                 ))}
             </div>
             <div className="flex items-center justify-between w-full max-w-xs mt-10">

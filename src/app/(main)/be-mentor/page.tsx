@@ -101,7 +101,6 @@ const BeMentor = () => {
                 </div>
                 {renderCurrentStepComponent()}
 
-
             </div>
         </>
     )
