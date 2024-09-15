@@ -64,6 +64,7 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                                 availableTimeFrom={mentorItem.validWindow?.start}
                                 availableTimeTo={mentorItem.validWindow?.end}
                                 title={mentorFullName}
+                                avatar={mentorItem.avatar}
                                 onSelect={() => {
                                     setScheduleInterviewItem('startTime', mentorItem.validWindow?.start);
                                     setScheduleInterviewItem('endTime', mentorItem.validWindow?.end);

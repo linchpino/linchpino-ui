@@ -1,8 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Image from "next/image";
-import Rating from '@mui/material/Rating';
-import { empty } from "@/utils/helper";
 import moment from "moment/moment";
+import { empty } from "@/utils/helper";
+import { BASE_URL_API } from "@/utils/system";
+import axios from "axios";
 import defaultAvatar from '../../../public/logo.svg';
 
 interface MentorListItemProps {
@@ -16,8 +17,28 @@ interface MentorListItemProps {
 const MentorListItem: FC<MentorListItemProps> = (props) => {
     const { availableTimeFrom, availableTimeTo, title, avatar, onSelect } = props;
 
-    const imageUrl = !empty(avatar) ? avatar : defaultAvatar;
+    const [imageUrl, setImageUrl] = useState<string>(defaultAvatar);
 
+    useEffect(() => {
+        const fetchAvatar = async () => {
+            if (!empty(avatar)) {
+                try {
+                    const response = await axios.get(`${BASE_URL_API}files/image/${avatar}`, {
+                        responseType: 'blob',
+                    });
+                    const url = URL.createObjectURL(response.data);
+                    setImageUrl(url);
+                } catch (error) {
+                    console.error("Error fetching avatar:", error);
+                    setImageUrl(defaultAvatar);
+                }
+            } else {
+                setImageUrl(defaultAvatar);
+            }
+        };
+
+        fetchAvatar();
+    }, [avatar]);
     return (
         <div className="relative w-full rounded-md flex flex-col m-4 shadow-lg h-[310px] justify-between items-center px-2 py-4">
             <div className='h-[97px] bg-[#F9A826] rounded-tr-md rounded-tl-md absolute top-0 z-10 w-full' />
@@ -29,8 +50,6 @@ const MentorListItem: FC<MentorListItemProps> = (props) => {
                 height={112}
             />
             <h6 className='text-[#F9A826] mt-[135px] text-[14px]'>{title}</h6>
-            {/*<Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />*/}
-
             <p className="text-[#4B4141] text-[12px]">
                 From: {!empty(availableTimeFrom) ? moment(availableTimeFrom).format('ddd, D MMMM YYYY, HH:mm') : ""}
             </p>
