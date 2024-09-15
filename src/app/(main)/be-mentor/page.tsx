@@ -9,13 +9,13 @@ import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
 import useStore from '../../../store/store';
 
 type Inputs = {
-    email:string
-    emailRequired:string
+    email: string
+    emailRequired: string
 }
 
 const BeMentor = () => {
     const [activeStep, setActiveStep] = useState(1);
-    const { setMentorInformation } = useStore();
+    const {setMentorInformation} = useStore();
     const {
         register,
         handleSubmit,
@@ -41,7 +41,7 @@ const BeMentor = () => {
         if (activeStep === 1) {
             return (
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
-                    <label className="form-control w-full " >
+                    <label className="form-control w-full ">
                         <div className="label">
                             <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
                         </div>
@@ -57,17 +57,18 @@ const BeMentor = () => {
                         {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 
                     </label>
-                    <button disabled={empty(watch("email"))} type="submit" className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
+                    <button disabled={empty(watch("email"))} type="submit"
+                            className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
                         Next
                     </button>
                 </form>
             )
-        }else if (activeStep === 2) {
+        } else if (activeStep === 2) {
             return <RegisterMentor activeStep={activeStep} setActiveStep={setActiveStep}/>
-        }else if (activeStep === 3){
-            return  <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
-        }else if (activeStep === 4){
-            return  <ConfirmationMentor/>
+        } else if (activeStep === 3) {
+            return <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
+        } else if (activeStep === 4) {
+            return <ConfirmationMentor/>
         }
     }
     return (

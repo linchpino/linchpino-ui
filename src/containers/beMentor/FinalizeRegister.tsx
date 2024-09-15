@@ -55,6 +55,10 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
         const dataToSend = {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
+            paymentMethodRequest:{
+                type: "FREE"
+            },
+            iban:'GB82 WEST 1234 5698 7654 32'
         };
         mutation.mutate(dataToSend);
     };
