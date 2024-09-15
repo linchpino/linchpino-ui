@@ -9,7 +9,7 @@ import {useMutation,useQueryClient} from "@tanstack/react-query";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import axios from "axios";
 import useStore from "@/store/store";
-import {formatDateTime} from "@/utils/helper";
+import {empty, formatDateTime} from "@/utils/helper";
 import PulseLoader from "react-spinners/PulseLoader";
 import {BASE_URL_API} from "@/utils/system";
 import {BsPlus} from 'react-icons/bs'
@@ -172,10 +172,12 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
         <>
             <div className="flex gap-x-2 mt-8">
                 <h4>Schedule</h4>
-                <button onClick={handleLoginClick}
-                        className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
-                    <BsPlus/>
-                </button>
+                {empty(startTime) && empty(endTime) &&
+                    <button onClick={handleLoginClick}
+                            className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
+                        <BsPlus/>
+                    </button>
+                }
             </div>
             <dialog ref={modalRef} id="modal" className={`modal ${isOpenAddModal && 'h-screen'}`}>
                 <div
@@ -393,7 +395,6 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     </div>
                 </div>
             </div>
-
 
         </>
     );
