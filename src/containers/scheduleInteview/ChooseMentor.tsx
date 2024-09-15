@@ -45,7 +45,6 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
     useEffect(() => {
         refetch()
     }, [calendarValue]);
-
     const renderList = () => {
         if (isLoading || isRefetching) {
             return <Spinner loading={isLoading || isRefetching}/>
@@ -71,6 +70,7 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                                     setScheduleInterviewItem('mentorAccountId', mentorItem.mentorId);
                                     setScheduleInterviewItem('mentorName', mentorFullName);
                                     setScheduleInterviewItem('isoDate', isoDate);
+                                    setScheduleInterviewItem('avatar', mentorItem.avatar);
                                     setActiveStep(activeStep + 1)
                                 }}
                             />
