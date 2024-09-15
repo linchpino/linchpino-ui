@@ -348,53 +348,55 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     </div>
                 </div>
             </dialog>
-
-            <div className="grid grid-cols-1 gap-x-6 mt-4 gap-y-6">
-                <div className="relative bg-white rounded-lg shadow-xl text-xs sm:text-sm md:text-base lg:text-sm">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
-                    <div className="card-body px-4 sm:px-6 py-6 flex flex-col">
-                        <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
-                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                <span className="font-medium text-gray-700">Start Time:</span>
-                                <span className="ml-0 sm:ml-2">{formattedStartTime}</span>
-                            </p>
-                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                <span className="font-medium text-gray-700">End Time:</span>
-                                <span className="ml-0 sm:ml-2">{formattedEndTime}</span>
-                            </p>
-                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                <span className="font-medium text-gray-700">Duration:</span>
-                                <span className="ml-0 sm:ml-2">{durationTime} minutes</span>
-                            </p>
-                            {/*<p className="flex flex-col sm:flex-row items-start sm:items-center">*/}
-                            {/*    <span className="font-medium text-gray-700">Account ID:</span>*/}
-                            {/*    <span className="ml-0 sm:ml-2">{accountId}</span>*/}
-                            {/*</p>*/}
-                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                <span className="font-medium text-gray-700">Recurrence Type:</span>
-                                <span className="ml-0 sm:ml-2">{recurrenceType}</span>
-                            </p>
-                            <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                <span className="font-medium text-gray-700">Interval:</span>
-                                <span className="ml-0 sm:ml-2">{interval}</span>
-                            </p>
-                            {weekDays.length > 0 && (
+            {!empty(startTime)&&!empty(endTime) &&
+                <div className="grid grid-cols-1 gap-x-6 mt-4 gap-y-6">
+                    <div className="relative bg-white rounded-lg shadow-xl text-xs sm:text-sm md:text-base lg:text-sm">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
+                        <div className="card-body px-4 sm:px-6 py-6 flex flex-col">
+                            <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Week Days:</span>
-                                    <span className="ml-0 sm:ml-2">{weekDays.join(', ')}</span>
+                                    <span className="font-medium text-gray-700">Start Time:</span>
+                                    <span className="ml-0 sm:ml-2">{formattedStartTime}</span>
                                 </p>
-                            )}
-                            {monthDays.length > 0 && (
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Month Days:</span>
-                                    <span className="ml-0 sm:ml-2">{monthDays.join(', ')}</span>
+                                    <span className="font-medium text-gray-700">End Time:</span>
+                                    <span className="ml-0 sm:ml-2">{formattedEndTime}</span>
                                 </p>
-                            )}
+                                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                    <span className="font-medium text-gray-700">Duration:</span>
+                                    <span className="ml-0 sm:ml-2">{durationTime} minutes</span>
+                                </p>
+                                {/*<p className="flex flex-col sm:flex-row items-start sm:items-center">*/}
+                                {/*    <span className="font-medium text-gray-700">Account ID:</span>*/}
+                                {/*    <span className="ml-0 sm:ml-2">{accountId}</span>*/}
+                                {/*</p>*/}
+                                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                    <span className="font-medium text-gray-700">Recurrence Type:</span>
+                                    <span className="ml-0 sm:ml-2">{recurrenceType}</span>
+                                </p>
+                                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                    <span className="font-medium text-gray-700">Interval:</span>
+                                    <span className="ml-0 sm:ml-2">{interval}</span>
+                                </p>
+                                {weekDays.length > 0 && (
+                                    <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                        <span className="font-medium text-gray-700">Week Days:</span>
+                                        <span className="ml-0 sm:ml-2">{weekDays.join(', ')}</span>
+                                    </p>
+                                )}
+                                {monthDays.length > 0 && (
+                                    <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                                        <span className="font-medium text-gray-700">Month Days:</span>
+                                        <span className="ml-0 sm:ml-2">{monthDays.join(', ')}</span>
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+            }
 
         </>
     );
