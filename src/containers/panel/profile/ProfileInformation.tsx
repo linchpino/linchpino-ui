@@ -15,6 +15,7 @@ const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
+    detailsOfExpertise: z.string()
 })
 type SignUpFields = z.infer<typeof schema>;
 
@@ -23,10 +24,22 @@ interface Interview {
     label: string;
 }
 
-const ProfileInformation = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm<SignUpFields>({
+interface ProfileInformationProps {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    detailsOfExpertise?: string
+}
+
+const ProfileInformation: React.FC<ProfileInformationProps> = ({ firstName, lastName, email,detailsOfExpertise }) => {
+    const {register, handleSubmit, formState: {errors}, setValue} = useForm<SignUpFields>({
         resolver: zodResolver(schema)
     });
+    React.useEffect(() => {
+        if (firstName) setValue("firstName", firstName);
+        if (lastName) setValue("lastName", lastName);
+        if (email) setValue("email", email);
+    }, [firstName, lastName, email,detailsOfExpertise, setValue]);
     const [isLoading, setIsLoading] = useState(false);
 
     const sendSignupForm = async (data: Omit<SignUpFields, 'repeat_password'> & { type: number }) => {
@@ -88,6 +101,7 @@ const ProfileInformation = () => {
         const selectedInterviews = selectedOptions.map(option => ({value: option.value, label: option.label}));
         console.log(selectedInterviews)
     };
+    console.log(isLoading)
     return (
         <>
             <h4 className='mt-8'>Your Information</h4>
@@ -103,7 +117,7 @@ const ProfileInformation = () => {
                             <div className="text-red-500 text-sm mt-1">{errors.firstName.message}</div>
                         )}
                     </label>
-                    <label className="w-full">
+                    <label className="w-full ">
                         <div className="label">
                             <span className="label-text">Last Name:</span>
                         </div>
@@ -113,7 +127,7 @@ const ProfileInformation = () => {
                             <div className="text-red-500 text-sm mt-1">{errors.lastName.message}</div>
                         )}
                     </label>
-                    <label className="w-full">
+                    <label className="w-full md:col-span-2">
                         <div className="label">
                             <span className="label-text">Email:</span>
                         </div>
@@ -129,38 +143,37 @@ const ProfileInformation = () => {
                             <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                         )}
                     </label>
-                    <label className="w-full">
-                        <div className="label">
-                            <span className="label-text">Field of expertise:</span>
-                        </div>
-                        <AsyncPaginate
-                            classNames={{
-                                control: () => " w-full min-h-[48px] text-sm px-2 mr-2 py-1",
-                                container: () => "text-sm w-full text-[#000000] text-left",
-                                menu: () => "bg-gray-100 rounded border py-2",
-                                option: ({isSelected, isFocused}) => isSelected
-                                    ? " dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
-                                    : isFocused
-                                        ? "bg-gray-200 px-4 py-2"
-                                        : "px-4 py-2",
-                                multiValue: () => "bg-[#F9A82699] rounded-lg border p-1 mx-1 truncate my-1 max-w-40",
-                            }}
-                            value={""}
-                            //@ts-ignore
-                            onChange={handleInterviewChange}
-                            isMulti
-                            placeholder="Interview Type"
-                            //@ts-ignore
-                            loadOptions={loadInterview}
-                            additional={{page: 0}}
-                        />
-                    </label>
+                    {/*<label className="w-full">*/}
+                    {/*    <div className="label">*/}
+                    {/*        <span className="label-text">Field of expertise:</span>*/}
+                    {/*    </div>*/}
+                    {/*    <AsyncPaginate*/}
+                    {/*        classNames={{*/}
+                    {/*            control: () => " w-full min-h-[48px] text-sm px-2 mr-2 py-1",*/}
+                    {/*            container: () => "text-sm w-full text-[#000000] text-left",*/}
+                    {/*            menu: () => "bg-gray-100 rounded border py-2",*/}
+                    {/*            option: ({isSelected, isFocused}) => isSelected*/}
+                    {/*                ? " dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"*/}
+                    {/*                : isFocused*/}
+                    {/*                    ? "bg-gray-200 px-4 py-2"*/}
+                    {/*                    : "px-4 py-2",*/}
+                    {/*            multiValue: () => "bg-[#F9A82699] rounded-lg border p-1 mx-1 truncate my-1 max-w-40",*/}
+                    {/*        }}*/}
+                    {/*        value={""}*/}
+                    {/*        //@ts-ignore*/}
+                    {/*        onChange={handleInterviewChange}*/}
+                    {/*        isMulti*/}
+                    {/*        placeholder="Interview Type"*/}
+                    {/*        //@ts-ignore*/}
+                    {/*        loadOptions={loadInterview}*/}
+                    {/*        additional={{page: 0}}*/}
+                    {/*    />*/}
+                    {/*</label>*/}
                     <label className="w-full md:col-span-2">
                         <div className="label">
                             <span className="label-text">Bio:</span>
                         </div>
-                        <textarea className="textarea textarea-bordered w-full bg-white"
-                                  placeholder="Your Details ..." {...register("firstName")}/>
+                        <textarea className="textarea textarea-bordered w-full bg-white" placeholder="Your Details ..." {...register("detailsOfExpertise")}/>
 
                     </label>
                 </div>
