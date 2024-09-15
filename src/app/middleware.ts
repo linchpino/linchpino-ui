@@ -11,13 +11,14 @@ const roleBasedAccess = {
 };
 
 export function middleware(request: NextRequest) {
+    console.log("token")
+
     const url = new URL(request.url);
     const path = url.pathname;
     // @ts-ignore
     const {token} = useStore(state => ({
         setToken: state.token,
     }));
-    console.log(token)
     const userRoles = JSON.parse(token).type || [];
 
     // @ts-ignore

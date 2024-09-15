@@ -88,12 +88,10 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
     };
 
     useEffect(() => {
-        if (mentorInformation.interviewTypeIDs.length) {
-            // Ensure data is loaded when component mounts
-            console.log("Interview Type IDs loaded:", mentorInformation.interviewTypeIDs);
+        if (mentorInformation.interviewTypeIDs.length !== 0) {
+            loadInterview('',[], {page:0})
         }
     }, [mentorInformation.interviewTypeIDs]);
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full">
