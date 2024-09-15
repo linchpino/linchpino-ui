@@ -1,14 +1,14 @@
 'use client'
-import React, {FC, useEffect, useState} from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { AsyncPaginate } from "react-select-async-paginate";
+import React, {FC, useState} from "react";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {AsyncPaginate} from "react-select-async-paginate";
 import axios from "axios";
-import { BASE_URL_API } from "@/utils/system";
+import {BASE_URL_API} from "@/utils/system";
 import useStore from "../../store/store";
-import { z, ZodError } from "zod";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { empty } from "@/utils/helper";
+import {z} from "zod";
+import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {empty} from "@/utils/helper";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -27,14 +27,15 @@ interface Interview {
     value: number;
     label: string;
 }
+
 interface RegisterMentorProps {
     activeStep: number;
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) => {
-    const { mentorInformation, setMentorInformation } = useStore();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>({
+const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) => {
+    const {mentorInformation, setMentorInformation} = useStore();
+    const {register, handleSubmit, watch, control, formState: {errors}} = useForm<Inputs>({
         resolver: zodResolver(schema),
         defaultValues: {
             firstName: mentorInformation.firstName,
@@ -43,6 +44,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
             repeatPassword: "",
         },
     });
+    const [state, setState] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
@@ -51,6 +53,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
+        console.log('data', data);
         setMentorInformation({
             firstName: data.firstName,
             lastName: data.lastName,
@@ -59,7 +62,9 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
         setActiveStep(activeStep + 1);
     };
 
-    const loadInterview = async (search: string, loadedOptions: unknown[], { page }: { page: number }) => {
+    const loadInterview = async (search: string, loadedOptions: unknown[], {page}: {
+        page: number
+    }) => {
         try {
             const response = await axios.get(`${BASE_URL_API}interviewtypes/search`, {
                 params: {
@@ -74,36 +79,38 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
             return {
                 options,
                 hasMore: !response.data.last,
-                additional: { page: page + 1 },
+                additional: {page: page + 1},
             };
         } catch (error) {
             console.error("Error loading interviews:", error);
-            return { options: [], additional: { page: page + 1 } };
+            return {options: [], additional: {page: page + 1}};
         }
     };
 
-    const handleInterviewChange = (selectedOptions: Interview[]) => {
-        const selectedInterviews = selectedOptions.map(option => ({ value: option.value, label: option.label }));
-        setMentorInformation({ interviewTypeIDs: selectedInterviews });
+    const handleInterviewChange = (selectedOptions: {
+        value: number;
+        label: string
+    }[]) => {
+        setMentorInformation({
+            interviewTypeIDs: selectedOptions
+        });
+        setState(!state);
     };
 
-    useEffect(() => {
-        if (mentorInformation.interviewTypeIDs.length !== 0) {
-            loadInterview('',[], {page:0})
-        }
-    }, [mentorInformation.interviewTypeIDs]);
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>First Name:</span>
+                    <span className="label-text text-[#3F3D56]"><span
+                        className='text-[#F9A826]'>*</span>First Name:</span>
                 </div>
                 <input {...register("firstName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.firstName && <p className='text-red-500 mt-1 text-left'>{errors.firstName.message}</p>}
             </label>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Last Name:</span>
+                    <span className="label-text text-[#3F3D56]"><span
+                        className='text-[#F9A826]'>*</span>Last Name:</span>
                 </div>
                 <input {...register("lastName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.lastName && <p className='text-red-500 mt-1 text-left'>{errors.lastName.message}</p>}
@@ -146,7 +153,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
                     )}
                 </label>
             </div>
-            <label className="form-control w-full">
+            <label className="w-full">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Field of expertise:</span>
                 </div>
@@ -155,21 +162,21 @@ const RegisterMentor: FC<RegisterMentorProps> = ({ activeStep, setActiveStep }) 
                         control: () => "border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 mr-2 py-2",
                         container: () => "text-sm rounded w-full text-[#000000] text-left",
                         menu: () => "bg-gray-100 rounded border py-2",
-                        option: ({ isSelected, isFocused }) => isSelected
+                        option: ({isSelected, isFocused}) => isSelected
                             ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
                             : isFocused
                                 ? "bg-gray-200 px-4 py-2"
                                 : "px-4 py-2",
                         multiValue: () => "bg-[#F9A82699] rounded border p-1 mx-1 truncate my-1 max-w-40",
                     }}
-                    value={mentorInformation.interviewTypeIDs.map(interview => ({ value: interview.value, label: interview.label }))}
+                    value={mentorInformation.interviewTypeIDs}
                     //@ts-ignore
                     onChange={handleInterviewChange}
                     isMulti
                     placeholder="Interview Type"
                     //@ts-ignore
                     loadOptions={loadInterview}
-                    additional={{ page: 0 }}
+                    additional={{page: 0}}
                 />
             </label>
             <button

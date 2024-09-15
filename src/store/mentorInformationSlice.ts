@@ -21,12 +21,17 @@ const createMentorInformationSlice: StateCreator<MentorInformationState> = (set)
         interviewTypeIDs: [],
         password: '',
     },
-    setMentorInformation: (info) => set((state) => ({
-        mentorInformation: {
-            ...state.mentorInformation,
-            ...info,
-        },
-    })),
+    setMentorInformation: (info) => set((state) => {
+        return {
+            mentorInformation: {
+                email: info.email ?? state.mentorInformation.email,
+                firstName: info.firstName ?? state.mentorInformation.firstName,
+                lastName: info.lastName ?? state.mentorInformation.lastName,
+                interviewTypeIDs: info.interviewTypeIDs ?? state.mentorInformation.interviewTypeIDs,
+                password: info.password ?? state.mentorInformation.password,
+            },
+        };
+    }),
 });
 
 export default createMentorInformationSlice;
