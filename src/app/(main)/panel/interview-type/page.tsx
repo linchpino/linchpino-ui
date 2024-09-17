@@ -114,12 +114,13 @@ const InterviewType = () => {
         }) => addInterviewType(newInterviewType, token),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['interviewTypes']});
-            setJobValue(null)
+            setJobValue(null);
             toastSuccess({message: 'Interview Type added successfully'});
             closeModal();
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to add interview type'});
+            const errorMessage = error.response?.data?.error || 'Failed to add interview type';
+            toastError({message: errorMessage});
         }
     });
     const editMutation = useMutation({
@@ -134,7 +135,8 @@ const InterviewType = () => {
             closeModal();
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to update interview type'});
+            const errorMessage = error.response?.data?.error || 'Failed to update interview type';
+            toastError({message: errorMessage});
         }
     });
     const deleteMutation = useMutation({
@@ -145,10 +147,24 @@ const InterviewType = () => {
             toastSuccess({message: 'Interview Type deleted successfully'});
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to delete interview type'});
+            const errorMessage = error.response?.data?.error || 'Failed to delete interview type';
+            toastError({message: errorMessage});
         }
     });
 
+    const fetchInterviewTypeById = async (id: number, token: string | null) => {
+        try {
+            const {data} = await axios.get(`${BASE_URL_API}admin/interviewtypes/${id}`, {
+                headers: {Authorization: `Bearer ${token}`},
+            });
+            return data;
+        } catch (error) {
+            console.error("Failed to fetch interview type:", error);
+            // @ts-ignore
+            toastError({message: error.response?.data?.error || 'Failed to fetch interview type'});
+            return null;
+        }
+    };
     const handleAddOrEdit = () => {
         setIsLoadingAction(true);
         if (selectedInterviewType) {
@@ -171,7 +187,6 @@ const InterviewType = () => {
             });
         }
     };
-
     const handleDelete = () => {
         setIsLoadingAction(true);
         deleteMutation.mutate(undefined, {
@@ -183,12 +198,46 @@ const InterviewType = () => {
             onError: () => setIsLoadingAction(false)
         });
     };
-    const openModal = (interviewType: InterviewType | null = null, deleteMode: boolean = false) => {
-        setSelectedInterviewType(interviewType);
-        setNewName(interviewType ? interviewType.title : '');
-        setSelectedJobPositionId(interviewType ? interviewType.jobPositionId : null);
+    const fetchJobPositions = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL_API}jobposition/search`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data.content
+        } catch (error) {
+            console.error("Failed to fetch job positions:", error);
+            toastError({message: 'Failed to fetch job positions'});
+            return [];
+        }
+    };
+
+    const openModal = async (interviewType: InterviewType | null = null, deleteMode: boolean = false) => {
         setIsDeleteMode(deleteMode);
-        setIsModalOpen(true);
+        if (interviewType) {
+            const fetchedData = await fetchInterviewTypeById(interviewType.id, token);
+            const allJobs = await fetchJobPositions();
+            if (fetchedData) {
+                setSelectedInterviewType(interviewType);
+                setNewName(fetchedData.title);
+                const matchedJob = allJobs.find((job: { id: number; }) => job.id === fetchedData.jobPositionId);
+                if (matchedJob) {
+                    setJobValue({value: matchedJob.id, label: matchedJob.name});
+                }
+                setIsModalOpen(true);
+            } else {
+                setNewName('');
+                setSelectedJobPositionId(null);
+                setJobValue(null);
+            }
+        } else {
+            setSelectedInterviewType(null);
+            setNewName('');
+            setSelectedJobPositionId(null);
+            setJobValue(null);
+            setIsModalOpen(true);
+        }
     };
     const closeModal = () => {
         setSelectedInterviewType(null);
@@ -292,66 +341,73 @@ const InterviewType = () => {
                 {isModalOpen && (
                     <div className={`modal modal-open`} data-theme="light">
                         <div className={`modal-box ${isOpenJobBox && 'h-[450px]'}`}>
-                            <form method="dialog">
-                                <button onClick={closeModal}
-                                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
-                                </button>
-                            </form>
+                            <button onClick={closeModal}
+                                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                            </button>
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center mt-3">
                                         {selectedInterviewType ? 'Edit Interview Type' : 'Add Interview Type'}
                                     </h3>
-                                    <AsyncPaginate
-                                        classNames={{
-                                            control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
-                                            container: () => "text-sm rounded w-full text-gray-400 ",
-                                            menu: () => "bg-gray-100 rounded border py-2",
-                                            option: ({isSelected, isFocused}) =>
-                                                isSelected
-                                                    ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
-                                                    : isFocused
-                                                        ? "bg-gray-200 px-4 py-2"
-                                                        : "px-4 py-2",
+
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            handleAddOrEdit();
                                         }}
-                                        value={jobValue}
-                                        onChange={(e) => setJobValue(e)}
-                                        //@ts-ignore
-                                        loadOptions={loadJobOptions}
-                                        unstyled
-                                        placeholder="Job Position"
-                                        //@ts-ignore
-                                        additional={{page: 0}}
-                                        onMenuOpen={() => setIsOpenJobBox(true)}
-                                        onMenuClose={() => setIsOpenJobBox(false)}
-                                    />
-                                    <input
-                                        ref={inputRef}
-                                        type="text"
-                                        placeholder="Interview Type Name"
-                                        value={newName}
-                                        onChange={(e) => setNewName(e.target.value)}
-                                        className="input input-bordered w-full my-4 h-10"
-                                    />
-                                    <div className="modal-action">
-                                        <button
-                                            className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="w-20 btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
-                                            onClick={handleAddOrEdit}
-                                            disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
-                                        >
-                                            {isLoadingAction ? (
-                                                <PulseLoader color="#FFFFFF" size={5}/>
-                                            ) : (
-                                                (selectedInterviewType ? 'Save' : 'Add')
-                                            )}
-                                        </button>
-                                    </div>
+                                    >
+                                        <AsyncPaginate
+                                            classNames={{
+                                                control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
+                                                container: () => "text-sm rounded w-full text-gray-400 ",
+                                                menu: () => "bg-gray-100 rounded border py-2",
+                                                option: ({isSelected, isFocused}) =>
+                                                    isSelected
+                                                        ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
+                                                        : isFocused
+                                                            ? "bg-gray-200 px-4 py-2"
+                                                            : "px-4 py-2",
+                                            }}
+                                            value={jobValue}
+                                            onChange={(e) => setJobValue(e)}
+                                            //@ts-ignore
+                                            loadOptions={loadJobOptions}
+                                            unstyled
+                                            placeholder="Job Position"
+                                            //@ts-ignore
+                                            additional={{page: 0}}
+                                            onMenuOpen={() => setIsOpenJobBox(true)}
+                                            onMenuClose={() => setIsOpenJobBox(false)}
+                                        />
+                                        <input
+                                            ref={inputRef}
+                                            type="text"
+                                            placeholder="Interview Type Name"
+                                            value={newName}
+                                            onChange={(e) => setNewName(e.target.value)}
+                                            className="input input-bordered w-full my-4 h-10"
+                                        />
+                                        <div className="modal-action">
+                                            <button
+                                                type="button"
+                                                className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                                onClick={closeModal}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="w-20 btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
+                                                disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
+                                            >
+                                                {isLoadingAction ? (
+                                                    <PulseLoader color="#FFFFFF" size={5}/>
+                                                ) : (
+                                                    (selectedInterviewType ? 'Save' : 'Add')
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
                                 </>
                             ) : (
                                 <>

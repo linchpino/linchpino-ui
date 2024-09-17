@@ -6,7 +6,6 @@ import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
-import {useRouter} from "next/navigation";
 
 type Interview = {
     intervieweeId: number;
@@ -53,9 +52,9 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         );
     }
     return (
-            <div className='flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative'>
+            <div className={`${isPast && 'mt-8'} flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative`}>
                 <div>
-                    <span className='text-[#F9A826]'>{title}</span>
+                    <h1 className="text-md font-bold">{title}</h1>
                     {data?.content.length === 0 ? (
                         <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
                     ) : (
@@ -82,7 +81,6 @@ const Interviews: React.FC = () => {
     const {decodedToken} = useStore(state => ({
         decodedToken: state.decodedToken,
     }));
-    const router= useRouter()
     const isMentor = decodedToken?.scope === "MENTOR";
 
     const upcomingUrl = isMentor

@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
-import {AsyncPaginate} from "react-select-async-paginate";
-import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
@@ -74,37 +72,11 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({ firstName, last
         }
     };
 
-    const loadInterview = async (search: string, loadedOptions: unknown[], {page}: { page: number }) => {
-        try {
-            const response = await axios.get(`${BASE_URL_API}interviewtypes/search`, {
-                params: {
-                    page,
-                    name: search,
-                },
-            });
-            const options = response.data.content.map((item: any) => ({
-                value: item.id,
-                label: item.title,
-            }));
-            return {
-                options,
-                hasMore: !response.data.last,
-                additional: {page: page + 1},
-            };
-        } catch (error) {
-            console.error("Error loading interviews:", error);
-            return {options: [], additional: {page: page + 1}};
-        }
-    };
-
-    const handleInterviewChange = (selectedOptions: Interview[]) => {
-        const selectedInterviews = selectedOptions.map(option => ({value: option.value, label: option.label}));
-        console.log(selectedInterviews)
-    };
-    console.log(isLoading)
     return (
         <>
-            <h4 className='mt-8'>Your Information</h4>
+            <div className="flex text-left mt-8">
+                <h1 className="text-md font-bold">Your Information</h1>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)} className="gap-y-5 flex flex-col justify-center mt-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 w-full gap-y-5">
                     <label className="w-full">
@@ -143,32 +115,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({ firstName, last
                             <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                         )}
                     </label>
-                    {/*<label className="w-full">*/}
-                    {/*    <div className="label">*/}
-                    {/*        <span className="label-text">Field of expertise:</span>*/}
-                    {/*    </div>*/}
-                    {/*    <AsyncPaginate*/}
-                    {/*        classNames={{*/}
-                    {/*            control: () => " w-full min-h-[48px] text-sm px-2 mr-2 py-1",*/}
-                    {/*            container: () => "text-sm w-full text-[#000000] text-left",*/}
-                    {/*            menu: () => "bg-gray-100 rounded border py-2",*/}
-                    {/*            option: ({isSelected, isFocused}) => isSelected*/}
-                    {/*                ? " dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"*/}
-                    {/*                : isFocused*/}
-                    {/*                    ? "bg-gray-200 px-4 py-2"*/}
-                    {/*                    : "px-4 py-2",*/}
-                    {/*            multiValue: () => "bg-[#F9A82699] rounded-lg border p-1 mx-1 truncate my-1 max-w-40",*/}
-                    {/*        }}*/}
-                    {/*        value={""}*/}
-                    {/*        //@ts-ignore*/}
-                    {/*        onChange={handleInterviewChange}*/}
-                    {/*        isMulti*/}
-                    {/*        placeholder="Interview Type"*/}
-                    {/*        //@ts-ignore*/}
-                    {/*        loadOptions={loadInterview}*/}
-                    {/*        additional={{page: 0}}*/}
-                    {/*    />*/}
-                    {/*</label>*/}
+
                     <label className="w-full md:col-span-2">
                         <div className="label">
                             <span className="label-text">Bio:</span>

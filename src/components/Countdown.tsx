@@ -111,7 +111,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, startDate, endDate })
         return formatTimeRemaining(days, hours, minutes, seconds, textColor);
     };
 
-    return <div>{renderDisplayContent()}</div>;
+    return <div> {renderDisplayContent()}</div>;
 };
 
 export default Countdown;
