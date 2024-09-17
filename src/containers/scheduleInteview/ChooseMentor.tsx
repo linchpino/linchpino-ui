@@ -12,7 +12,6 @@ import {BASE_URL_API} from "@/utils/system";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import 'moment-timezone';
-import {useSearchParams} from 'next/navigation';
 import useStore from "@/store/store";
 
 interface ChooseMentorProp {

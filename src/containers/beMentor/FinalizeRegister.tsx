@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, {FC, useState} from "react";
 import useStore from "@/store/store";
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, } from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from '@/components/CustomToast';

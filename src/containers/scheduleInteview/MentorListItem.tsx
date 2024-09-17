@@ -4,7 +4,6 @@ import moment from "moment/moment";
 import { empty } from "@/utils/helper";
 import { BASE_URL_API } from "@/utils/system";
 import axios from "axios";
-import defaultAvatar from '../../../public/logo.svg';
 
 interface MentorListItemProps {
     title: string;
@@ -17,7 +16,7 @@ interface MentorListItemProps {
 const MentorListItem: FC<MentorListItemProps> = (props) => {
     const { availableTimeFrom, availableTimeTo, title, avatar, onSelect } = props;
 
-    const [imageUrl, setImageUrl] = useState<string>(defaultAvatar);
+    const [imageUrl, setImageUrl] = useState<string>('/logo.svg');
 
     useEffect(() => {
         const fetchAvatar = async () => {
@@ -30,10 +29,10 @@ const MentorListItem: FC<MentorListItemProps> = (props) => {
                     setImageUrl(url);
                 } catch (error) {
                     console.error("Error fetching avatar:", error);
-                    setImageUrl(defaultAvatar);
+                    setImageUrl('/logo.svg');
                 }
             } else {
-                setImageUrl(defaultAvatar);
+                setImageUrl('/logo.svg');
             }
         };
 
