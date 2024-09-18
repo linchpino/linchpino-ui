@@ -67,7 +67,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
                 <div className="relative h-32 w-32 mx-auto ">
                     <Image
-                        src="/logo.svg"
+                        src="/logo-sm.svg"
                         alt="mentor-avatar"
                         layout="fill"
                         objectFit="contain"
