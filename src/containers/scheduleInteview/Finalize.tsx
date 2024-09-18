@@ -17,6 +17,17 @@ const Finalize: FC<Inputs> = (props) => {
     const {scheduleInterview} = useStore();
     const [imageUrl, setImageUrl] = useState<string>('/logo-sm.svg');
     const [isLoadingAvatar, setIsLoadingAvatar] = useState<boolean>(true);
+    const localStartTime = scheduleInterview.startTime
+        ? new Date(scheduleInterview.startTime).toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        })
+        : null;
+
     useEffect(() => {
         const fetchAvatar = async () => {
             if (scheduleInterview.avatar) {
@@ -42,7 +53,9 @@ const Finalize: FC<Inputs> = (props) => {
 
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
-            <p className="text-[20px] text-[#F9A826]">{now.format("dddd DD MMMM YYYY HH:mm")}</p>
+            <p className="text-[20px] text-[#F9A826]">
+                {localStartTime ? localStartTime : "No Date Available"}
+            </p>
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
                 <div className="relative h-32 w-32 mx-auto flex items-center justify-center">
                     {isLoadingAvatar ? (

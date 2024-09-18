@@ -56,8 +56,9 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                     {
                         !empty(data) && !empty(data.length) &&
                         data.map((mentorItem, index) => {
+                            console.log(mentorItem)
                             const mentorFullName = mentorItem.mentorFirstName + " " + mentorItem.mentorLastName
-                            const isoDate=!empty(mentorItem.from) ?  moment(mentorItem.from).format('ddd, D MMMM YYYY, HH:mm') : ""
+                            const isoDate=!empty(mentorItem.validWindow?.start) ?  moment(mentorItem.validWindow?.start).format('ddd, D MMMM YYYY, HH:mm') : ""
                             return <MentorListItem
                                 key={mentorItem.mentorId}
                                 availableTimeFrom={mentorItem.validWindow?.start}
