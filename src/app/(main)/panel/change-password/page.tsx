@@ -1,12 +1,26 @@
 'use client'
 import React, {useState} from "react";
-import {useForm} from "react-hook-form";
+import {SubmitHandler, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
-import PanelContentChild from "../../../../containers/panel/PanelContentChild";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {toastError, toastSuccess} from "@/components/CustomToast";
+import axiosInstance from '../../../../utils/axiosInstance';
+import {useMutation} from "@tanstack/react-query";
+import {BASE_URL_API} from "@/utils/system";
+import axios, {AxiosError} from 'axios';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {ClipLoader} from "react-spinners";
 
+interface ErrorResponse {
+    error?: string;
+}
+
+const isAxiosError = (error: unknown): error is AxiosError<ErrorResponse> => {
+    return axios.isAxiosError(error);
+};
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 const schema = z.object({
@@ -21,6 +35,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const ChangePasswrod = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showRepeatNewPassword, setShowRepeatNewPassword] = useState(false);
@@ -37,9 +53,40 @@ const ChangePasswrod = () => {
         resolver: zodResolver(schema),
     });
 
-    const onSubmit = (data: FormData) => {
-        console.log("Form Data: ", data);
+
+    const changePasswordMutation = useMutation({
+        mutationFn: async (data: FormData) => {
+            setIsLoading(true);
+            try {
+                const { currentPassword, newPassword } = data;
+                const response = await axiosInstance.put(`${BASE_URL_API}accounts/profile/change-password`, {
+                    currentPassword,
+                    newPassword
+                });
+                return response.data;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        onSuccess: () => {
+            toastSuccess({ message: 'Password changed successfully!' });
+            setIsLoading(false);
+        },
+        onError: (error) => {
+            setIsLoading(false);
+            if (isAxiosError(error)) {
+                const errorMessage = error.response?.data?.error || 'There was an issue, please try again.';
+                toastError({ message: errorMessage });
+            } else {
+                toastError({ message: 'There was an issue, please try again.' });
+            }
+        }
+    });
+
+    const onSubmit: SubmitHandler<FormData> = (data) => {
+        changePasswordMutation.mutate(data);
     };
+
 
     return (
         <ProtectedPage>
@@ -47,7 +94,8 @@ const ChangePasswrod = () => {
                 <div className="flex text-left">
                     <h1 className="text-md font-bold">Change Password</h1>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6 w-full flex flex-col justify-center items-center ">
+                <form onSubmit={handleSubmit(onSubmit)}
+                      className="space-y-6 mt-6 w-full flex flex-col justify-center items-center ">
                     <label className="w-full max-w-[28rem]">
                         <div className="label">
                             <span className="label-text">Current Password:</span>
@@ -64,7 +112,8 @@ const ChangePasswrod = () => {
                                 onClick={toggleShowCurrentPassword}
                                 className="absolute right-3 flex items-center text-gray-700"
                             >
-                                {showCurrentPassword ? <BsEyeSlashFill color="#686868"/> : <BsEyeFill color="#686868"/>}
+                                {showCurrentPassword ? <BsEyeSlashFill color="#686868"/> :
+                                    <BsEyeFill color="#686868"/>}
                             </button>
                         </div>
                         {errors.currentPassword && (
@@ -116,7 +165,8 @@ const ChangePasswrod = () => {
                                 onClick={toggleShowRepeatNewPassword}
                                 className="absolute right-3 flex items-center text-gray-700"
                             >
-                                {showRepeatNewPassword ? <BsEyeSlashFill color="#686868"/> : <BsEyeFill color="#686868"/>}
+                                {showRepeatNewPassword ? <BsEyeSlashFill color="#686868"/> :
+                                    <BsEyeFill color="#686868"/>}
                             </button>
                         </div>
                         {errors.repeatNewPassword && (
@@ -126,14 +176,16 @@ const ChangePasswrod = () => {
                         )}
                     </label>
                     <button
+                        disabled={isLoading}
                         type="submit"
                         className="btn btn-primary bg-[#F9A826] text-white border-none px-6 py-2 mt-8 hover:bg-[#e39620] w-full max-w-[28rem]"
                     >
-                        Change Password
+                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Change Password'}
                     </button>
 
                 </form>
             </div>
+            <ToastContainer/>
         </ProtectedPage>
     );
 };
