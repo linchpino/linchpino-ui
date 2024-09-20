@@ -42,18 +42,33 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
 
     return (
         <div className='rounded-md border-l-2 border-[#F9A826] shadow-lg flex flex-col mt-4 p-3 gap-y-2'>
-            <span>{props.role ==="MENTOR" ? 'Jobseeker ':'Mentor '}: {props.data.intervieweeName}</span>
+            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                <span className="font-medium text-gray-700">{props.role ==="MENTOR" ? 'Jobseeker ':'Mentor '}:</span>
+                <span className="ml-0 sm:ml-2"> {props.data.intervieweeName}</span>
+            </p>
             <div>
                 {props.isPast ?
-                    <span className='flex gap-x-2'>From: {moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
+                    <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                        <span className="font-medium text-gray-700">From: </span>
+                        <span className="ml-0 sm:ml-2"> {moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
+                    </p>
                     :
-                    <span className='flex gap-x-2'>From: <Countdown targetDate={props.data.fromTime} startDate={props.data.fromTime} endDate={props.data.toTime} /></span>
+                    <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                        <span className="font-medium text-gray-700">From: </span>
+                        <Countdown targetDate={props.data.fromTime} startDate={props.data.fromTime} endDate={props.data.toTime} />
+                    </p>
                 }
             </div>
             <div>
-                <span>Duration: {renderDuration()}</span>
+                <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <span className="font-medium text-gray-700">Duration: </span>
+                    <span className="ml-0 sm:ml-2"> {renderDuration()}</span>
+                </p>
             </div>
-            <span>Position: {props.data.interviewType}</span>
+            <p className="flex flex-col sm:flex-row items-start sm:items-center">
+                <span className="font-medium text-gray-700">Interview Type: </span>
+                <span className="ml-0 sm:ml-2"> {props.data.interviewType}</span>
+            </p>
         </div>
     );
 };

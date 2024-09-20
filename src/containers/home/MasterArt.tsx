@@ -11,7 +11,7 @@ export default function MasterArt() {
                     next interview with confidence"
             buttonText="Explore techniques"
             onClick={()=> console.log(1)}
-
+            clickable={false}
         />
     )
 }

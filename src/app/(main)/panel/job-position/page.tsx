@@ -10,6 +10,7 @@ import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
 import {ToastContainer} from "react-toastify";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {empty} from "@/utils/helper";
 
 interface JobPosition {
     id: number;
@@ -105,7 +106,8 @@ const JobPosition = () => {
             closeModal();
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to add job position'});
+            const errorMessage = error.response?.data?.error || 'Failed to add job position';
+            toastError({message: errorMessage});
         }
     });
     const editMutation = useMutation({
@@ -116,7 +118,8 @@ const JobPosition = () => {
             closeModal();
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to update job position'});
+            const errorMessage = error.response?.data?.error || 'Failed to update job position';
+            toastError({message: errorMessage});
         }
     });
     const deleteMutation = useMutation({
@@ -127,7 +130,8 @@ const JobPosition = () => {
             closeModal();
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to delete job position'});
+            const errorMessage = error.response?.data?.error || 'Failed to delete job position';
+            toastError({message: errorMessage});
         }
     });
 
@@ -277,69 +281,79 @@ const JobPosition = () => {
                 {isModalOpen && (
                     <div className="modal modal-open" data-theme="light">
                         <div className="modal-box">
-                            <form method="dialog">
-                                <button onClick={closeModal}
-                                        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
-                                </button>
-                            </form>
+                            <button onClick={closeModal}
+                                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                            </button>
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center">
                                         {selectedJobPosition ? 'Edit Job Position' : 'Add Job Position'}
                                     </h3>
-                                    <input
-                                        ref={inputRef}
-                                        type="text"
-                                        placeholder="Job Title"
-                                        value={newTitle}
-                                        onChange={(e) => setNewTitle(e.target.value)}
-                                        className="input input-bordered w-full my-4 h-10"
-                                    />
-                                    <div className="modal-action">
-                                        <button
-                                            className="w-20 btn btn-sm btn-outline btn-ghost text-center font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="w-20 btn btn-sm bg-[#F9A826] text-white text-center font-light text-[.9rem]"
-                                            onClick={handleAddOrEdit}
-                                            disabled={isLoadingAction}
-                                        >
-                                            {isLoadingAction ? (
-                                                <PulseLoader color="#FFFFFF" size={5}/>
-                                            ) : (
-                                                (selectedJobPosition ? 'Save' : 'Add')
-                                            )}
-                                        </button>
-                                    </div>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        handleAddOrEdit();
+                                    }}>
+                                        <input
+                                            ref={inputRef}
+                                            type="text"
+                                            placeholder="Job Title"
+                                            value={newTitle}
+                                            onChange={(e) => setNewTitle(e.target.value)}
+                                            className="input input-bordered w-full my-4 h-10"
+                                        />
+                                        <div className="modal-action">
+                                            <button
+                                                type="button"
+                                                className="w-20 btn btn-sm btn-outline btn-ghost text-center font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                                onClick={closeModal}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="w-20 btn btn-sm bg-[#F9A826] text-white text-center font-medium text-[.9rem]"
+                                                disabled={isLoadingAction || empty(newTitle)}
+                                            >
+                                                {isLoadingAction ? (
+                                                    <PulseLoader color="#FFFFFF" size={5}/>
+                                                ) : (
+                                                    selectedJobPosition ? 'Save' : 'Add'
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
+
                                 </>
                             ) : (
                                 <>
                                     <h3 className="text-center text-lg mt-4">
                                         Are you sure you want to delete this job position?
                                     </h3>
-                                    <div className="modal-action">
-                                        <button
-                                            className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
-                                            onClick={closeModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="w-20 btn btn-error btn-sm font-light text-[.9rem] text-white"
-                                            onClick={handleDelete}
-                                            disabled={isLoadingAction}
-                                        >
-                                            {isLoadingAction ? (
-                                                <PulseLoader color="#FFFFFF" size={5}/>
-                                            ) : (
-                                                'Delete'
-                                            )}
-                                        </button>
-
-                                    </div>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        handleDelete();
+                                    }}>
+                                        <div className="modal-action">
+                                            <button
+                                                type="button"
+                                                className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                                onClick={closeModal}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="w-20 btn btn-error btn-sm font-medium text-[.9rem] text-white"
+                                                disabled={isLoadingAction}
+                                            >
+                                                {isLoadingAction ? (
+                                                    <PulseLoader color="#FFFFFF" size={5}/>
+                                                ) : (
+                                                    'Delete'
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
                                 </>
                             )}
                         </div>

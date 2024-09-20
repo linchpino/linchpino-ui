@@ -15,13 +15,6 @@ import {BASE_URL_API} from "@/utils/system";
 import {BsPlus} from 'react-icons/bs'
 import moment from "moment/moment";
 
-type TimeCard = {
-    id: number;
-    start: string;
-    duration: string;
-    repeat: string;
-    days: string[];
-};
 type DurationOption = {
     id: number;
     time: number;
@@ -35,7 +28,6 @@ type RepeatOption = {
     value: string;
     label: string;
 };
-
 interface ProfileTimeSlotProps {
     startTime: string;
     endTime: string;
@@ -53,13 +45,9 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
     const queryClient = useQueryClient();
 
     const currentDate = new Date();
+    const nextMonthDate = new Date(currentDate);
+    nextMonthDate.setMonth(currentDate.getMonth() + 1);
 
-    const timeCards: TimeCard[] = [
-        {id: 1, start: "2024-08-10", duration: "30 min", repeat: "no", days: ["Su", "Mo", "Tu", "We", "Th"]},
-        {id: 2, start: "2024-08-11", duration: "60 min", repeat: "1 week", days: ["Su", "Mo", "Tu", "We", "Th"]},
-        {id: 3, start: "2024-08-13", duration: "15 min", repeat: "1 week", days: ["Su", "We", "Th"]},
-        {id: 4, start: "2024-08-14", duration: "45 min", repeat: "2 week", days: ["Su"]},
-    ];
     const duration: DurationOption[] = [
         {id: 1, time: 15},
         {id: 2, time: 20},
@@ -84,7 +72,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
 
     const [selectedStart, setSelectedStart] = useState<Date | null>(currentDate);
     const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(currentDate);
-    const [selectedEnd, setSelectedEnd] = useState<Date | null>(currentDate);
+    const [selectedEnd, setSelectedEnd] = useState<Date | null>(nextMonthDate);
     const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(currentDate);
     const [selectedDuration, setSelectedDuration] = useState<number>(15);
     const [selectedDay, setSelectedDay] = useState<string[]>([]);
@@ -171,7 +159,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
     return (
         <>
             <div className="flex gap-x-2 mt-8">
-                <h4>Schedule</h4>
+                    <h1 className="text-md font-bold">Schedule</h1>
                 {empty(startTime) && empty(endTime) &&
                     <button onClick={handleLoginClick}
                             className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
@@ -353,7 +341,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     <div className="relative bg-white rounded-lg shadow-xl text-xs sm:text-sm md:text-base lg:text-sm">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
                         <div className="card-body px-4 sm:px-6 py-6 flex flex-col">
-                            <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>
+                            {/*<h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>*/}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
                                     <span className="font-medium text-gray-700">Start Time:</span>

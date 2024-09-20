@@ -57,7 +57,10 @@
     color: #898989;
     cursor: not-allowed;
 }
-
+.tooltip {
+    --tooltip-color: oklch(0.24 0.08 269.56);
+    --tooltip-text-color: #fff;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;

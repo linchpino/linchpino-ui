@@ -11,6 +11,7 @@ export default function InterviewMeeting() {
                     to join your interview. You will also find the joining link in your email."
             buttonText="Attend the interview"
             onClick={()=> console.log(1)}
+            clickable={false}
         />
     )
 }

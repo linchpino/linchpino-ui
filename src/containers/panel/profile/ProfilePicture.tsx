@@ -28,7 +28,6 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
         if (avatar) {
             const fetchProfileImage = async () => {
                 setImageLoading(true);
-
                 try {
                     const response = await axios.get(`${BASE_URL_API}files/image/${avatar}`, {
                         headers: {
@@ -36,7 +35,6 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                         },
                         responseType: 'blob',
                     });
-
                     if (response.status === 200) {
                         const imageUrl = URL.createObjectURL(response.data);
                         setPreview(imageUrl);
@@ -47,8 +45,10 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                     setImageLoading(false);
                 }
             };
-
             fetchProfileImage();
+        } else {
+            setPreview("");
+            setImageLoading(false);
         }
     }, [avatar, token]);
 
@@ -107,7 +107,9 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
 
     return (
         <>
-            <h4 className='text-center md:text-left'>Profile Picture</h4>
+            <div className="flex text-left">
+                <h1 className="text-md font-bold">Profile Picture</h1>
+            </div>
             <div className='flex flex-col md:flex-row items-center gap-x-8'>
                 <div className="avatar mt-3 relative w-36">
                     <div className="flex w-36 h-36 rounded-xl bg-gray-200 items-center justify-center">
