@@ -12,7 +12,6 @@ import {BASE_URL_API} from "@/utils/system";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import 'moment-timezone';
-import {useSearchParams} from 'next/navigation';
 import useStore from "@/store/store";
 
 interface ChooseMentorProp {
@@ -45,7 +44,6 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
     useEffect(() => {
         refetch()
     }, [calendarValue]);
-
     const renderList = () => {
         if (isLoading || isRefetching) {
             return <Spinner loading={isLoading || isRefetching}/>
@@ -58,19 +56,22 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                     {
                         !empty(data) && !empty(data.length) &&
                         data.map((mentorItem, index) => {
+                            console.log(mentorItem)
                             const mentorFullName = mentorItem.mentorFirstName + " " + mentorItem.mentorLastName
-                            const isoDate=!empty(mentorItem.from) ?  moment(mentorItem.from).format('ddd, D MMMM YYYY, HH:mm') : ""
+                            const isoDate=!empty(mentorItem.validWindow?.start) ?  moment(mentorItem.validWindow?.start).format('ddd, D MMMM YYYY, HH:mm') : ""
                             return <MentorListItem
                                 key={mentorItem.mentorId}
                                 availableTimeFrom={mentorItem.validWindow?.start}
                                 availableTimeTo={mentorItem.validWindow?.end}
                                 title={mentorFullName}
+                                avatar={mentorItem.avatar}
                                 onSelect={() => {
                                     setScheduleInterviewItem('startTime', mentorItem.validWindow?.start);
                                     setScheduleInterviewItem('endTime', mentorItem.validWindow?.end);
                                     setScheduleInterviewItem('mentorAccountId', mentorItem.mentorId);
                                     setScheduleInterviewItem('mentorName', mentorFullName);
                                     setScheduleInterviewItem('isoDate', isoDate);
+                                    setScheduleInterviewItem('avatar', mentorItem.avatar);
                                     setActiveStep(activeStep + 1)
                                 }}
                             />

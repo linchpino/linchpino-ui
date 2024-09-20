@@ -71,39 +71,36 @@ const BeMentor = () => {
         }
     }
     return (
-        <>
-            <div className='bg-white p-6 sm:container text-center flex flex-col gap-y-9 items-center'>
-                <p className='text-black text-2xl mt-9'>{renderStepperTitle()}</p>
-                <div className='w-full flex items-center justify-center'>
-                    <MobileStepper
-                        variant="progress"
-                        steps={5}
-                        position="static"
-                        activeStep={activeStep}
-                        sx={{
+        <div className='bg-white p-6 sm:container text-center flex flex-col gap-y-9 items-center'>
+            <p className='text-black text-2xl mt-9'>{renderStepperTitle()}</p>
+            <div className='w-full flex items-center justify-center'>
+                <MobileStepper
+                    variant="progress"
+                    steps={5}
+                    position="static"
+                    activeStep={activeStep}
+                    sx={{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        '& .MuiLinearProgress-bar': {
+                            backgroundColor: '#F9A826',
                             width: '100%',
-                            backgroundColor: 'white',
-                            '& .MuiLinearProgress-bar': {
-                                backgroundColor: '#F9A826',
-                                width: '100%',
-                            },
-                            '& .MuiLinearProgress-determinate': {
-                                backgroundColor: '#FFDCBF',
-                            },
-                        }}
-                        nextButton={
-                            <div className='w-1'/>
-                        }
-                        backButton={
-                            <div className='w-1'/>
-                        }
-                    />
-                </div>
-                {renderCurrentStepComponent()}
-
-
+                        },
+                        '& .MuiLinearProgress-determinate': {
+                            backgroundColor: '#FFDCBF',
+                        },
+                    }}
+                    nextButton={
+                        <div className='w-1'/>
+                    }
+                    backButton={
+                        <div className='w-1'/>
+                    }
+                />
             </div>
-        </>
+            {renderCurrentStepComponent()}
+
+        </div>
     )
 }
 export default BeMentor
