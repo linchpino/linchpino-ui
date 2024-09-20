@@ -7,6 +7,7 @@ import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {textWithTooltip} from "@/utils/helper";
 
 interface UserType {
     id: number;
@@ -140,8 +141,8 @@ const User = () => {
                                     <tr key={user.id}
                                         className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
                                         <td>{currentPage * itemsPerPage + index + 1}</td>
-                                        <td>{fullName}</td>
-                                        <td>{user.email}</td>
+                                        <td>{textWithTooltip(fullName)}</td>
+                                        <td>{textWithTooltip(user.email)}</td>
                                         <td>{user.roles[0]}</td>
                                     </tr>
                                 );

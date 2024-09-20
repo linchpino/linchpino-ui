@@ -11,13 +11,14 @@ import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
 import {AsyncPaginate} from "react-select-async-paginate";
 import {useLoadJob} from "@/utils/hooks/useLoadJob";
-import {empty} from "@/utils/helper";
+import {empty, textWithTooltip} from "@/utils/helper";
 import {ToastContainer} from "react-toastify";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 
 interface InterviewType {
     id: number;
     jobPositionId: number;
+    jobPosition: { id: number, title: string }
     title: string;
 }
 
@@ -54,11 +55,15 @@ const editInterviewType = async (updatedInterviewType: {
     jobPositionId: number;
     name: string
 }, token: string | null) => {
-    const {data} = await axios.put(`${BASE_URL_API}admin/interviewtypes/${updatedInterviewType.id.toString()}`, {name: updatedInterviewType.name}, {
+    const {data} = await axios.put(`${BASE_URL_API}admin/interviewtypes/${updatedInterviewType.id.toString()}`, {
+        name: updatedInterviewType.name,
+        jobPositionId: updatedInterviewType.jobPositionId
+    }, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
+    console.log(updatedInterviewType)
     return data;
 };
 const deleteInterviewType = async (id: number, token: string | null) => {
@@ -77,7 +82,6 @@ const InterviewType = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteMode, setIsDeleteMode] = useState(false);
     const [newName, setNewName] = useState('');
-    const [selectedJobPositionId, setSelectedJobPositionId] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
@@ -168,7 +172,7 @@ const InterviewType = () => {
     const handleAddOrEdit = () => {
         setIsLoadingAction(true);
         if (selectedInterviewType) {
-            editMutation.mutate({id: selectedInterviewType.id, jobPositionId: selectedJobPositionId!, name: newName}, {
+            editMutation.mutate({id: selectedInterviewType.id, jobPositionId: jobValue?.value!, name: newName}, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({queryKey: ['interviewTypes']});
                     closeModal();
@@ -198,43 +202,23 @@ const InterviewType = () => {
             onError: () => setIsLoadingAction(false)
         });
     };
-    const fetchJobPositions = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL_API}jobposition/search`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            return response.data.content
-        } catch (error) {
-            console.error("Failed to fetch job positions:", error);
-            toastError({message: 'Failed to fetch job positions'});
-            return [];
-        }
-    };
 
     const openModal = async (interviewType: InterviewType | null = null, deleteMode: boolean = false) => {
         setIsDeleteMode(deleteMode);
         if (interviewType) {
             const fetchedData = await fetchInterviewTypeById(interviewType.id, token);
-            const allJobs = await fetchJobPositions();
             if (fetchedData) {
                 setSelectedInterviewType(interviewType);
                 setNewName(fetchedData.title);
-                const matchedJob = allJobs.find((job: { id: number; }) => job.id === fetchedData.jobPositionId);
-                if (matchedJob) {
-                    setJobValue({value: matchedJob.id, label: matchedJob.name});
-                }
+                setJobValue({value: fetchedData.jobPosition?.id, label: fetchedData.jobPosition?.title})
                 setIsModalOpen(true);
             } else {
                 setNewName('');
-                setSelectedJobPositionId(null);
                 setJobValue(null);
             }
         } else {
             setSelectedInterviewType(null);
             setNewName('');
-            setSelectedJobPositionId(null);
             setJobValue(null);
             setIsModalOpen(true);
         }
@@ -242,7 +226,6 @@ const InterviewType = () => {
     const closeModal = () => {
         setSelectedInterviewType(null);
         setNewName('');
-        setSelectedJobPositionId(null);
         setIsModalOpen(false);
         setIsDeleteMode(false);
     };
@@ -290,7 +273,8 @@ const InterviewType = () => {
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
                                 <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
-                                <th>Name</th>
+                                <th className='w-2/5'>Name</th>
+                                <th>Job Position</th>
                                 <th className="w-16 text-center rounded-tl-none rounded-tr-xl">Actions</th>
                             </tr>
                             </thead>
@@ -299,7 +283,8 @@ const InterviewType = () => {
                                 <tr key={interviewType.id}
                                     className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
                                     <td>{(currentPage) * itemsPerPage + index + 1}</td>
-                                    <td>{interviewType.title}</td>
+                                    <td>{textWithTooltip(interviewType.title)}</td>
+                                    <td>{interviewType.jobPosition?.title}</td>
                                     <td className="flex justify-center">
                                         <button
                                             className="btn btn-ghost text-blue-500 text-lg p-1 px-3"
@@ -390,14 +375,14 @@ const InterviewType = () => {
                                         <div className="modal-action">
                                             <button
                                                 type="button"
-                                                className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                                className="w-20 btn btn-sm btn-outline btn-ghost text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="w-20 btn btn-sm bg-[#F9A826] text-white font-light text-[.9rem]"
+                                                className="w-20 btn btn-sm bg-[#F9A826] text-white text-[.9rem]"
                                                 disabled={selectedInterviewType ? isLoadingAction || empty(newName) : isLoadingAction || !jobValue || empty(newName)}
                                             >
                                                 {isLoadingAction ? (
@@ -416,13 +401,13 @@ const InterviewType = () => {
                                     </h3>
                                     <div className="modal-action">
                                         <button
-                                            className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                            className="w-20 btn btn-sm btn-outline btn-ghost text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                             onClick={closeModal}
                                         >
                                             Cancel
                                         </button>
                                         <button
-                                            className="w-20 btn btn-error btn-sm font-light text-[.9rem] text-white"
+                                            className="w-20 btn btn-error btn-sm text-[.9rem] text-white"
                                             onClick={handleDelete}
                                             disabled={isLoadingAction}
                                         >

@@ -14,6 +14,7 @@ export default function BeMentor() {
                 and expertise in guiding aspiring professionals."
             buttonText="Be a mentor"
             onClick={() =>router.push('/be-mentor')}
+            clickable
        />
     )
 }
