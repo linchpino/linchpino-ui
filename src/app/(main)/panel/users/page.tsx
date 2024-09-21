@@ -1,6 +1,6 @@
 'use client'
 import React, {useState, useEffect} from 'react';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 import Select from 'react-select';
 import {BASE_URL_API} from "@/utils/system";
@@ -8,6 +8,7 @@ import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {textWithTooltip} from "@/utils/helper";
+import {toastError, toastSuccess} from "@/components/CustomToast";
 
 interface UserType {
     id: number;
@@ -15,6 +16,7 @@ interface UserType {
     lastName: string;
     email: string;
     roles: string[];
+    status: number;
 }
 
 
@@ -25,7 +27,8 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
 }> => {
     const params: any = {
         page,
-        sort: 'desc'
+        sort: 'firstName,desc',
+        size: 10
     };
     if (name) {
         params.name = name;
@@ -41,17 +44,39 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
     });
     return data;
 };
+const updateUser = async (token: string | null, updatedData: {
+    accountId: number,
+    roles: number[],
+    status: number
+}) => {
+    await axios.put(`${BASE_URL_API}admin/accounts/update`, updatedData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+};
 
 const User = () => {
-    const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage] = useState(20);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRole, setSelectedRole] = useState<number | null>(null);
-    const [isLastPage, setIsLastPage] = useState(false);
-
+    const queryClient = useQueryClient();
     const {token,} = useStore(state => ({
         token: state.token,
     }));
+    const roleOptions = [
+        {value: "", label: "All"},
+        {value: 1, label: "GUEST"},
+        {value: 2, label: "JOBSEEKER"},
+        {value: 3, label: "MENTOR"},
+        {value: 4, label: "ADMIN"}
+    ];
+    const statusOptions = [
+        {value: 1, label: "Active"},
+        {value: 2, label: "Deactivate"}
+    ];
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage] = useState(10);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedRole, setSelectedRole] = useState<number | null>(null);
+    const [isLastPage, setIsLastPage] = useState(false);
 
     const {data: usersData, isLoading} = useQuery({
         queryKey: ['users', currentPage, searchTerm, selectedRole],
@@ -64,6 +89,26 @@ const User = () => {
             console.error('Failed to fetch users:', error);
         }
     });
+
+    const mutation = useMutation({
+        mutationFn: (updatedData: {
+            accountId: number,
+            roles: number[],
+            status: number
+        }) => updateUser(token, {accountId:updatedData.accountId, roles: updatedData.roles, status: updatedData.status}),
+        onSuccess: () => {
+            toastSuccess({message: 'User updated successfully!'});
+            queryClient.invalidateQueries({queryKey: ['users']});
+        },
+        onError: (error: any) => {
+            console.error('Failed to update user:', error);
+            toastError({message: 'Error updating user.'});
+        }
+    });
+    const handleUserUpdate = (accountId: number, roles: (number)[], status: number) => {
+        mutation.mutate({accountId, roles, status});
+    };
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
         setCurrentPage(0);
@@ -72,13 +117,6 @@ const User = () => {
         setSelectedRole(selectedOption ? selectedOption.value : null);
         setCurrentPage(0);
     };
-    const roleOptions = [
-        {value: "", label: "All"},
-        {value: 1, label: "GUEST"},
-        {value: 2, label: "JOBSEEKER"},
-        {value: 3, label: "MENTOR"},
-        {value: 4, label: "ADMIN"}
-    ];
 
     useEffect(() => {
         if (isLastPage && currentPage > usersData?.totalPages) {
@@ -87,7 +125,22 @@ const User = () => {
     }, [isLastPage, currentPage, usersData]);
 
     const totalPages = usersData?.totalPages || 0;
-
+    const ToggleSwitch = ({isActive, onToggle}: { isActive: boolean, onToggle: () => void }) => (
+        <label className="relative inline-flex items-center cursor-pointer">
+            <input
+                type="checkbox"
+                checked={isActive}
+                onChange={onToggle}
+                className="sr-only peer"
+            />
+            <div
+                className={`w-11 h-6 rounded-full ${isActive ? 'bg-green-500' : 'bg-red-500'} peer-checked:bg-green-500 peer-focus:ring-4 peer-focus:ring-blue-300`}
+            />
+            <span
+                className={`absolute left-1 top-[2px] w-5 h-5 bg-white rounded-full transition-transform duration-200 transform ${isActive ? 'translate-x-full' : ''}`}
+            />
+        </label>
+    );
     return (
         <ProtectedPage>
             <div className="mx-auto">
@@ -131,11 +184,13 @@ const User = () => {
                                 <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Status</th>
                                 <th className='w-20 rounded-tl-none rounded-tr-xl'>Role</th>
                             </tr>
                             </thead>
                             <tbody>
                             {usersData?.content?.map((user: UserType, index: number) => {
+                                const isActive = user.status === 1;
                                 const fullName = `${user.firstName} ${user.lastName}`;
                                 return (
                                     <tr key={user.id}
@@ -143,7 +198,30 @@ const User = () => {
                                         <td>{currentPage * itemsPerPage + index + 1}</td>
                                         <td>{textWithTooltip(fullName)}</td>
                                         <td>{textWithTooltip(user.email)}</td>
-                                        <td>{user.roles[0]}</td>
+                                        <td>
+                                            <input
+                                                data-theme='light'
+                                                type="checkbox"
+                                                className="toggle toggle-success"
+                                                defaultChecked={isActive}
+                                                onChange={() => handleUserUpdate(user.id, user.roles.map(role => role), isActive ? 1 : 2)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <select
+                                                data-theme='light'
+                                                defaultValue={user.roles[0]}
+                                                className="select select-bordered w-full"
+                                                onChange={(e) => handleUserUpdate(user.id, [parseInt(e.target.value)], user.status)}
+                                            >
+                                                {roleOptions.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </td>
+
                                     </tr>
                                 );
                             })}
