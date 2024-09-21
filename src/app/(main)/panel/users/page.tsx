@@ -33,7 +33,7 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
     if (role !== null) {
         params.role = role;
     }
-    const {data} = await axios.get(`${BASE_URL_API}accounts/search`, {
+    const {data} = await axios.get(`${BASE_URL_API}admin/accounts/search`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
