@@ -13,7 +13,7 @@ interface FinalizeRegisterProp {
 
 const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     const {activeStep, setActiveStep} = props;
-    const {mentorInformation,setMentorInformation} = useStore();
+    const {mentorInformation, setMentorInformation} = useStore();
     const [isLoading, setIsLoading] = useState(false);
 
     const submitMentorInformation = async (data: any) => {
@@ -55,6 +55,10 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
         const dataToSend = {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
+            paymentMethodRequest: {
+                type: "FREE",
+            },
+            iban: "GB82 WEST 1234 5698 7654 32"
         };
         mutation.mutate(dataToSend);
     };
@@ -77,7 +81,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             </div>
             <div className="flex items-center justify-between w-full max-w-xs mt-10">
                 <button onClick={() => {
-                    setMentorInformation({ interviewTypeIDs: [] });
+                    setMentorInformation({interviewTypeIDs: []});
                     setActiveStep(activeStep - 1)
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
