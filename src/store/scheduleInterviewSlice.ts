@@ -9,6 +9,7 @@ export type ScheduleInterviewDetails = {
     jobSeekerEmail: string | null;
     mentorName: string | null;
     isoDate: string | null;
+    avatar: string | null;
 };
 
 export type SetScheduleInterviewDetails = (key: keyof ScheduleInterviewDetails, value: string | number | null) => void;
@@ -29,6 +30,7 @@ const createScheduleInterviewSlice: StateCreator<ScheduleInterviewState> = (set)
         jobSeekerEmail: null,
         mentorName: null,
         isoDate: null,
+        avatar: null,
     },
     setScheduleInterviewItem: (key, value) =>
         set((state) => ({
@@ -48,6 +50,7 @@ const createScheduleInterviewSlice: StateCreator<ScheduleInterviewState> = (set)
                 jobSeekerEmail: null,
                 mentorName: null,
                 isoDate: null,
+                avatar: null,
             },
         }),
 });

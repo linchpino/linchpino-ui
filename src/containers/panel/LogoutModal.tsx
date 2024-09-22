@@ -16,9 +16,9 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
 
 
     const handleLogout = () => {
-        setToken(null);
+        setToken(null,null);
         setUserInfo(null);
-        router.push('/signin');
+        router.push('/');
     };
 
     if (!isOpen) return null;
@@ -38,13 +38,13 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
                 <p className="mb-4">Are you sure you want to log out?</p>
                 <div className="modal-action">
                     <button
-                        className="w-20 btn btn-sm btn-outline btn-ghost font-light text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                        className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                         onClick={onClose}
                     >
                         Cancel
                     </button>
                     <button
-                        className="w-20 btn btn-error btn-sm font-light text-[.9rem] text-white"
+                        className="w-20 btn btn-error btn-sm font-medium text-[.9rem] text-white"
                         onClick={handleLogout}
                     >
                         Logout

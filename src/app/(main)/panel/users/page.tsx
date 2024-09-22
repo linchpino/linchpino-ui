@@ -7,12 +7,16 @@ import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {textWithTooltip} from "@/utils/helper";
 
 interface UserType {
     id: number;
-    name: string;
-    role: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    roles: string[];
 }
+
 
 const fetchUsers = async (token: string | null, page: number, name: string, role: number | null): Promise<{
     content: UserType[],
@@ -29,7 +33,7 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
     if (role !== null) {
         params.role = role;
     }
-    const {data} = await axios.get(`${BASE_URL_API}accounts/search`, {
+    const {data} = await axios.get(`${BASE_URL_API}admin/accounts/search`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -40,7 +44,7 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
 
 const User = () => {
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(20);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState<number | null>(null);
     const [isLastPage, setIsLastPage] = useState(false);
@@ -112,7 +116,6 @@ const User = () => {
                                         ? "bg-gray-200 px-4 py-2"
                                         : "px-4 py-2",
                             }}
-                            // className="w-full md:w-56 ml-0 md:ml-4 text-sm h-8"
                         />
                     </div>
                 </div>
@@ -132,18 +135,17 @@ const User = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {/*@ts-ignore*/}
-                            {usersData && usersData.content && usersData.content.map((user, index) => {
-                                const fullName = `${user.firstName} ${user.lastName}`
+                            {usersData?.content?.map((user: UserType, index: number) => {
+                                const fullName = `${user.firstName} ${user.lastName}`;
                                 return (
                                     <tr key={user.id}
                                         className={`${index % 2 === 0 ? 'bg-gray-100 text-[#111B47]' : 'bg-white text-[#111B47]'}`}>
-                                        <td>{(currentPage) * itemsPerPage + index + 1}</td>
-                                        <td>{fullName}</td>
-                                        <td>{user.email}</td>
+                                        <td>{currentPage * itemsPerPage + index + 1}</td>
+                                        <td>{textWithTooltip(fullName)}</td>
+                                        <td>{textWithTooltip(user.email)}</td>
                                         <td>{user.roles[0]}</td>
                                     </tr>
-                                )
+                                );
                             })}
                             </tbody>
                         </table>

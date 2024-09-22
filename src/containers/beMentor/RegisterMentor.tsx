@@ -1,10 +1,11 @@
+'use client'
 import React, {FC, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {AsyncPaginate} from "react-select-async-paginate";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "../../store/store";
-import {z, ZodError} from "zod";
+import {z} from "zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {empty} from "@/utils/helper";
@@ -26,22 +27,25 @@ interface Interview {
     value: number;
     label: string;
 }
+
 interface RegisterMentorProps {
-    activeStep: number,
+    activeStep: number;
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) => {
     const {mentorInformation, setMentorInformation} = useStore();
-    const {register, handleSubmit, watch, formState: {errors}} = useForm<Inputs>({
+    const {register, handleSubmit, watch, control, formState: {errors}} = useForm<Inputs>({
         resolver: zodResolver(schema),
         defaultValues: {
-            firstName: "",
-            lastName: "",
-            password: "",
+            firstName: mentorInformation.firstName,
+            lastName: mentorInformation.lastName,
+            password: mentorInformation.password,
             repeatPassword: "",
         },
     });
+    const [state, setState] = useState(false);
+
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
@@ -49,14 +53,18 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
+        console.log('data', data);
         setMentorInformation({
             firstName: data.firstName,
             lastName: data.lastName,
-            password:data.password
+            password: data.password,
         });
         setActiveStep(activeStep + 1);
     };
-    const loadInterview = async (search: string, loadedOptions: unknown[], {page}: { page: number }) => {
+
+    const loadInterview = async (search: string, loadedOptions: unknown[], {page}: {
+        page: number
+    }) => {
         try {
             const response = await axios.get(`${BASE_URL_API}interviewtypes/search`, {
                 params: {
@@ -79,11 +87,16 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
         }
     };
 
-    const handleInterviewChange = (selectedOptions: Interview[]) => {
-        const selectedInterviews = selectedOptions.map(option => ({ value: option.value, label: option.label }));
-        setMentorInformation({ interviewTypeIDs: selectedInterviews });
+    const handleInterviewChange = (selectedOptions: {
+        value: number;
+        label: string
+    }[]) => {
+        setMentorInformation({
+            interviewTypeIDs: selectedOptions
+        });
+        setState(!state);
     };
-    console.log(mentorInformation)
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full">
@@ -140,7 +153,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     )}
                 </label>
             </div>
-            <label className="form-control w-full">
+            <label className="w-full">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Field of expertise:</span>
                 </div>
@@ -156,7 +169,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                                 : "px-4 py-2",
                         multiValue: () => "bg-[#F9A82699] rounded border p-1 mx-1 truncate my-1 max-w-40",
                     }}
-                    value={mentorInformation.interviewTypeIDs.map(interview => ({value: interview.value, label: interview.label}))}
+                    value={mentorInformation.interviewTypeIDs}
                     //@ts-ignore
                     onChange={handleInterviewChange}
                     isMulti
@@ -168,7 +181,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </label>
             <button
                 type="submit"
-                disabled={empty(watch('firstName'))||empty(watch('lastName'))||empty(mentorInformation.interviewTypeIDs.length)||empty(watch('password'))||empty(watch('repeatPassword'))}
+                disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
                 className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
                 Next
             </button>

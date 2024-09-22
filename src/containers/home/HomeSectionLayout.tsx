@@ -9,10 +9,11 @@ interface HomeLayoutProps {
     buttonText: string,
     isLtr: boolean,
     onClick:() => void,
+    clickable:boolean
 }
 
 const HomeSectionLayout: FC<HomeLayoutProps> = (props) => {
-    const {imageSource, title, description, buttonText, isLtr = false,onClick} = props
+    const {imageSource, title, description, buttonText, isLtr = false,onClick,clickable=false} = props
     return (
         <div className='lg:flex items-center mt-14'>
             <Image className={`flex ${isLtr ? "order-2 lg:order-2" : "order-1 lg:order-1"}`} src={imageSource}
@@ -22,7 +23,7 @@ const HomeSectionLayout: FC<HomeLayoutProps> = (props) => {
                 className={`flex flex-col items-start lg:px-20 ${isLtr ? "order-1 lg:order-1" : "order-2 lg:order-2"} `}>
                 <h2 className="font-bold mt-4 lg:mt-0">{title}</h2>
                 <p className='whitespace-pre-line text-[#6F7CB2] mt-6'>{description}</p>
-                <button onClick={onClick} className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'>
+                <button onClick={onClick} className={`${!clickable && 'cursor-default'} btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3`}>
                     {buttonText}
                 </button>
             </div>

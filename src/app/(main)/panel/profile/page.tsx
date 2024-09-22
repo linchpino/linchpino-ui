@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import PanelContentChild from '@/containers/panel/PanelContentChild';
 import ProfilePicture from '@/containers/panel/profile/ProfilePicture';
 import ProfileInformation from '@/containers/panel/profile/ProfileInformation';
 import ProfileTimeSlot from '@/containers/panel/profile/ProfileTimeSlot';
@@ -60,14 +59,13 @@ const Profile: React.FC = () => {
 
     if (!data) return null;
 
-    const { avatar, firstName, lastName, email, type, status, detailsOfExpertise, schedule } = data;
+    const { avatar, firstName, lastName, email, detailsOfExpertise, schedule } = data;
 
     const isMentor = userRoles.includes("MENTOR");
 
     return (
-        <PanelContentChild>
+        <>
             <ProfilePicture avatar={avatar} />
-
             <ProfileInformation
                 firstName={firstName ?? ''}
                 lastName={lastName ?? ''}
@@ -87,7 +85,7 @@ const Profile: React.FC = () => {
                 />
             }
 
-        </PanelContentChild>
+        </>
     );
 };
 

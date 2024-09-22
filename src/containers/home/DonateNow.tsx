@@ -12,6 +12,7 @@ export default function DonateNow() {
                     the tools they need to succeed."
             buttonText="Donate now"
             onClick={()=> console.log(1)}
+            clickable={false}
         />
     )
 }
