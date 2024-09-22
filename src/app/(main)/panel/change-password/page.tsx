@@ -10,8 +10,6 @@ import axiosInstance from '../../../../utils/axiosInstance';
 import {useMutation} from "@tanstack/react-query";
 import {BASE_URL_API} from "@/utils/system";
 import axios, {AxiosError} from 'axios';
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {ClipLoader} from "react-spinners";
 
 interface ErrorResponse {
@@ -185,7 +183,6 @@ const ChangePasswrod = () => {
 
                 </form>
             </div>
-            <ToastContainer/>
         </ProtectedPage>
     );
 };

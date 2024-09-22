@@ -32,33 +32,7 @@ const Header: React.FC<Props> = () => {
     useEffect(() => {
         setIsClient(true);
     }, []);
-    const [activeRate, setActiveRate] = useState(4);
-    const rateData = [
-        {
-            id: 1,
-            rate: 'very-bad',
-            icon: <BsEmojiAngry size={'100%'} className={activeRate === 1 ? 'fill-[#F9A826]' : ''}/>
-        },
-        {id: 2, rate: 'bad', icon: <BsEmojiFrown size={'100%'} className={activeRate === 2 ? 'fill-[#F9A826]' : ''}/>},
-        {
-            id: 3,
-            rate: 'normal',
-            icon: <BsEmojiNeutral size={'100%'} className={activeRate === 3 ? 'fill-[#F9A826]' : ''}/>
-        },
-        {
-            id: 4,
-            rate: 'good',
-            icon: <BsEmojiSmile size={'100%'} className={activeRate === 4 ? 'fill-[#F9A826]' : ''}/>
-        },
-        {
-            id: 5,
-            rate: 'very-good',
-            icon: <BsEmojiHeartEyes size={'100%'} className={activeRate === 5 ? 'fill-[#F9A826]' : ''}/>
-        },
-    ];
-    const [comment, setComment] = useState('');
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const modalRef = useRef<HTMLDialogElement>(null);
 
     const handleLoginOrPanelClick = () => {
         if (token) {
@@ -80,53 +54,7 @@ const Header: React.FC<Props> = () => {
                         <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
                     </div>
                 </button>
-                {/*<button onClick={handleLoginClick} className="flex items-end">*/}
-                {/*    <Image src="/Logo.svg" alt='logo' width={103} height={130}/>*/}
-                {/*    <div className='ml-4 hidden lg:flex lg:flex-col'>*/}
-                {/*        <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>*/}
-                {/*        <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>*/}
-                {/*    </div>*/}
-                {/*</button>*/}
-                <dialog ref={modalRef} id="modal"
-                        className="modal">
-                    <div className="modal-box max-w-lg bg-white flex flex-col items-center">
-                        <form method="dialog">
-                            <button
-                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
-                            </button>
-                        </form>
-                        <div
-                            className="flex flex-col py-6 items-center justify-center w-full border-[.6px] rounded-md mt-10 mb-10 lg:mb-0 container p-3">
-                            <h1 className='text-xl text-center text-[#000]'>Thank you for attending to the
-                                interview</h1>
-                            <div className='flex flex-col text-center w-full max-w-xs'>
-                                <span className='mt-10'>What is your feeling?</span>
-                                <div className="flex mt-3 justify-between">
-                                    {rateData.map((item => {
-                                        return (
-                                            <div key={item.id} className="tooltip tooltip-bottom"
-                                                 data-tip={item.rate}>
-                                                <button className='w-10 xs:w-12' onClick={() => setActiveRate(item.id)}>
-                                                    {item.icon}
-                                                </button>
-                                            </div>
-                                        )
-                                    }))}
-                                </div>
-                                <span className='mt-10'>Tell us what do you want?</span>
-                                <textarea maxLength={300} value={comment}
-                                          onChange={(e) => setComment(e.target.value)}
-                                          className="textarea textarea-bordered bg-white mt-2 w-full max-w-sm"
-                                          placeholder="Write something..."></textarea>
-                                <span className="text-xs text-left ml-1 mt-1">{comment.length} / 300</span>
-                                <button
-                                    className='btn btn-sm btn-warning w-32 bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'>
-                                    Send
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </dialog>
+
                 <nav>
                     <section className="MOBILE-MENU flex lg:hidden z-20">
                         <div className='flex flex-col '>

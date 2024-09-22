@@ -383,9 +383,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                         </div>
                     </div>
                 </div>
-
             }
-
         </>
     );
 };

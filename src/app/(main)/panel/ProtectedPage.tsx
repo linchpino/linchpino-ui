@@ -34,10 +34,6 @@ const PrivatePage: React.FC<PrivatePageProps> = ({ children }) => {
         const userInfoFromCookie = Cookies.get('userInfo');
         const userInfo = userInfoFromCookie ? JSON.parse(userInfoFromCookie) : null;
         const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
-        // @ts-ignore
-        console.log(new Date().getTime() >= expiresAtDate.getTime())
-        console.log(token)
-        console.log(userInfo)
         const checkAccess = () => {
             if (!token || !expiresAt || !expiresAtDate || new Date().getTime() >= expiresAtDate.getTime()) {
                 Cookies.remove('token');
