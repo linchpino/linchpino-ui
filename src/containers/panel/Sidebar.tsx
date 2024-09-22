@@ -4,9 +4,10 @@ import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey, BsCalendar3Week, BsBoxArrowRight} from 'react-icons/bs';
-import {FaLaptopCode, FaSignOutAlt} from 'react-icons/fa';
+import {FaLaptopCode} from 'react-icons/fa';
 import useStore from '@/store/store';
 import LogoutModal from './LogoutModal';
+import {MdOutlineLockReset} from "react-icons/md";
 
 const Sidebar = () => {
     const pathname = usePathname();
@@ -53,6 +54,12 @@ const Sidebar = () => {
             label: 'Change Password',
             icon: <BsKey size={20}/>,
             roles: ['ADMIN', 'JOB_SEEKER', 'MENTOR']
+        },
+        {
+            href: '/panel/reset-password',
+            label: 'Reset Password',
+            icon: <MdOutlineLockReset size={21}/>,
+            roles: ['ADMIN']
         },
     ];
 
