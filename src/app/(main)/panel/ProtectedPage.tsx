@@ -17,6 +17,7 @@ const roleBasedAccess = {
     '/panel/job-position': ['ADMIN'],
     '/panel/interview-type': ['ADMIN'],
     '/panel/change-password': ['ADMIN', 'JOB_SEEKER', 'MENTOR'],
+    '/panel/reset-password': ['ADMIN'],
 };
 
 const PrivatePage: React.FC<PrivatePageProps> = ({ children }) => {
@@ -34,6 +35,7 @@ const PrivatePage: React.FC<PrivatePageProps> = ({ children }) => {
         const userInfoFromCookie = Cookies.get('userInfo');
         const userInfo = userInfoFromCookie ? JSON.parse(userInfoFromCookie) : null;
         const expiresAtDate = expiresAt ? new Date(expiresAt) : null;
+
         const checkAccess = () => {
             if (!token || !expiresAt || !expiresAtDate || new Date().getTime() >= expiresAtDate.getTime()) {
                 Cookies.remove('token');
@@ -72,6 +74,8 @@ const PrivatePage: React.FC<PrivatePageProps> = ({ children }) => {
             case '/panel/interviews':
                 return <InterviewsSkeleton />;
             case '/panel/change-password':
+                return <PasswordChangeSkeleton />;
+            case '/panel/reset-password':
                 return <PasswordChangeSkeleton />;
             default:
                 return <CrudSkeleton />;
