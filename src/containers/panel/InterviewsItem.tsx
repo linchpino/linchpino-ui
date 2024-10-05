@@ -135,14 +135,16 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
     }
     return (
         <div
-            className='rounded-xl h-fit hover:border-t-[.1px] hover:border-[#F2A926] shadow-lg bg-white flex flex-col mt-3 p-6 gap-y-4 xs:gap-y-2  duration-200 transition-all ease-linear'>
+            className='rounded-xl hover:border-t-[.1px] hover:border-[#F2A926]
+             shadow-[0_4px_10px_rgba(204,204,204,0.65)]
+             bg-white flex flex-col mt-3 p-6 gap-y-4 xs:gap-y-2  duration-200 transition-all ease-linear'>
 
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700 ">
                     <FaUserAlt className="text-[#F9A826]"/>
                     <span>{props.role === "MENTOR" ? 'Jobseeker' : 'Mentor'}:</span>
                 </div>
-                <span className="text-black">{props.data.intervieweeName}</span>
+                <span className="text-black text-center">{props.data.intervieweeName}</span>
             </div>
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700  font-medium">
@@ -160,7 +162,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                 {props.isPast ? (
                     <>
                         <span
-                            className="ml-2 text-black font-semibold">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
+                            className="ml-2 text-black text-center font-semibold">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
                     </>
                 ) : (
                     <>
@@ -174,14 +176,14 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                     <FaStopwatch className="text-[#F472B6]"/>
                     <span>Duration:</span>
                 </div>
-                <span className="ml-2 text-black ">{renderDuration()}</span>
+                <span className="ml-2 text-black text-center">{renderDuration()}</span>
             </div>
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700 text-sm font-medium">
                     <FaClock className="text-[#60A5FA]"/>
                     <span>Interview Type:</span>
                 </div>
-                <span className="ml-2 font-semibold text-black">{props.data.interviewType}</span>
+                <span className="ml-2 font-semibold text-black text-center">{props.data.interviewType}</span>
 
             </div>
 
