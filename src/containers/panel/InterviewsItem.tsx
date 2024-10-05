@@ -202,7 +202,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                     className={`mt-3 w-full flex justify-center items-center border-[.1px] border-green-300 text-green-600 text-sm font-semibold py-2 px-4 rounded-xl shadow-lg`}
                     disabled={goToInterviewLoading}
                 >
-                    {goToInterviewLoading ? <ClipLoader size={18} color={"#fff"}/> : <><FaLink className="mr-2"/> Go to
+                    {goToInterviewLoading ? <ClipLoader size={18} color={"#a8a7a5"}/> : <><FaLink className="mr-2"/> Go to
                         Interview</>}
                 </button>
             ) : null}
