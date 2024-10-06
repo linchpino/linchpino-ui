@@ -1,7 +1,7 @@
 import React, {FC, useRef, useState} from "react";
 import moment from 'moment';
 import Countdown from "../../components/Countdown";
-import {FaUserAlt, FaClock, FaCalendarAlt, FaStopwatch, FaCommentDots, FaLink} from 'react-icons/fa';
+import {FaUserAlt, FaClock, FaCalendarAlt, FaStopwatch, FaCommentDots} from 'react-icons/fa';
 import {BsEmojiAngry, BsEmojiFrown, BsEmojiHeartEyes, BsEmojiNeutral, BsEmojiSmile} from "react-icons/bs";
 import {useMutation} from "@tanstack/react-query";
 import axiosInstance from "@/utils/axiosInstance";
@@ -47,7 +47,6 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
     ];
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
-    const [goToInterviewLoading, setGoToInterviewLoading] = useState(false);
 
     const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -114,25 +113,6 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
         if (modalRef.current) modalRef.current.showModal();
     };
 
-    const handleGoToInterview = async () => {
-        setGoToInterviewLoading(true);
-        try {
-            const response = await axiosInstance.get(`${BASE_URL_API}interviews/${props.data.id}/validity`);
-            if (response.data.verifyStatus) {
-                window.location.href = response.data.link;
-            } else {
-                toastError({message: 'Interview is not valid.'});
-            }
-        } catch (error) {
-            toastError({message: 'An error occurred while verifying the interview.'});
-        } finally {
-            setGoToInterviewLoading(false);
-        }
-    };
-    if (!props.isPast) {
-        console.log(moment(props.data.fromTime).diff(moment(), 'minutes') <= 5)
-        console.log(!props.isPast && moment(props.data.fromTime).diff(moment(), 'minutes') <= 5)
-    }
     return (
         <div
             className='rounded-xl hover:border-t-[.1px] hover:border-[#F2A926]
@@ -162,7 +142,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                 {props.isPast ? (
                     <>
                         <span
-                            className="ml-2 text-black text-center font-semibold">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
+                            className="ml-2 text-black font-semibold text-center">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
                     </>
                 ) : (
                     <>
@@ -196,17 +176,6 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                     Feedback
                 </button>
             )}
-            {!props.isPast && moment(props.data.fromTime).diff(moment(), 'minutes') <= 5 ? (
-                <button
-                    onClick={handleGoToInterview}
-                    className={`mt-3 w-full flex justify-center items-center border-[.1px] border-green-300 text-green-600 text-sm font-semibold py-2 px-4 rounded-xl shadow-lg`}
-                    disabled={goToInterviewLoading}
-                >
-                    {goToInterviewLoading ? <ClipLoader size={18} color={"#a8a7a5"}/> : <><FaLink className="mr-2"/> Go to
-                        Interview</>}
-                </button>
-            ) : null}
-
             <dialog ref={modalRef} id="modal"
                     className="modal">
                 <div className="modal-box max-w-lg bg-white flex flex-col items-center">
