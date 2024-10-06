@@ -5,11 +5,19 @@ import {useMutation, } from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from '@/components/CustomToast';
+import {empty} from "@/utils/helper";
 
 interface FinalizeRegisterProp {
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
+export interface PaymentMethodRequest {
+    type:string;
+    min?: string;
+    max?: string;
+    fixRate?: string;
+}
+
 
 const MAX_LENGTH = 20;
 const shortenText = (text: string, maxLength: number) => {
@@ -56,12 +64,20 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     const handleConfirm = () => {
         const interviewTypeIDsPush = mentorInformation.interviewTypeIDs.map(type => type.value);
         const {interviewTypeIDs, ...rest} = mentorInformation;
+        const paymentMethodRequest: Partial<PaymentMethodRequest> = {
+            type:mentorInformation.paymentMethodRequest.type.value
+        }
+        if (mentorInformation.paymentMethodRequest.type.value==="PAY_AS_YOU_GO"){
+            paymentMethodRequest.min = mentorInformation.paymentMethodRequest.min
+            paymentMethodRequest.max = mentorInformation.paymentMethodRequest.max
+        }
+        if (mentorInformation.paymentMethodRequest.type.value==="FIX_PRICE"){
+            paymentMethodRequest.fixRate = mentorInformation.paymentMethodRequest.fixRate
+        }
         const dataToSend = {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
-            paymentMethodRequest: {
-                type: "FREE",
-            },
+            paymentMethodRequest,
             iban: "GB82 WEST 1234 5698 7654 32"
         };
         mutation.mutate(dataToSend);
