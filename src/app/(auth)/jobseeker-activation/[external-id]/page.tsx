@@ -10,8 +10,6 @@ import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import {ClipLoader} from "react-spinners";
-import {ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 const schema = z.object({
@@ -72,7 +70,6 @@ export default function JobseekerActivation() {
     };
     return (
         <>
-            <ToastContainer/>
             <div className='bg-white container pb-5 lg:pb-0'>
                 <div className="flex flex-col items-center justify-center gap-y-6 mt-14">
                     <h1 className='text-black text-3xl text-center'>Activate Your Account</h1>

@@ -52,19 +52,19 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
         );
     }
     return (
-            <div className={`${isPast && 'mt-8'} flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative`}>
+            <div className={`${isPast && 'mt-10'} flex flex-col gap-x-8 gap-y-5 lg:gap-y-0 relative`}>
                 <div>
                     <h1 className="text-md font-bold">{title}</h1>
-                    {data?.content.length === 0 ? (
+                    {data?.content.length === 0 ?
                         <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
-                    ) : (
-                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4'>
-                            {data?.content.map((interview: Interview) => (
-                                <InterviewsItem key={interview.intervieweeId} data={interview} isPast={isPast}
+                     :
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-2'>
+                            {data?.content.map((interview: Interview,index:number) => (
+                                <InterviewsItem key={index+1} data={interview} isPast={isPast}
                                                 role={role}/>
                             ))}
                         </div>
-                    )}
+                    }
                     {data && data.number < data.totalPages - 1 && (
                         <button
                             onClick={loadMore}

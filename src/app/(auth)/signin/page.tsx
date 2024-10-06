@@ -3,9 +3,7 @@ import {SubmitHandler, useForm} from 'react-hook-form';
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import {BASE_URL, BASE_URL_API} from "@/utils/system";
-import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
-import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
@@ -198,7 +196,6 @@ export default function SignIn() {
                     </div>
                 </form>
             </div>
-            <ToastContainer/>
         </>
     );
 }

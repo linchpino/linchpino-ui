@@ -8,7 +8,6 @@ import {toastError, toastSuccess} from '@/components/CustomToast';
 import {AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
-import {ToastContainer} from "react-toastify";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {empty} from "@/utils/helper";
 
@@ -359,8 +358,6 @@ const JobPosition = () => {
                         </div>
                     </div>
                 )}
-                <ToastContainer/>
-
             </div>
         </ProtectedPage>
     );

@@ -9,7 +9,6 @@ import Confirmation from "../../../containers/scheduleInteview/Confirmation";
 import {Value} from "react-multi-date-picker";
 import useStore from "../../../store/store";
 import {useMutation} from "@tanstack/react-query";
-import {ToastContainer} from "react-toastify";
 import axios from "axios";
 import {BASE_URL_API} from "../../../utils/system";
 import {ClipLoader} from "react-spinners";
@@ -137,8 +136,6 @@ const ScheduleInterview = () => {
                             </div>
                         }
                     </form>
-                    <ToastContainer/>
-
                 </Finalize>
             )
         } else if (activeStep === 3) {

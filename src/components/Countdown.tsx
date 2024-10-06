@@ -80,11 +80,11 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, startDate, endDate })
     };
 
     const determineTextColor = (days: number, hours: number): string => {
-        let textColor = 'text-gray-500';
+        let textColor = 'text-gray-500 text-center';
 
-        if (hours < 24) textColor = 'text-orange-400';
-        if (hours < 2) textColor = 'text-orange-500';
-        if (hours < 1) textColor = 'text-red-600';
+        if (hours < 24) textColor = 'text-orange-400 text-center';
+        if (hours < 2) textColor = 'text-orange-500 text-center';
+        if (hours < 1) textColor = 'text-red-600 text-center';
 
         return textColor;
     };

@@ -12,7 +12,6 @@ import PulseLoader from "react-spinners/PulseLoader";
 import {AsyncPaginate} from "react-select-async-paginate";
 import {useLoadJob} from "@/utils/hooks/useLoadJob";
 import {empty, textWithTooltip} from "@/utils/helper";
-import {ToastContainer} from "react-toastify";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 
 interface InterviewType {
@@ -423,8 +422,6 @@ const InterviewType = () => {
                         </div>
                     </div>
                 )}
-                <ToastContainer/>
-
             </div>
         </ProtectedPage>
     )

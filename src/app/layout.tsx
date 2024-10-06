@@ -3,8 +3,10 @@ import QueryProvider from '@/app/QueryProvider';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {Suspense} from "react";
+import React, {Suspense} from "react";
 import Loading from "@/app/loading";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RootLayout({
                                        children,
@@ -18,8 +20,10 @@ export default function RootLayout({
                 <Header/>
                 <Suspense fallback={<Loading/>}>
                     {children}
+                    <ToastContainer/>
                 </Suspense>
                 <Footer/>
+
             </div>
         </QueryProvider>
         </body>

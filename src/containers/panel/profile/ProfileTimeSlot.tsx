@@ -73,7 +73,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
     const [selectedStart, setSelectedStart] = useState<Date | null>(currentDate);
     const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(currentDate);
     const [selectedEnd, setSelectedEnd] = useState<Date | null>(nextMonthDate);
-    const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(currentDate);
+    const [selectedEndTime, setSelectedEndTime] = useState<Date | null>(nextMonthDate);
     const [selectedDuration, setSelectedDuration] = useState<number>(15);
     const [selectedDay, setSelectedDay] = useState<string[]>([]);
     const [selectedInterval, setSelectedInterval] = useState("");
@@ -141,7 +141,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
         setLoading(true);
 
         const formattedStartTime = formatDateTime(selectedStart || currentDate);
-        const formattedEndTime = formatDateTime(selectedEnd || currentDate);
+        const formattedEndTime = formatDateTime(selectedEnd || nextMonthDate);
         let timeSlotData: any = {
             startTime: formattedStartTime,
             duration: selectedDuration,
@@ -383,9 +383,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                         </div>
                     </div>
                 </div>
-
             }
-
         </>
     );
 };
