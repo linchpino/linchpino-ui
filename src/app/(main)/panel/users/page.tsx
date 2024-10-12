@@ -9,6 +9,7 @@ import Spinner from "@/components/Spinner";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {textWithTooltip} from "@/utils/helper";
 import {toastError, toastSuccess} from "@/components/CustomToast";
+import PulseLoader from "react-spinners/PulseLoader";
 interface UserType {
     id: number;
     firstName: string;
@@ -85,6 +86,7 @@ const User = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState<number | null>(null);
     const [isLastPage, setIsLastPage] = useState(false);
+    const [loadingState, setLoadingState] = useState<{ [userId: number]: { role: boolean; status: boolean } }>({});
 
     const {data: usersData, isLoading} = useQuery<UsersData>({
         queryKey: ['users', currentPage, searchTerm, selectedRole],
@@ -105,22 +107,48 @@ const User = () => {
             status: number
         }) => updateUser(token, updatedData),
         onSuccess: () => {
-            toastSuccess({ message: 'User updated successfully!' });
             queryClient.invalidateQueries({ queryKey: ['users'] });
+            toastSuccess({ message: 'User updated successfully!' });
         },
         onError: (error) => {
             console.error('Failed to update user:', error);
             toastError({ message: 'Error updating user.' });
         }
     });
+    const handleUserUpdate = (accountId: number, roles: string[], status: string, type: 'role' | 'status') => {
+        setLoadingState((prevState) => ({
+            ...prevState,
+            [accountId]: {
+                ...prevState[accountId],
+                [type]: true,
+            },
+        }));
 
-    const handleUserUpdate = (accountId: number, roles: string[], status: string) => {
         const roleNumbers = mapRolesToNumbers(roles);
         const statusNumber = statusTextToNumber[status as StatusKeys];
+
         mutation.mutate({
             accountId,
             roles: roleNumbers,
             status: statusNumber
+        }, {
+            onSuccess: () => {
+                toastSuccess({ message: 'User updated successfully!' });
+                queryClient.invalidateQueries({ queryKey: ['users'] });
+            },
+            onError: (error) => {
+                console.error('Failed to update user:', error);
+                toastError({ message: 'Error updating user.' });
+            },
+            onSettled: () => {
+                setLoadingState((prevState) => ({
+                    ...prevState,
+                    [accountId]: {
+                        ...prevState[accountId],
+                        [type]: false,
+                    },
+                }));
+            }
         });
     };
 
@@ -207,32 +235,42 @@ const User = () => {
                                     <td>{textWithTooltip(`${user.firstName} ${user.lastName}`)}</td>
                                     <td>{textWithTooltip(user.email)}</td>
                                     <td>
-                                        <input
-                                            data-theme="light"
-                                            type="checkbox"
-                                            className="toggle toggle-success toggle-sm"
-                                            checked={user.status === "ACTIVATED"}
-                                            onChange={() => handleUserUpdate(user.id, user.roles, user.status === "ACTIVATED" ? "DEACTIVATED" : "ACTIVATED")}
-                                        />
+                                        {loadingState[user.id]?.status  ? (
+                                            <PulseLoader size={8} color="#F9A826"/>
+                                        ) : (
+                                            <input
+                                                data-theme="light"
+                                                type="checkbox"
+                                                className="toggle toggle-sm"
+                                                checked={user.status === "ACTIVATED"}
+                                                onChange={() => handleUserUpdate(user.id, user.roles, user.status === "ACTIVATED" ? "DEACTIVATED" : "ACTIVATED", 'status')}
+                                            />
+                                        )}
+
                                     </td>
                                     <td>
-                                        <Select
-                                            isMulti
-                                            options={[
-                                                { value: "GUEST", label: "GUEST" },
-                                                { value: "JOBSEEKER", label: "JOBSEEKER" },
-                                                { value: "MENTOR", label: "MENTOR" },
-                                                { value: "ADMIN", label: "ADMIN" }
-                                            ]}
-                                            //@ts-ignore
-                                            menuPortalTarget={document.body}
-                                            styles={{
-                                                menuPortal: base => ({ ...base, zIndex: 9999 })
-                                            }}
-                                            //@ts-ignore
-                                            defaultValue={user.roles.map(role => ({ value: role, label: role }))}
-                                            onChange={(selectedOptions) => handleUserUpdate(user.id, selectedOptions.map(opt => opt.value), user.status)}
-                                        />
+                                        {loadingState[user.id]?.role  ?
+                                                <PulseLoader size={8} color="#F9A826"/>
+                                            :
+                                            <Select
+                                                isMulti
+                                                options={[
+                                                    { value: "GUEST", label: "GUEST" },
+                                                    { value: "JOBSEEKER", label: "JOBSEEKER" },
+                                                    { value: "MENTOR", label: "MENTOR" },
+                                                    { value: "ADMIN", label: "ADMIN" }
+                                                ]}
+                                                //@ts-ignore
+                                                menuPortalTarget={document.body}
+                                                styles={{
+                                                    menuPortal: base => ({ ...base, zIndex: 9999 })
+                                                }}
+                                                //@ts-ignore
+                                                value={user.roles.map(role => ({ value: role, label: role }))}
+                                                onChange={(selectedOptions) => handleUserUpdate(user.id, selectedOptions.map(opt => opt.value), user.status, 'role')}
+                                            />
+                                        }
+
                                     </td>
                                 </tr>
                             ))}
