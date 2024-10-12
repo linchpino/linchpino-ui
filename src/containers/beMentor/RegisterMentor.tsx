@@ -18,21 +18,23 @@ const schema = z.object({
     password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
     repeatPassword: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
     sheba: z.string(),
-    min: z.string(),
-    max: z.string(),
-    fixPrice: z.string(),
+    min: z.string().optional(),
+    max: z.string().optional(),
+    fixPrice: z.string().optional(),
 
-}).refine((data) => data.password === data.repeatPassword, {
-    message: "Passwords don't match",
-    path: ["repeatPassword"],
-});
+})
+    .refine((data) => data.password === data.repeatPassword, {
+        message: "Passwords don't match",
+        path: ["repeatPassword"],
+    })
+
 
 type Inputs = z.infer<typeof schema>;
 
 export interface PaymentMethodRequest {
     type: {
-        value:string,
-        label:string
+        value: string,
+        label: string
     };
     min?: string;
     max?: string;
@@ -59,9 +61,9 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             password: mentorInformation.password,
             repeatPassword: "",
             sheba: mentorInformation.sheba,
-            min:mentorInformation.paymentMethodRequest?.min,
-            max:mentorInformation.paymentMethodRequest?.max,
-            fixPrice:mentorInformation.paymentMethodRequest?.fixRate,
+            min: mentorInformation.paymentMethodRequest?.min,
+            max: mentorInformation.paymentMethodRequest?.max,
+            fixPrice: mentorInformation.paymentMethodRequest?.fixRate,
         },
     });
     const [state, setState] = useState(false);
@@ -75,7 +77,6 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log(1)
         const paymentMethodRequest: Partial<PaymentMethodRequest> = {
             type: paymentMethod
         };
@@ -274,8 +275,16 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </div>
             <button
                 type="submit"
-                disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) ||
-                    empty(watch('password')) || empty(watch('repeatPassword')) || empty(watch('sheba'))}
+                disabled={
+                    empty(watch('firstName')) ||
+                    empty(watch('lastName')) ||
+                    empty(mentorInformation.interviewTypeIDs.length) ||
+                    empty(watch('password')) ||
+                    empty(watch('repeatPassword')) ||
+                    empty(watch('sheba')) ||
+                    (paymentMethod?.value === "PAY_AS_YOU_GO" && empty(watch('min')) || empty(watch('max'))) ||
+                    (paymentMethod?.value === "FIX_PRICE" && empty(watch('fixPrice')))
+                }
                 className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-12 py-2 px-3'>
                 Next
             </button>

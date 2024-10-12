@@ -5,7 +5,6 @@ import {useMutation, } from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from '@/components/CustomToast';
-import {empty} from "@/utils/helper";
 
 interface FinalizeRegisterProp {
     activeStep: number,
@@ -28,7 +27,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     const {mentorInformation, setMentorInformation} = useStore();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submitMentorInformation = async (data: any) => {
+    const submitMentorInformation = async (data: Omit<any,'sheba'>) => {
         const response = await axios.post(`${BASE_URL_API}accounts/mentors`, data);
         return response.data;
     };
@@ -63,7 +62,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
     });
     const handleConfirm = () => {
         const interviewTypeIDsPush = mentorInformation.interviewTypeIDs.map(type => type.value);
-        const {interviewTypeIDs, ...rest} = mentorInformation;
+        const {interviewTypeIDs,sheba, ...rest} = mentorInformation;
         const paymentMethodRequest: Partial<PaymentMethodRequest> = {
             type:mentorInformation.paymentMethodRequest.type.value
         }
