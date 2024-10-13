@@ -43,7 +43,6 @@ const addJobPosition = async (newJobPosition: { title: string }, token: string |
             Authorization: `Bearer ${token}`,
         },
     });
-    console.log(data)
     return data;
 };
 const editJobPosition = async (updatedJobPosition: { id: number; title: string }, token: string | null) => {
