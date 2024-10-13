@@ -4,10 +4,8 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import Link from "next/link";
 import {z} from "zod";
 import axios from "axios";
-import {ToastContainer} from "react-toastify";
 import {ClipLoader} from 'react-spinners';
 import {useState} from 'react';
-import 'react-toastify/dist/ReactToastify.css';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
@@ -170,7 +168,6 @@ export default function SignUp() {
                     </div>
                 </div>
             </div>
-            <ToastContainer/>
         </>
     );
 }

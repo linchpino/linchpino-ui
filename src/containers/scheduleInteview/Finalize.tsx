@@ -4,7 +4,6 @@ import React, {FC, useEffect, useState} from "react";
 import useStore from "@/store/store";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
-import {ClipLoader} from "react-spinners";
 import PulseLoader from "react-spinners/PulseLoader";
 
 type Inputs = {

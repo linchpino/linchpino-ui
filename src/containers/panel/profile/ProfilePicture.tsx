@@ -4,8 +4,6 @@ import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import {toastSuccess, toastError} from "@/components/CustomToast";
-import 'react-toastify/dist/ReactToastify.css';
-import {ToastContainer} from 'react-toastify';
 import {FaCamera} from 'react-icons/fa';
 import {empty} from "@/utils/helper";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -155,7 +153,6 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                     </button>
                 }
             </div>
-            <ToastContainer/>
         </>
     );
 }

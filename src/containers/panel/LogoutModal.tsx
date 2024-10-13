@@ -1,24 +1,24 @@
 import React from 'react';
 import useStore from '@/store/store';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
 interface LogoutModalProps {
     onClose: () => void;
-    isOpen : boolean
+    isOpen: boolean
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({isOpen, onClose}) => {
     const router = useRouter();
-    const { setToken, setUserInfo } = useStore(state => ({
+    const {setToken, setUserInfo} = useStore(state => ({
         setToken: state.setToken,
         setUserInfo: state.setUserInfo,
     }));
 
 
     const handleLogout = () => {
-        setToken(null,null);
-        setUserInfo(null);
         router.push('/');
+        setToken(null, null);
+        setUserInfo(null);
     };
 
     if (!isOpen) return null;

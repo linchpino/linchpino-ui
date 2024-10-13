@@ -1,11 +1,8 @@
 //@ts-nocheck
 'use client'
 import React, {useState} from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Rating from "@mui/material/Rating";
 import {BsInstagram, BsLinkedin, BsMailbox, BsClock, BsFillPersonFill} from "react-icons/bs";
-import {empty} from "@/utils/helper";
 
 const UserProfile = () => {
     const [timeData, setTimeData] = useState([{id: 1, available: "12:00 - 12:30"}, {
@@ -95,8 +92,6 @@ const UserProfile = () => {
     ]
     const [activeDate , setActiveDate]=useState(null)
     const [activeTime, setActiveTime] = useState(null);
-    console.log(activeDate)
-    console.log(timeData)
     return (
         <div>
             <div
