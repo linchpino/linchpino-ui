@@ -1,36 +1,41 @@
 import Image from "next/image";
-import React, {FC, useState} from "react";
+import React, { FC, useState } from "react";
 import useStore from "@/store/store";
-import {useMutation, } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import {BASE_URL_API} from "@/utils/system";
-import {toastError, toastSuccess} from '@/components/CustomToast';
+import { BASE_URL_API } from "@/utils/system";
+import { toastError, toastSuccess } from '@/components/CustomToast';
+import {ToastContainer} from "react-toastify";
+
+import 'react-toastify/dist/ReactToastify.css';
 
 interface FinalizeRegisterProp {
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
+
 export interface PaymentMethodRequest {
-    type:string;
+    type: string;
     min?: string;
     max?: string;
     fixRate?: string;
 }
 
-
 const MAX_LENGTH = 20;
 const shortenText = (text: string, maxLength: number) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 };
+
 const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
-    const {activeStep, setActiveStep} = props;
-    const {mentorInformation, setMentorInformation} = useStore();
+    const { activeStep, setActiveStep } = props;
+    const { mentorInformation, setMentorInformation } = useStore();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submitMentorInformation = async (data: Omit<any,'sheba'>) => {
+    const submitMentorInformation = async (data: Omit<any, 'sheba'>) => {
         const response = await axios.post(`${BASE_URL_API}accounts/mentors`, data);
         return response.data;
     };
+
     const mutation = useMutation({
         mutationFn: async (data: any) => {
             setIsLoading(true);
@@ -38,49 +43,50 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             setIsLoading(false);
         },
         onSuccess: () => {
-            toastSuccess({message: "Your information submitted successfully!"});
+            toastSuccess({ message: "Your information submitted successfully!" });
             setActiveStep(activeStep + 1);
         },
         onError: (error: any) => {
             setIsLoading(false);
             if (error.response) {
                 const status = error.response.status;
-                const errorMessage = error.response.data.error;
-                if (status === 400) {
-                    toastError({message: errorMessage});
-                } else if (status === 401) {
-                    toastError({message: errorMessage});
-                } else if (status === 500) {
-                    toastError({message: errorMessage});
-                } else {
-                    toastError({message: errorMessage});
+                let errorMessage = "An error occurred";
+                if (status === 400 || status === 401 || status === 500) {
+                    errorMessage = error.response.data.error || "An unexpected error occurred.";
                 }
+                toastError({ message: errorMessage });
             } else {
-                toastError({message: "Network Error. Please check your internet connection."});
+                toastError({ message: "Network Error. Please check your internet connection." });
             }
         }
     });
+
     const handleConfirm = () => {
         const interviewTypeIDsPush = mentorInformation.interviewTypeIDs.map(type => type.value);
-        const {interviewTypeIDs,sheba, ...rest} = mentorInformation;
+        const { interviewTypeIDs, sheba, ...rest } = mentorInformation;
         const paymentMethodRequest: Partial<PaymentMethodRequest> = {
-            type:mentorInformation.paymentMethodRequest.type.value
+            type: mentorInformation.paymentMethodRequest.type.value
+        };
+
+        if (mentorInformation.paymentMethodRequest.type.value === "PAY_AS_YOU_GO") {
+            paymentMethodRequest.min = mentorInformation.paymentMethodRequest.min;
+            paymentMethodRequest.max = mentorInformation.paymentMethodRequest.max;
         }
-        if (mentorInformation.paymentMethodRequest.type.value==="PAY_AS_YOU_GO"){
-            paymentMethodRequest.min = mentorInformation.paymentMethodRequest.min
-            paymentMethodRequest.max = mentorInformation.paymentMethodRequest.max
+
+        if (mentorInformation.paymentMethodRequest.type.value === "FIX_PRICE") {
+            paymentMethodRequest.fixRate = mentorInformation.paymentMethodRequest.fixRate;
         }
-        if (mentorInformation.paymentMethodRequest.type.value==="FIX_PRICE"){
-            paymentMethodRequest.fixRate = mentorInformation.paymentMethodRequest.fixRate
-        }
+
         const dataToSend = {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
             paymentMethodRequest,
-            iban: "GB82 WEST 1234 5698 7654 32"
+            iban: mentorInformation.sheba
         };
+
         mutation.mutate(dataToSend);
     };
+
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
@@ -112,6 +118,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                     {isLoading ? 'Loading...' : 'Confirm'}
                 </button>
             </div>
+            <ToastContainer/>
 
         </div>
     );
