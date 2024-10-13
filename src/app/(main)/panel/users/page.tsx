@@ -238,19 +238,22 @@ const User = () => {
                                         {loadingState[user.id]?.status  ? (
                                             <PulseLoader size={8} color="#F9A826"/>
                                         ) : (
-                                            <input
-                                                data-theme="light"
-                                                type="checkbox"
-                                                className="toggle toggle-sm"
-                                                checked={user.status === "ACTIVATED"}
-                                                onChange={() => handleUserUpdate(user.id, user.roles, user.status === "ACTIVATED" ? "DEACTIVATED" : "ACTIVATED", 'status')}
-                                            />
+                                            <div className="tooltip tooltip-right whitespace-pre-line "
+                                                 data-tip={user.status}>
+                                                <input
+                                                    data-theme="light"
+                                                    type="checkbox"
+                                                    className="toggle toggle-sm"
+                                                    checked={user.status === "ACTIVATED"}
+                                                    onChange={() => handleUserUpdate(user.id, user.roles, user.status === "ACTIVATED" ? "DEACTIVATED" : "ACTIVATED", 'status')}
+                                                />
+                                            </div>
                                         )}
 
                                     </td>
                                     <td>
-                                        {loadingState[user.id]?.role  ?
-                                                <PulseLoader size={8} color="#F9A826"/>
+                                        {loadingState[user.id]?.role ?
+                                            <PulseLoader size={8} color="#F9A826"/>
                                             :
                                             <Select
                                                 isMulti
