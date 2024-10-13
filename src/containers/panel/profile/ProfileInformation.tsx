@@ -107,7 +107,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
     const onSubmit: SubmitHandler<UpdateFields> = async (data) => {
         console.log(data)
         try {
-            await sendUpdateForm(data);
+            // await sendUpdateForm(data);
         } catch (error) {
             console.error('Signup failed', error);
         }
