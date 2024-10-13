@@ -8,7 +8,7 @@ import {toastError, toastSuccess} from '@/components/CustomToast';
 import {AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai';
 import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
-import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import ProtectedPage from "@/app/[lng]/panel/ProtectedPage";
 import {empty} from "@/utils/helper";
 
 interface JobPosition {

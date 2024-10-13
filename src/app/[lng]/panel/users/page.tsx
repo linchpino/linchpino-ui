@@ -6,7 +6,7 @@ import Select from 'react-select';
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
-import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import ProtectedPage from "@/app/[lng]/panel/ProtectedPage";
 import {textWithTooltip} from "@/utils/helper";
 
 interface UserType {

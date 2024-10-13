@@ -12,7 +12,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import {AsyncPaginate} from "react-select-async-paginate";
 import {useLoadJob} from "@/utils/hooks/useLoadJob";
 import {empty, textWithTooltip} from "@/utils/helper";
-import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import ProtectedPage from "@/app/[lng]/panel/ProtectedPage";
 
 interface InterviewType {
     id: number;

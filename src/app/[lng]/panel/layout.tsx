@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import Sidebar from "@/containers/panel/Sidebar";
 import {ReactNode, Suspense} from "react";
-import Loading from "@/app/(main)/panel/loading";
+import Loading from "@/app/[lng]/panel/loading";
 import PanelContentChild from "@/containers/panel/PanelContentChild";
 import Cookies from 'js-cookie';
 

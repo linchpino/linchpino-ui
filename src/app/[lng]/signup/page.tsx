@@ -162,7 +162,7 @@ export default function SignUp() {
                             Login
                         </Link>
                         /
-                        <Link href='/' className='text-[#F9A826] text-sm'>
+                        <Link href='/public' className='text-[#F9A826] text-sm'>
                             Forgot Password
                         </Link>
                     </div>

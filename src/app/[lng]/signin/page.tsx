@@ -10,8 +10,8 @@ import useStore from "@/store/store";
 import {useRouter} from "next/navigation";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import Cookies from "js-cookie";
-import { useTranslation } from 'react-i18next';
-import '../../../i18n';
+import { useTranslation } from '../../i18n';
+
 interface SignInForm {
     email: string;
     password: string;
@@ -32,7 +32,7 @@ const fetchUserInfo = async (token: string) => {
 };
 
 
-export default function SignIn() {
+export default async function SignIn() {
     const router = useRouter()
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
@@ -148,7 +148,7 @@ export default function SignIn() {
             setIsLoading(false);
         }
     });
-    const { t } = useTranslation();
+    const { t } = await useTranslation('fa')
 
     return (
         <>
@@ -157,10 +157,11 @@ export default function SignIn() {
                       className="flex flex-col items-center justify-center gap-y-8 mt-14"
                       method="post"
                 >
-                    <h1 className='text-black text-3xl'>Sign In</h1>
+                    <h1 className='text-black text-3xl'>{t('title')}</h1>
+                    {/*<h1 className='text-black text-3xl'>Sign In</h1>*/}
                     <label className="form-control w-full max-w-xs">
                         <div className="label">
-                            <span className="label-text">{t('welcome')}:</span>
+                            <span className="label-text">Email:</span>
                         </div>
                         <input type="text" placeholder="Your registered email address"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
