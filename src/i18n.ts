@@ -1,0 +1,28 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+i18n
+    .use(initReactI18next)
+    .init({
+        resources: {
+            en: {
+                translation: {
+                    welcome: "Welcome",
+                    submit: "Submit",
+                }
+            },
+            fa: {
+                translation: {
+                    welcome: "خوش آمدید",
+                    submit: "ارسال",
+                }
+            }
+        },
+        lng: "fa",
+        fallbackLng: "fa",
+        interpolation: {
+            escapeValue: false,
+        }
+    });
+
+export default i18n;

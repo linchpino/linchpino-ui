@@ -1,4 +1,4 @@
-import './globals.css';
+import '../globals.css';
 import QueryProvider from '@/app/QueryProvider';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from "@/components/Header";
@@ -7,7 +7,7 @@ import React, {Suspense} from "react";
 import Loading from "@/app/loading";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import '../../i18n';
 export default function RootLayout({
                                        children,
                                    }: { children: React.ReactNode }) {

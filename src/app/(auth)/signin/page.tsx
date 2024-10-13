@@ -10,7 +10,8 @@ import useStore from "@/store/store";
 import {useRouter} from "next/navigation";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import Cookies from "js-cookie";
-
+import { useTranslation } from 'react-i18next';
+import '../../../i18n';
 interface SignInForm {
     email: string;
     password: string;
@@ -147,6 +148,7 @@ export default function SignIn() {
             setIsLoading(false);
         }
     });
+    const { t } = useTranslation();
 
     return (
         <>
@@ -158,7 +160,7 @@ export default function SignIn() {
                     <h1 className='text-black text-3xl'>Sign In</h1>
                     <label className="form-control w-full max-w-xs">
                         <div className="label">
-                            <span className="label-text">Email Address:</span>
+                            <span className="label-text">{t('welcome')}:</span>
                         </div>
                         <input type="text" placeholder="Your registered email address"
                                className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
