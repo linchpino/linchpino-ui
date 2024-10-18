@@ -22,3 +22,34 @@ export const textWithTooltip = (text, maxLength = 30) => {
         <span>{truncatedText}</span>
     );
 };
+function iso7064Mod97_10(iban) {
+    let remainder = iban,
+        block;
+
+    while (remainder.length > 2){
+        block = remainder.slice(0, 9);
+        remainder = parseInt(block, 10) % 97 + remainder.slice(block.length);
+    }
+
+    return parseInt(remainder, 10) % 97;
+}
+
+export const validateIBAN= (str) => {
+    let pattern = /[0-9]{24}/;
+
+    if (str.length !== 24) {
+        return false;
+    }
+
+    if (!pattern.test(str)) {
+        return false;
+    }
+
+    let newStr = str.substr(4);
+    let d1 = str.charCodeAt(0) - 65 + 10;
+    let d2 = str.charCodeAt(1) - 65 + 10;
+    newStr += d1.toString() + d2.toString() + str.substr(2, 2);
+
+    let remainder = iso7064Mod97_10(newStr);
+    return !(remainder !== 1);
+};
