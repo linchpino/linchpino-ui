@@ -271,7 +271,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             <div className="w-full relative">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>IBan:</span>
+                        className='text-[#F9A826]'>*</span>IBAN:</span>
                     <span className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>IR</span>
                 </div>
                 <input {...register("iban")} type="text" className="input input-bordered w-full bg-white pl-10"/>
