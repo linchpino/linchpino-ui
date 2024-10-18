@@ -81,7 +81,16 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingChanges, setIsLoadingChanges] = useState(false);
 
-    const sendUpdateForm = async (data: { firstName: string; lastName: string; email: string; detailsOfExpertise: string; iban: string; min: string; max: string; fixPrice: string; }) => {
+    const sendUpdateForm = async (data: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        detailsOfExpertise: string;
+        iban: string;
+        min: string;
+        max: string;
+        fixPrice: string;
+    }) => {
         setIsLoading(true);
         try {
             const response = await axios.put(`${BASE_URL_API}accounts/profile`, data);
@@ -119,7 +128,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                 <h1 className="text-md font-bold">Your Information</h1>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="gap-y-5 flex flex-col justify-center items-center mt-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 w-full gap-y-5">
+                <div data-theme="light" className="grid grid-cols-1 md:grid-cols-2 gap-x-6 w-full gap-y-5">
                     <label className="w-full">
                         <div className="label">
                             <span className="label-text">First Name:</span>
@@ -144,7 +153,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                         <div className="label">
                             <span className="label-text">Email:</span>
                         </div>
-                        <input {...register("email", {
+                        <input disabled {...register("email", {
                             required: "Email is required",
                             pattern: {
                                 value: ValidateEmailPattern,
@@ -193,18 +202,16 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                 </>
                             }
                             {paymentMethodRequest && paymentMethodRequest.type === "FIX_PRICE" &&
-                                <>
-                                    <label className="w-full">
-                                        <div className="label">
-                                            <span className="label-text">Sheba:</span>
-                                        </div>
-                                        <input {...register("iban")} type="text" placeholder="Your sheba number"
-                                               className="input input-bordered w-full bg-white"/>
-                                        {errors.iban && (
-                                            <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
-                                        )}
-                                    </label>
-                                </>
+                                <label className="w-full">
+                                    <div className="label">
+                                        <span className="label-text">Sheba:</span>
+                                    </div>
+                                    <input {...register("iban")} type="text" placeholder="Your sheba number"
+                                           className="input input-bordered w-full bg-white"/>
+                                    {errors.iban && (
+                                        <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
+                                    )}
+                                </label>
                             }
 
                         </>
