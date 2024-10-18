@@ -249,16 +249,16 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </div>
             {paymentMethod?.value === "PAY_AS_YOU_GO" &&
                 <div className=" w-full flex flex-col md:flex-row justify-between gap-x-3">
-                    <>
+
                         <input {...register("min")} type="text" className="input input-bordered w-full bg-white"
                                placeholder="Min"/>
                         {errors?.min && <p className='text-red-500 mt-1 text-left'>{errors.min.message}</p>}
-                    </>
-                    <>
+
+
                         <input {...register("max")} type="text" className="input input-bordered w-full bg-white"
                                placeholder="Max"/>
                         {errors?.max && <p className='text-red-500 mt-1 text-left'>{errors.max.message}</p>}
-                    </>
+
                 </div>
             }
             {paymentMethod?.value === "FIX_PRICE" &&
