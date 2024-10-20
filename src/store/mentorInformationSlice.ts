@@ -1,4 +1,14 @@
-import { StateCreator } from 'zustand';
+import {StateCreator} from 'zustand';
+
+export interface PaymentMethodRequest {
+    type: {
+        value: string,
+        label: string
+    };
+    min?: string;
+    max?: string;
+    fixRate?: string;
+}
 
 export interface MentorInformation {
     email: string;
@@ -6,6 +16,8 @@ export interface MentorInformation {
     lastName: string;
     interviewTypeIDs: { value: number; label: string }[];
     password: string;
+    paymentMethodRequest: PaymentMethodRequest;
+    sheba: string
 }
 
 export interface MentorInformationState {
@@ -20,6 +32,13 @@ const createMentorInformationSlice: StateCreator<MentorInformationState> = (set)
         lastName: '',
         interviewTypeIDs: [],
         password: '',
+        sheba: '',
+        paymentMethodRequest: {
+            type: {
+                value: 'FREE',
+                label: "Free"
+            }
+        },
     },
     setMentorInformation: (info) => set((state) => {
         return {
@@ -29,6 +48,14 @@ const createMentorInformationSlice: StateCreator<MentorInformationState> = (set)
                 lastName: info.lastName ?? state.mentorInformation.lastName,
                 interviewTypeIDs: info.interviewTypeIDs ?? state.mentorInformation.interviewTypeIDs,
                 password: info.password ?? state.mentorInformation.password,
+                sheba: info.sheba ?? state.mentorInformation.sheba,
+                paymentMethodRequest: {
+                    ...state.mentorInformation.paymentMethodRequest,
+                    type: info.paymentMethodRequest?.type ?? state.mentorInformation.paymentMethodRequest?.type,
+                    min: info.paymentMethodRequest?.min ?? state.mentorInformation.paymentMethodRequest?.min,
+                    max: info.paymentMethodRequest?.max ?? state.mentorInformation.paymentMethodRequest?.max,
+                    fixRate: info.paymentMethodRequest?.fixRate ?? state.mentorInformation.paymentMethodRequest?.fixRate,
+                },
             },
         };
     }),
