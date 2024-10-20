@@ -3,11 +3,18 @@ import React from 'react';
 import ProfilePicture from '@/containers/panel/profile/ProfilePicture';
 import ProfileInformation from '@/containers/panel/profile/ProfileInformation';
 import ProfileTimeSlot from '@/containers/panel/profile/ProfileTimeSlot';
-import { useQuery } from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import Spinner from '@/components/Spinner';
 import useStore from '@/store/store';
-import { BASE_URL_API } from "@/utils/system";
+import {BASE_URL_API} from "@/utils/system";
+
+interface PaymentRequest {
+    type: string | null,
+    minPayment?: string | number,
+    maxPayment?: string | number,
+    fixRate?: string | number
+}
 
 interface Schedule {
     id: number;
@@ -32,45 +39,49 @@ interface ProfileData {
     avatar: string | null;
     detailsOfExpertise: string | undefined;
     schedule: Schedule | null;
+    iban: string | null,
+    paymentMethod: PaymentRequest | null
 }
 
 const fetchProfileData = async (token: string | null): Promise<ProfileData> => {
-    const { data } = await axios.get(`${BASE_URL_API}accounts/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
+    const {data} = await axios.get(`${BASE_URL_API}accounts/profile`, {
+        headers: {Authorization: `Bearer ${token}`},
     });
     return data;
 };
 
 const Profile: React.FC = () => {
-    const { userRoles, token } = useStore(state => ({
+    const {userRoles, token} = useStore(state => ({
         userRoles: state.userRoles,
         token: state.token,
     }));
 
-    const { data, isLoading, error } = useQuery({
+        const {data, isLoading, error} = useQuery({
         queryKey: ['profileData'],
         queryFn: () => fetchProfileData(token),
         enabled: !!token,
     });
 
-    if (isLoading) return <div className="flex items-center justify-center"><Spinner loading={true} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center"><Spinner loading={true}/></div>;
 
     if (error) return <div>Error loading profile data</div>;
 
     if (!data) return null;
 
-    const { avatar, firstName, lastName, email, detailsOfExpertise, schedule } = data;
+    const {avatar, firstName, lastName, email, detailsOfExpertise, schedule, paymentMethod, iban} = data;
 
     const isMentor = userRoles.includes("MENTOR");
 
     return (
         <>
-            <ProfilePicture avatar={avatar} />
+            <ProfilePicture avatar={avatar}/>
             <ProfileInformation
                 firstName={firstName ?? ''}
                 lastName={lastName ?? ''}
                 email={email ?? ''}
                 detailsOfExpertise={detailsOfExpertise}
+                iban={iban}
+                paymentMethodRequest={paymentMethod}
             />
             {isMentor &&
                 <ProfileTimeSlot
