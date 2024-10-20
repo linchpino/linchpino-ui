@@ -17,8 +17,8 @@ interface FinalizeRegisterProp {
 
 export interface PaymentMethodRequest {
     type: string;
-    min?: string;
-    max?: string;
+    minPayment?: string;
+    maxPayment?: string;
     fixRate?: string;
 }
 
@@ -70,8 +70,8 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
         };
 
         if (mentorInformation.paymentMethodRequest.type.value === "PAY_AS_YOU_GO") {
-            paymentMethodRequest.min = mentorInformation.paymentMethodRequest.min;
-            paymentMethodRequest.max = mentorInformation.paymentMethodRequest.max;
+            paymentMethodRequest.minPayment = mentorInformation.paymentMethodRequest.min;
+            paymentMethodRequest.maxPayment = mentorInformation.paymentMethodRequest.max;
         }
 
         if (mentorInformation.paymentMethodRequest.type.value === "FIX_PRICE") {
@@ -82,7 +82,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
             paymentMethodRequest,
-            iban: mentorInformation.sheba
+            iban: `IR${mentorInformation.sheba}`
         };
 
         mutation.mutate(dataToSend);

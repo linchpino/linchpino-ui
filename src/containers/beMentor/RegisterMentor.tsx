@@ -12,14 +12,15 @@ import {empty} from "@/utils/helper";
 import Select from "react-select";
 
 const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-const ibanPattern = /^\d{24}$/;
+// const ibanPattern = /^\d{24}$/;
 
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
     repeatPassword: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
-    iban: z.string().regex(ibanPattern, "Invalid iban format"),
+    iban: z.string(),
+    // iban: z.string().regex(ibanPattern, "Invalid iban format"),
     min: z.string().optional(),
     max: z.string().optional(),
     fixPrice: z.string().optional(),
@@ -272,7 +273,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span
                         className='text-[#F9A826]'>*</span>IBAN:</span>
-                    <span className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>IR</span>
+                    <span className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>DE</span>
                 </div>
                 <input {...register("iban")} type="text" className="input input-bordered w-full bg-white pl-10"/>
                 {errors?.iban && <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
