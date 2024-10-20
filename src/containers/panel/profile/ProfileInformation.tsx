@@ -9,30 +9,33 @@ import {z} from "zod";
 import '../../../app/globals.css'
 import useStore from "@/store/store";
 import {ClipLoader} from "react-spinners";
+import Select from "react-select";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from "@/utils/axiosInstance";
 
-const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
     detailsOfExpertise: z.string(),
     iban: z.string(),
-    min: z.string(),
-    max: z.string(),
-    fixPrice: z.string(),
+    // iban: z.string().regex(ibanPattern, "Invalid iban format"),
+    paymentMethodRequest: z.object({
+        minPayment: z.string().optional(),
+        maxPayment: z.string().optional(),
+        fixRate: z.string().optional(),
+        type: z.string().optional(),
+    }).optional()
 })
 type UpdateFields = z.infer<typeof schema>;
 
-interface Interview {
-    value: number;
-    label: string;
-}
-
-interface PaymentRequest {
+export interface PaymentMethodRequest {
     type: string | null,
-    min?: string | number,
-    max?: string | number,
-    fixPrice?: string | number
+    minPayment?: string | number;
+    maxPayment?: string | number;
+    fixRate?: string | number
 }
 
 interface ProfileInformationProps {
@@ -41,7 +44,7 @@ interface ProfileInformationProps {
     email?: string;
     detailsOfExpertise?: string
     iban?: string | null,
-    paymentMethodRequest?: PaymentRequest | null,
+    paymentMethodRequest?: PaymentMethodRequest | null,
 }
 
 const ProfileInformation: React.FC<ProfileInformationProps> = ({
@@ -55,19 +58,34 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
     const {register, handleSubmit, formState: {errors}, setValue} = useForm<UpdateFields>({
         resolver: zodResolver(schema)
     });
+    const paymentOptions = [
+        {value: "PAY_AS_YOU_GO", label: "Pay As You Go"},
+        {value: "FIX_PRICE", label: "Fix Price"},
+        {value: "FREE", label: "Free"},
+    ]
+    const [paymentMethod, setPaymentMethod] = useState(paymentOptions[2]);
+
     React.useEffect(() => {
         if (firstName) setValue("firstName", firstName);
         if (lastName) setValue("lastName", lastName);
+        if (detailsOfExpertise) setValue("detailsOfExpertise", detailsOfExpertise);
         if (email) setValue("email", email);
-        if (iban) setValue("iban", iban);
-        if (paymentMethodRequest) { // @ts-ignore
-            setValue("min", paymentMethodRequest.min);
+        if (iban) {
+            const fixIban = iban.slice(2, iban.length)
+            setValue("iban", fixIban);
         }
-        if (paymentMethodRequest) { // @ts-ignore
-            setValue("max", paymentMethodRequest.max);
-        }
-        if (paymentMethodRequest) { // @ts-ignore
-            setValue("fixPrice", paymentMethodRequest.fixPrice);
+        if (paymentMethodRequest) {
+            const matchedPaymentOption = paymentOptions.find(option => option.value === paymentMethodRequest.type);
+            if (matchedPaymentOption) {
+                setPaymentMethod(matchedPaymentOption);
+            }
+            if (paymentMethodRequest.type === "PAY_AS_YOU_GO") {
+                setValue("paymentMethodRequest.minPayment", paymentMethodRequest?.minPayment + "");
+                setValue("paymentMethodRequest.maxPayment", paymentMethodRequest?.maxPayment + "");
+            }
+            if (paymentMethodRequest.type === "FIX_PRICE") {
+                setValue("paymentMethodRequest.fixRate", paymentMethodRequest?.fixRate + "");
+            }
         }
     }, [firstName, lastName, email, detailsOfExpertise, iban, paymentMethodRequest, setValue]);
 
@@ -87,13 +105,11 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
         email: string;
         detailsOfExpertise: string;
         iban: string;
-        min: string;
-        max: string;
-        fixPrice: string;
+        paymentMethodRequest: PaymentMethodRequest
     }) => {
-        setIsLoading(true);
+        setIsLoadingChanges(true);
         try {
-            const response = await axios.put(`${BASE_URL_API}accounts/profile`, data);
+            const response = await axiosInstance.put(`${BASE_URL_API}accounts/profile`, data);
             toastSuccess({message: 'Update successful!'});
             return response.data;
         } catch (error) {
@@ -109,14 +125,33 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
             }
             throw error;
         } finally {
-            setIsLoading(false);
+            setIsLoadingChanges(false);
         }
     };
 
     const onSubmit: SubmitHandler<UpdateFields> = async (data) => {
-        console.log(data)
+        data.iban = `IR${data.iban}`
+        data.paymentMethodRequest = {
+            ...data.paymentMethodRequest,
+            type: paymentMethod?.value
+        };
+        // if (validateNumericIBAN(data.iban)) {
+        //     toastError({message: "IBAN is not valid"})
+        //     return
+        // }
+        if (paymentMethod?.value === "FREE") {
+            delete data.paymentMethodRequest?.minPayment;
+            delete data.paymentMethodRequest?.maxPayment;
+            delete data.paymentMethodRequest?.fixRate;
+        } else if (paymentMethod?.value === "PAY_AS_YOU_GO") {
+            delete data.paymentMethodRequest?.fixRate;
+        } else if (paymentMethod?.value === "FIX_PRICE") {
+            delete data.paymentMethodRequest?.minPayment;
+            delete data.paymentMethodRequest?.maxPayment;
+        }
         try {
-            // await sendUpdateForm(data);
+            // @ts-ignore
+            await sendUpdateForm(data);
         } catch (error) {
             console.error('Signup failed', error);
         }
@@ -167,53 +202,86 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                     </label>
                     {isMentor &&
                         <>
-                            <label className="w-full md:col-span-2">
+                            <div
+                                className={`w-full ${paymentMethod.value === "FREE" && "md:col-span-2"} ${paymentMethod.value === "PAY_AS_YOU_GO" && "md:col-span-2"} `}>
                                 <div className="label">
-                                    <span className="label-text">Sheba:</span>
+                                    <span className="label-text text-[#3F3D56]">Payment Method:</span>
                                 </div>
-                                <input {...register("iban")} type="text" placeholder="Your sheba number"
-                                       className="input input-bordered w-full bg-white"/>
-                                {errors.iban && (
-                                    <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
-                                )}
-                            </label>
-                            {paymentMethodRequest && paymentMethodRequest.type === "PAY_AS_YOU_GO" &&
+                                <Select
+                                    options={paymentOptions}
+                                    placeholder="Select payment method"
+                                    unstyled
+                                    isSearchable={false}
+                                    //@ts-ignore
+                                    onChange={setPaymentMethod}
+                                    classNames={{
+                                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] mt-1 text-sm px-3 mr-2 text-left",
+                                        container: () => "text-sm rounded w-full text-gray-500 ",
+                                        menu: () => "bg-gray-50 rounded border py-2 text-left",
+                                        option: ({isSelected, isFocused}) =>
+                                            isSelected
+                                                ? " bg-gray-200 px-4 py-2"
+                                                : isFocused
+                                                    ? "bg-gray-100 px-4 py-2"
+                                                    : "px-4 py-2",
+                                    }}
+                                    value={paymentMethod}
+                                    // defaultValue={mentorInformation.paymentMethodRequest.type}
+                                />
+                            </div>
+                            {paymentMethod.value === "FIX_PRICE" &&
+                                <label className="w-full">
+                                    <div className="label">
+                                        <span className="label-text">Fix Price:</span>
+                                    </div>
+                                    <input {...register("paymentMethodRequest.fixRate")} inputMode="numeric" type="number"
+                                           placeholder="Enter Price"
+                                           className="input input-bordered w-full bg-white"/>
+                                    {errors.paymentMethodRequest?.fixRate && (
+                                        <div
+                                            className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.fixRate.message}</div>
+                                    )}
+                                </label>
+                            }
+                            {paymentMethod.value === "PAY_AS_YOU_GO" &&
                                 <>
                                     <label className="w-full">
                                         <div className="label">
-                                            <span className="label-text">Sheba:</span>
+                                            <span className="label-text">Min Payment:</span>
                                         </div>
-                                        <input {...register("iban")} type="text" placeholder="Your sheba number"
+                                        <input inputMode="numeric" type="number" {...register("paymentMethodRequest.minPayment")}
+                                               placeholder="Min Payment"
                                                className="input input-bordered w-full bg-white"/>
-                                        {errors.iban && (
-                                            <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
+                                        {errors.paymentMethodRequest?.minPayment && (
+                                            <div
+                                                className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.minPayment.message}</div>
                                         )}
                                     </label>
                                     <label className="w-full">
                                         <div className="label">
-                                            <span className="label-text">Sheba:</span>
+                                            <span className="label-text">Max Payment:</span>
                                         </div>
-                                        <input {...register("iban")} type="text" placeholder="Your sheba number"
+                                        <input inputMode="numeric" {...register("paymentMethodRequest.maxPayment")} type="number"
+                                               placeholder="Max Payment"
                                                className="input input-bordered w-full bg-white"/>
-                                        {errors.iban && (
-                                            <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
+                                        {errors.paymentMethodRequest?.maxPayment && (
+                                            <div
+                                                className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.maxPayment.message}</div>
                                         )}
                                     </label>
                                 </>
                             }
-                            {paymentMethodRequest && paymentMethodRequest.type === "FIX_PRICE" &&
-                                <label className="w-full">
-                                    <div className="label">
-                                        <span className="label-text">Sheba:</span>
-                                    </div>
-                                    <input {...register("iban")} type="text" placeholder="Your sheba number"
-                                           className="input input-bordered w-full bg-white"/>
-                                    {errors.iban && (
-                                        <div className="text-red-500 text-sm mt-1">{errors.iban.message}</div>
-                                    )}
-                                </label>
-                            }
-
+                            <div className="w-full md:col-span-2 mt-2 relative">
+                                <div className="label">
+                                    <span className="label-text text-[#3F3D56]">IBAN:</span>
+                                    <span
+                                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>DE</span>
+                                </div>
+                                <input maxLength={24} {...register("iban")} inputMode="numeric" type="number"
+                                       className="input input-bordered w-full bg-white pl-10"/>
+                                {errors?.iban &&
+                                    <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
+                            </div>
                         </>
                     }
 
@@ -233,6 +301,8 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                     {isLoadingChanges ? <ClipLoader size={24} color={"#fff"}/> : 'Save Changes'}
                 </button>
             </form>
+            <ToastContainer/>
+
         </>
     )
 }
