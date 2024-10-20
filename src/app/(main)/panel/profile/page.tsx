@@ -40,7 +40,7 @@ interface ProfileData {
     detailsOfExpertise: string | undefined;
     schedule: Schedule | null;
     iban: string | null,
-    paymentMethodRequest: PaymentRequest | null
+    paymentMethod: PaymentRequest | null
 }
 
 const fetchProfileData = async (token: string | null): Promise<ProfileData> => {
@@ -56,7 +56,7 @@ const Profile: React.FC = () => {
         token: state.token,
     }));
 
-    const {data, isLoading, error} = useQuery({
+        const {data, isLoading, error} = useQuery({
         queryKey: ['profileData'],
         queryFn: () => fetchProfileData(token),
         enabled: !!token,
@@ -68,7 +68,7 @@ const Profile: React.FC = () => {
 
     if (!data) return null;
 
-    const {avatar, firstName, lastName, email, detailsOfExpertise, schedule, paymentMethodRequest, iban} = data;
+    const {avatar, firstName, lastName, email, detailsOfExpertise, schedule, paymentMethod, iban} = data;
 
     const isMentor = userRoles.includes("MENTOR");
 
@@ -81,7 +81,7 @@ const Profile: React.FC = () => {
                 email={email ?? ''}
                 detailsOfExpertise={detailsOfExpertise}
                 iban={iban}
-                paymentMethodRequest={paymentMethodRequest}
+                paymentMethodRequest={paymentMethod}
             />
             {isMentor &&
                 <ProfileTimeSlot
