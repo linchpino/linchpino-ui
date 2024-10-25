@@ -14,6 +14,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import {BASE_URL_API} from "@/utils/system";
 import {BsPlus} from 'react-icons/bs'
 import moment from "moment/moment";
+import {useTranslation} from "react-i18next";
 
 type DurationOption = {
     id: number;
@@ -40,6 +41,8 @@ interface ProfileTimeSlotProps {
 }
 
 const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, durationTime, accountId, recurrenceType, interval, weekDays, monthDays}) => {
+    const { t } = useTranslation();
+
     const formattedStartTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
     const formattedEndTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
     const queryClient = useQueryClient();
@@ -56,20 +59,20 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
         {id: 5, time: 60},
     ];
     const days: DayOption[] = [
-        {id: 1, day: "Su", value: "SUNDAY"},
-        {id: 2, day: "Mo", value: "MONDAY"},
-        {id: 3, day: "Tu", value: "TUESDAY"},
-        {id: 4, day: "We", value: "WEDNESDAY"},
-        {id: 5, day: "Th", value: "THURSDAY"},
-        {id: 6, day: "Fr", value: "FRIDAY"},
-        {id: 7, day: "Sa", value: "SATURDAY"},
-    ];
-    const repeatOptions: RepeatOption[] = [
-        {value: "DAILY", label: "Day"},
-        {value: "WEEKLY", label: "Week"},
-        {value: "MONTHLY", label: "Month"},
+        {id: 1, day: t("Profile.Days.SUNDAY.abbr"), value: "SUNDAY"},
+        {id: 2, day: t("Profile.Days.MONDAY.abbr"), value: "MONDAY"},
+        {id: 3, day: t("Profile.Days.TUESDAY.abbr"), value: "TUESDAY"},
+        {id: 4, day: t("Profile.Days.WEDNESDAY.abbr"), value: "WEDNESDAY"},
+        {id: 5, day: t("Profile.Days.THURSDAY.abbr"), value: "THURSDAY"},
+        {id: 6, day: t("Profile.Days.FRIDAY.abbr"), value: "FRIDAY"},
+        {id: 7, day: t("Profile.Days.SATURDAY.abbr"), value: "SATURDAY"}
     ];
 
+    const repeatOptions: RepeatOption[] = [
+        {value: "DAILY", label: t("Profile.RepeatOptions.DAILY")},
+        {value: "WEEKLY", label: t("Profile.RepeatOptions.WEEKLY")},
+        {value: "MONTHLY", label: t("Profile.RepeatOptions.MONTHLY")}
+    ];
     const [selectedStart, setSelectedStart] = useState<Date | null>(currentDate);
     const [selectedStartTime, setSelectedStartTime] = useState<Date | null>(currentDate);
     const [selectedEnd, setSelectedEnd] = useState<Date | null>(nextMonthDate);
@@ -125,12 +128,12 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
 
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['profileData']});
-            toastSuccess({message: "Time slot added successfully!"});
+            toastSuccess({message:t("Profile.success")});
             setIsOpenAddModal(false)
         },
         onError: (error: any) => {
             console.log(error)
-            toastError({message: error.response.data.error || 'Error adding time slot!'});
+            toastError({message: error.response.data.error || t("Profile.error")});
         },
         onSettled: () => {
             setLoading(false);
@@ -159,7 +162,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
     return (
         <>
             <div className="flex gap-x-2 mt-8">
-                    <h1 className="text-md font-bold">Schedule</h1>
+                    <h1 className="text-md font-bold">{t("Profile.scheduleTitle")}</h1>
                 {empty(startTime) && empty(endTime) &&
                     <button onClick={handleLoginClick}
                             className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
@@ -175,11 +178,11 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     </form>
                     <div
                         className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-4 lg:mb-0 container p-3">
-                        <h1 className="text-xl text-center text-[#000]">Add Schedule</h1>
+                        <h1 className="text-xl text-center text-[#000]">{t("scheduleInfo.header")}</h1>
                         <div
                             className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat?.value === "week" ? 'gap-y-6' : 'gap-y-8'}`}>
                             <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
-                                <span className="text-sm">Start: </span>
+                                <span className="text-sm">{t("scheduleInfo.start")}: </span>
                                 <DatePicker
                                     containerClassName="w-full sm:w-1/2"
                                     inputClass="profile-calendar w-full"
@@ -208,7 +211,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                                 />
                             </div>
                             <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
-                                <span className="text-sm">End: </span>
+                                <span className="text-sm">{t("scheduleInfo.end")}:</span>
                                 <DatePicker
                                     containerClassName="w-full sm:w-1/2"
                                     inputClass="profile-calendar w-full"
@@ -238,7 +241,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                             </div>
 
                             <div className="flex items-center w-full flex-col sm:flex-row">
-                                <span className="text-sm">Duration: </span>
+                                <span className="text-sm">{t("scheduleInfo.duration")}:</span>
                                 <div className="flex gap-x-2 ml-2 flex-wrap justify-center gap-y-3 mt-2 sm:mt-0">
                                     {duration.map(durationItem => (
                                         <button
@@ -252,7 +255,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                                 </div>
                             </div>
                             <div className="flex items-center w-full gap-x-2 flex-col sm:flex-row gap-y-3">
-                                <span className="text-sm">Interval: </span>
+                                <span className="text-sm">{t("scheduleInfo.interval")}:</span>
                                 <input value={selectedInterval}
                                        onChange={(e) => setSelectedInterval(e.target.value)}
                                        type='number'
@@ -279,7 +282,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                             </div>
                             {selectedRepeat?.value === "WEEKLY" && (
                                 <div className="flex items-center w-full flex-col sm:flex-row">
-                                    <span className="text-sm">On: </span>
+                                    <span className="text-sm">{t("scheduleInfo.on")}:</span>
                                     <div className="flex gap-x-2 ml-2 justify-center flex-wrap mt-2 sm:mt-0 gap-y-2">
                                         {days.map(daysItem => {
                                             const isSelected = selectedDay.includes(daysItem.value);
@@ -298,7 +301,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                             )}
                             {selectedRepeat?.value === "MONTHLY" && (
                                 <div className="flex items-center w-full flex-col sm:flex-row gap-y-3">
-                                    <span className="text-sm">Days of month: </span>
+                                    <span className="text-sm">{t("scheduleInfo.daysOfMonth")}:</span>
                                     <Select
                                         isMulti
                                         unstyled
@@ -328,7 +331,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                                 {loading ? (
                                     <PulseLoader color="#FFFFFF" size={5}/>
                                 ) : (
-                                    'Add'
+                                    t("scheduleInfo.addButton")
                                 )}
                             </button>
                         </div>
@@ -344,38 +347,38 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                             {/*<h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>*/}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Start Time:</span>
+                                    <span className="font-medium text-gray-700">{t("scheduleInfo.startTime")}:</span>
                                     <span className="ml-0 sm:ml-2">{formattedStartTime}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">End Time:</span>
+                                    <span className="font-medium text-gray-700">{t("scheduleInfo.endTime")}:</span>
                                     <span className="ml-0 sm:ml-2">{formattedEndTime}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Duration:</span>
-                                    <span className="ml-0 sm:ml-2">{durationTime} minutes</span>
+                                    <span className="font-medium text-gray-700">{t("scheduleInfo.duration")}:</span>
+                                    <span className="ml-0 sm:ml-2">{durationTime} {t("scheduleInfo.minutes")}</span>
                                 </p>
                                 {/*<p className="flex flex-col sm:flex-row items-start sm:items-center">*/}
                                 {/*    <span className="font-medium text-gray-700">Account ID:</span>*/}
                                 {/*    <span className="ml-0 sm:ml-2">{accountId}</span>*/}
                                 {/*</p>*/}
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Recurrence Type:</span>
+                                    <span className="font-medium text-gray-700">{t("scheduleInfo.recurrenceType")}:</span>
                                     <span className="ml-0 sm:ml-2">{recurrenceType}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">Interval:</span>
+                                    <span className="font-medium text-gray-700">{t("scheduleInfo.interval")}:</span>
                                     <span className="ml-0 sm:ml-2">{interval}</span>
                                 </p>
                                 {weekDays.length > 0 && (
                                     <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                        <span className="font-medium text-gray-700">Week Days:</span>
+                                        <span className="font-medium text-gray-700">{t("scheduleInfo.weekDays")}:</span>
                                         <span className="ml-0 sm:ml-2">{weekDays.join(', ')}</span>
                                     </p>
                                 )}
                                 {monthDays.length > 0 && (
                                     <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                        <span className="font-medium text-gray-700">Month Days:</span>
+                                        <span className="font-medium text-gray-700">{t("scheduleInfo.monthDays")}:</span>
                                         <span className="ml-0 sm:ml-2">{monthDays.join(', ')}</span>
                                     </p>
                                 )}

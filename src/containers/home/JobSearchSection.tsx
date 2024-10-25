@@ -6,6 +6,7 @@ import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import useStore from "@/store/store";
 import {useRouter} from "next/navigation";
+import {useTranslations} from "next-intl";
 
 interface OptionsType {
     value: number;
@@ -88,7 +89,7 @@ const JobSearchSection: React.FC = () => {
             return {options: [], hasMore: false, additional: {page: page + 1}};
         }
     };
-
+    const t = useTranslations()
     return (
         <div className="flex flex-col items-center justify-center text-black mt-8 md:mt-0">
             <Image
@@ -113,9 +114,7 @@ const JobSearchSection: React.FC = () => {
             </div>
             <div className="flex flex-col items-center justify-between relative">
                 <h2 className="relative z-5 text-center md:ml-[40%] ">
-                    Empower Your Job Search
-                    <br/>
-                    Participate in a Free Mock Interview with Professionals
+                    {t("Home.jobSection")}
                 </h2>
                 <div className="flex flex-col justify-between items-center">
                     <Image
@@ -145,7 +144,7 @@ const JobSearchSection: React.FC = () => {
                             setJobValue(e);
                         }}
                         unstyled
-                        placeholder="Dream job"
+                        placeholder={t("Home.jobSectionDreamJob")}
                         loadOptions={loadJob}
                         additional={{page: 0}}
                     />
@@ -168,7 +167,7 @@ const JobSearchSection: React.FC = () => {
                             setInterviewValue(e);
                         }}
                         unstyled
-                        placeholder="Interview Type"
+                        placeholder={t("Home.jobSectionInterviewType")}
                         loadOptions={loadInterview}
                         additional={{page: 0}}
                     />
@@ -183,7 +182,7 @@ const JobSearchSection: React.FC = () => {
                         disabled={!jobValue || !interviewValue}
                         className="btn btn-sm w-2/3 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs"
                     >
-                        Schedule the interview
+                        {t("Home.jobSectionScheduleButton")}
                     </button>
                 </div>
             </div>

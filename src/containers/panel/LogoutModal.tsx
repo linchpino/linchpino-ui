@@ -1,6 +1,7 @@
 import React from 'react';
 import useStore from '@/store/store';
-import {useRouter} from 'next/navigation';
+import {useRouter} from '../../i18n/routing';
+import {useTranslations} from "next-intl";
 
 interface LogoutModalProps {
     onClose: () => void;
@@ -8,6 +9,8 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({isOpen, onClose}) => {
+    const t = useTranslations();
+
     const router = useRouter();
     const {setToken, setUserInfo} = useStore(state => ({
         setToken: state.setToken,
@@ -34,20 +37,20 @@ const LogoutModal: React.FC<LogoutModalProps> = ({isOpen, onClose}) => {
                         ✕
                     </button>
                 </form>
-                <h2 className="text-lg font-bold mb-4">Confirm Logout</h2>
-                <p className="mb-4">Are you sure you want to log out?</p>
+                <h2 className="text-lg font-bold mb-4">{t("SignOut.header")}</h2>
+                <p className="mb-4">{t("SignOut.areSure")}</p>
                 <div className="modal-action">
                     <button
                         className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                         onClick={onClose}
                     >
-                        Cancel
+                        {t("SignOut.cancel")}
                     </button>
                     <button
                         className="w-20 btn btn-error btn-sm font-medium text-[.9rem] text-white"
                         onClick={handleLogout}
                     >
-                        Logout
+                        {t("SignOut.cancel")}
                     </button>
                 </div>
             </div>

@@ -1,15 +1,17 @@
 'use client';
 
-import Link from 'next/link';
-import {usePathname} from 'next/navigation';
+import {Link, usePathname} from '../../i18n/routing';
 import {useEffect, useState} from 'react';
 import {BsFillPersonFill, BsPersonVcard, BsPeopleFill, BsKey, BsCalendar3Week, BsBoxArrowRight} from 'react-icons/bs';
 import {FaLaptopCode} from 'react-icons/fa';
 import useStore from '@/store/store';
 import LogoutModal from './LogoutModal';
 import {MdOutlineLockReset} from "react-icons/md";
+import {useTranslations} from "next-intl";
 
 const Sidebar = () => {
+    const t = useTranslations();
+
     const pathname = usePathname();
     const {userInfo} = useStore(state => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,43 +23,43 @@ const Sidebar = () => {
     const links = [
         {
             href: '/panel/profile',
-            label: 'Profile',
+            label: t('sidebar.profile'),
             icon: <BsFillPersonFill size={20}/>,
             roles: ['ADMIN', 'JOB_SEEKER', 'MENTOR']
         },
         {
             href: '/panel/interviews',
-            label: 'Interviews',
+            label: t('sidebar.interviews'),
             icon: <BsPersonVcard size={20}/>,
             roles: ['JOB_SEEKER', 'MENTOR']
         },
         {
             href: '/panel/users',
-            label: 'Users',
+            label: t('sidebar.users'),
             icon: <BsPeopleFill size={20}/>,
             roles: ['ADMIN']
         },
         {
             href: '/panel/job-position',
-            label: 'Job Positions',
+            label: t('sidebar.jobPositions'),
             icon: <FaLaptopCode size={20}/>,
             roles: ['ADMIN']
         },
         {
             href: '/panel/interview-type',
-            label: 'Interview Types',
+            label: t('sidebar.interviewTypes'),
             icon: <BsCalendar3Week size={20}/>,
             roles: ['ADMIN']
         },
         {
             href: '/panel/change-password',
-            label: 'Change Password',
+            label: t('sidebar.changePassword'),
             icon: <BsKey size={20}/>,
             roles: ['ADMIN', 'JOB_SEEKER', 'MENTOR']
         },
         {
             href: '/panel/reset-password',
-            label: 'Reset Password',
+            label: t('sidebar.resetPassword'),
             icon: <MdOutlineLockReset size={21}/>,
             roles: ['ADMIN']
         },
@@ -85,7 +87,7 @@ const Sidebar = () => {
                         <button onClick={() => setIsModalOpen(true)}
                                 className={`flex gap-x-2 items-center justify-start ${pathname === '/panel/signout' ? 'bg-[#F9A826] text-white' : ''} px-2 my-2 rounded-md w-8 h-8 md:h-10 md:w-full cursor-pointer ${pathname !== '/panel/signout' && 'hover:bg-orange-100'}`}>
                             <BsBoxArrowRight size={20}/>
-                            <span className='hidden md:flex'>Sign Out</span>
+                            <span className='hidden md:flex'>{t('sidebar.signOut')}</span>
                         </button>
                     </li>
                 </ul>

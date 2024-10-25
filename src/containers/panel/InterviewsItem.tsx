@@ -10,6 +10,7 @@ import {toastError, toastSuccess} from "@/components/CustomToast";
 import {ClipLoader} from "react-spinners";
 import Cookies from "js-cookie";
 import {empty} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 
 interface InterviewsItemProp {
     data: any;
@@ -18,6 +19,8 @@ interface InterviewsItemProp {
 }
 
 const InterviewsItem: FC<InterviewsItemProp> = (props) => {
+    const t = useTranslations();
+
     const userInfoFromCookie = Cookies.get('userInfo');
     const userInfo = userInfoFromCookie ? JSON.parse(userInfoFromCookie) : null;
 
@@ -87,7 +90,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
     const feedbackMutation = useMutation({
         mutationFn: submitFeedback,
         onSuccess: () => {
-            toastSuccess({message: 'Feedback sent successfully!'});
+            toastSuccess({message: t('Interview.feedbackSent')});
             if (modalRef.current) {
                 modalRef.current.close();
             }
@@ -95,7 +98,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
             setActiveRate(4)
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'An error occurred';
+            const errorMessage = error.response?.data?.error || t('Interview.feedbackError');
             toastError({message: errorMessage});
         },
         onSettled: () => {
@@ -122,7 +125,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700 ">
                     <FaUserAlt className="text-[#F9A826]"/>
-                    <span>{props.role === "MENTOR" ? 'Jobseeker' : 'Mentor'}:</span>
+                    <span>{props.role === "MENTOR" ? t('Interview.jobseeker') : t('Interview.mentor')}:</span>
                 </div>
                 <span className="text-black text-center">{props.data.intervieweeName}</span>
             </div>
@@ -130,41 +133,33 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                 <div className="flex items-center gap-2 text-gray-700  font-medium">
                     <FaCalendarAlt className="text-[#34D399]"/>
                     {props.isPast ? (
-                        <>
-                            <span>From:</span>
-                        </>
+                        <span>{t('Interview.from')}</span>
                     ) : (
-                        <>
-                            <span>Start:</span>
-                        </>
+                        <span>{t('Interview.start')}</span>
                     )}
                 </div>
                 {props.isPast ? (
-                    <>
-                        <span
-                            className="ml-2 text-black font-semibold text-center">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
-                    </>
+                    <span
+                        className="ml-2 text-black font-semibold text-center">{moment(props.data.fromTime).format('MMMM D, YYYY h:mm A')}</span>
                 ) : (
-                    <>
-                        <Countdown targetDate={props.data.fromTime} startDate={props.data.fromTime}
-                                   endDate={props.data.toTime}/>
-                    </>
+                    <Countdown targetDate={props.data.fromTime} startDate={props.data.fromTime}
+                               endDate={props.data.toTime}/>
                 )}
             </div>
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700 text-sm font-medium">
                     <FaStopwatch className="text-[#F472B6]"/>
-                    <span>Duration:</span>
+                    <span>{t('Interview.duration')}</span>
                 </div>
                 <span className="ml-2 text-black text-center">{renderDuration()}</span>
             </div>
             <div className="flex flex-col xs:flex-row gap-1 text-sm font-semibold items-center">
                 <div className="flex items-center gap-2 text-gray-700 text-sm font-medium">
                     <FaClock className="text-[#60A5FA]"/>
-                    <span>Interview Type:</span>
+                    <span>{t('Interview.interviewType')}</span>
+
                 </div>
                 <span className="ml-2 font-semibold text-black text-center">{props.data.interviewType}</span>
-
             </div>
 
             {props.isPast && userInfo && userInfo.type.includes("JOB_SEEKER") && (
@@ -173,7 +168,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                     className="mt-3 w-full flex justify-center items-center border-[.1px] border-[#F2A926] text-[#F2A926] text-sm font-semibold py-2 px-4 rounded-xl shadow-lg"
                 >
                     <FaCommentDots className="mr-2"/>
-                    Feedback
+                    {t('Interview.feedbackButton')}
                 </button>
             )}
             <dialog ref={modalRef} id="modal"
@@ -187,8 +182,7 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                         }}
                         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
                     </button>
-                    <h1 className='text-xl text-center text-[#000] mt-4'>Thank you for attending to the
-                        interview</h1>
+                    <h1 className='text-xl text-center text-[#000] mt-4'>{t('Interview.thankYouMessage')}</h1>
                     <div
                         className="flex flex-col py-6 items-center justify-center w-full border-[.6px] rounded-md mt-4 mb-10 lg:mb-0 container p-3">
 
@@ -215,11 +209,13 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                                     )
                                 }))}
                             </div>
-                            <span className='mt-10'>Tell us what do you want?</span>
+                            <span className='mt-10'>{t("Interview.tellUsPrompt")}</span>
                             <textarea maxLength={300} value={comment}
                                       onChange={(e) => setComment(e.target.value)}
                                       className="textarea textarea-bordered bg-white mt-2 w-full max-w-sm"
-                                      placeholder="Write something..."></textarea>
+                                      placeholder={t('Interview.writeSomethingPlaceholder')}
+
+                            ></textarea>
                             <span className="text-xs text-left ml-1 mt-1">{comment.length} / 300</span>
                             <div className="modal-action">
                                 <button
@@ -231,13 +227,13 @@ const InterviewsItem: FC<InterviewsItemProp> = (props) => {
                                         }
                                     }}
                                 >
-                                    Cancel
+                                    {t('interview.cancel')}
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={loading || empty(comment)}
                                     className='w-[48%] btn btn-sm btn-warning bg-[#F9A826] text-white rounded-md shadow-md py-2 px-3'>
-                                    {loading ? <ClipLoader size={18} color={"#fff"}/> : 'Send'}
+                                    {loading ? <ClipLoader size={18} color={"#fff"}/> : t('interview.send')}
                                 </button>
                             </div>
                         </form>

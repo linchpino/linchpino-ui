@@ -9,19 +9,8 @@ import {z} from "zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {empty} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 
-const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-const schema = z.object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
-    repeatPassword: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
-}).refine((data) => data.password === data.repeatPassword, {
-    message: "Passwords don't match",
-    path: ["repeatPassword"],
-});
-
-type Inputs = z.infer<typeof schema>;
 
 interface Interview {
     value: number;
@@ -34,6 +23,23 @@ interface RegisterMentorProps {
 }
 
 const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) => {
+    const t = useTranslations()
+
+
+    type Inputs = z.infer<typeof schema>;
+
+    const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const schema = z.object({
+        firstName: z.string().min(1, t("Forms.firstNameRequired")),
+        lastName: z.string().min(1, t("Forms.lastNameRequired")),
+        password: z.string().min(6, t("Forms.passwordCharacterLength")).regex(passwordPattern, t("Forms.passwordPattern")),
+        repeatPassword: z.string().min(6, t("Forms.passwordCharacterLength")).regex(passwordPattern, t("Forms.passwordPattern")),
+    }).refine((data) => data.password === data.repeatPassword, {
+        message: t("Form.matchPassword"),
+        path: ["repeatPassword"],
+    });
+
+
     const {mentorInformation, setMentorInformation} = useStore();
     const {register, handleSubmit, watch, control, formState: {errors}} = useForm<Inputs>({
         resolver: zodResolver(schema),
@@ -53,7 +59,6 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
     const toggleShowRepeatPassword = () => setShowRepeatPassword(prev => !prev);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log('data', data);
         setMentorInformation({
             firstName: data.firstName,
             lastName: data.lastName,
@@ -102,7 +107,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             <label className="form-control w-full">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>First Name:</span>
+                        className='text-[#F9A826]'>*</span>{t("Forms.firstName")}</span>
                 </div>
                 <input {...register("firstName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.firstName && <p className='text-red-500 mt-1 text-left'>{errors.firstName.message}</p>}
@@ -110,7 +115,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             <label className="form-control w-full">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>Last Name:</span>
+                        className='text-[#F9A826]'>*</span>{t("Forms.lastName")}</span>
                 </div>
                 <input {...register("lastName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.lastName && <p className='text-red-500 mt-1 text-left'>{errors.lastName.message}</p>}
@@ -118,7 +123,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             <div className="flex flex-col md:flex-row flex-nowrap md:flex-wrap gap-x-2 w-full gap-y-5">
                 <label className="w-full lg:w-[20rem]">
                     <div className="label">
-                        <span className="label-text">Password:</span>
+                        <span className="label-text">{t("Forms.password")}</span>
                     </div>
                     <div className="flex items-center justify-between relative">
                         <input {...register("password")} type={showPassword ? "text" : "password"}
@@ -136,7 +141,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 </label>
                 <label className="w-full lg:w-[20rem]">
                     <div className="label">
-                        <span className="label-text">Re-Password:</span>
+                        <span className="label-text">{t("Forms.repeatPassword")}</span>
                     </div>
                     <div className="flex items-center justify-between relative">
                         <input {...register("repeatPassword")}
@@ -155,7 +160,8 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </div>
             <label className="w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Field of expertise:</span>
+                    <span className="label-text text-[#3F3D56]"><span
+                        className='text-[#F9A826]'>*</span>{t("BeMentor.expertise")}</span>
                 </div>
                 <AsyncPaginate
                     classNames={{
@@ -173,7 +179,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     //@ts-ignore
                     onChange={handleInterviewChange}
                     isMulti
-                    placeholder="Interview Type"
+                    placeholder={t("BeMentor.interviewPlaceholder")}
                     //@ts-ignore
                     loadOptions={loadInterview}
                     additional={{page: 0}}
@@ -183,7 +189,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 type="submit"
                 disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
                 className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
-                Next
+                {t("BeMentor.nextButton")}
             </button>
         </form>
     );

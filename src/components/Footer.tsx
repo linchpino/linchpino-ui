@@ -1,7 +1,9 @@
 import Link from "next/link";
 import {BsFacebook, BsLinkedin, BsTwitter, BsYoutube, BsInstagram} from 'react-icons/bs'
+import {useTranslations} from "next-intl";
 
 export default function Footer() {
+    const t = useTranslations()
     return (
         <div className='hidden lg:flex flex-col gap-y-10 mt-10 w-full bg-[#E7ECFF] pt-12 px-24 pb-10'>
             <div className='flex justify-between items-center'>
@@ -9,23 +11,23 @@ export default function Footer() {
                     ©2024 Linchpino
                 </p>
                 <button className='btn btn-sm bg-[#111B47] rounded text-white shadow-md px-6'>
-                    Donate Now
+                    {t('Footer.donateButton')}
                 </button>
             </div>
             <div className="h-0.5 w-full bg-[#5F5791]"/>
             <div className='flex justify-between items-center'>
                 <div className='flex justify-end gap-6'>
                     <Link href="/">
-                        Home
+                        {t("Footer.navHome")}
                     </Link>
                     <Link href="/">
-                        About Us
+                        {t("Footer.navAbout")}
                     </Link>
                     <Link href="/">
-                        Contact Us
+                        {t("Footer.navContact")}
                     </Link>
                     <Link href="/">
-                        Invite Friends
+                        {t("Footer.navInvite")}
                     </Link>
                 </div>
                 <div className='flex justify-end gap-6'>

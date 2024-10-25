@@ -1,27 +1,25 @@
 'use client'
-import React, {useEffect, useRef, useState, } from "react";
+import React, {useEffect, useState,} from "react";
 import {
     BsFillPersonFill,
-    BsEmojiAngry,
-    BsEmojiFrown,
-    BsEmojiNeutral,
-    BsEmojiSmile,
-    BsEmojiHeartEyes
 } from 'react-icons/bs';
 import Image from "next/image";
-import {usePathname, useRouter} from 'next/navigation';
+import {useRouter} from '../i18n/routing';
 import useStore from "@/store/store";
+import {useTranslations} from "next-intl";
 
 interface Props {
 }
 
 const Header: React.FC<Props> = () => {
     const router = useRouter();
+    const t = useTranslations()
+
     const linkData = [
-        {id: 1, name: "Our Services"},
-        {id: 2, name: "Blog"},
-        {id: 3, name: "About Us"},
-        {id: 4, name: "Contact Us"},
+        {id: 1, name:t("Header.navService")},
+        {id: 2, name: t("Header.navBlog")},
+        {id: 3, name: t("Header.navAbout")},
+        {id: 4, name: t("Header.navContact")},
     ];
 
     const {token} = useStore(state => ({
@@ -54,7 +52,6 @@ const Header: React.FC<Props> = () => {
                         <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
                     </div>
                 </button>
-
                 <nav>
                     <section className="MOBILE-MENU flex lg:hidden z-20">
                         <div className='flex flex-col '>
@@ -87,7 +84,7 @@ const Header: React.FC<Props> = () => {
                         <div className='lg:flex items-center justify-end mt-6'>
                             <div
                                 className="input input-bordered input-md bg-transparent rounded-md w-[60%] flex items-center gap-2 mr-4">
-                                <input type="text" className="grow" placeholder="Search Here ..."/>
+                                <input type="text" className="grow" placeholder={t("Header.navSearh")}/>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                                      className="w-4 h-4 opacity-70">
                                     <path fillRule="evenodd"
@@ -96,8 +93,8 @@ const Header: React.FC<Props> = () => {
                                 </svg>
                             </div>
                             <button onClick={handleLoginOrPanelClick}
-                                  className='btn btn-warning py-3 px-5 bg-[#F9A826] text-white rounded-md shadow-md'>
-                                {isClient ? (token ? 'Panel' : 'SignIn / Register') : 'SignIn / Register'}
+                                    className='btn btn-warning py-3 px-5 bg-[#F9A826] text-white rounded-md shadow-md'>
+                                {isClient ? (token ? t("Header.navPanel") : t("Header.navSignInButton")) : t("Header.navSignInButton")}
                             </button>
                         </div>
                     </div>
@@ -143,7 +140,7 @@ const Header: React.FC<Props> = () => {
                 <div className="MENU-LINK-MOBILE-OPEN flex fixed flex-col items-center justify-between min-h-[350px]">
                     <div
                         className="input input-bordered input-md bg-transparent rounded-md w-[100%] flex items-center gap-2 mt-5">
-                        <input type="text" className="grow" placeholder="Search Here ..."/>
+                        <input type="text" className="grow" placeholder={t("Header.navSearh")}/>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                              className="w-4 h-4 opacity-70">
                             <path fillRule="evenodd"
