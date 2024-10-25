@@ -27,7 +27,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({isOpen, onClose}) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal modal-open z-100 fixed" data-theme="light">
+        <div className="modal modal-open z-100 fixed text-center" data-theme="light">
             <div className="modal-box">
                 <form method="dialog">
                     <button
@@ -39,18 +39,18 @@ const LogoutModal: React.FC<LogoutModalProps> = ({isOpen, onClose}) => {
                 </form>
                 <h2 className="text-lg font-bold mb-4">{t("SignOut.header")}</h2>
                 <p className="mb-4">{t("SignOut.areSure")}</p>
-                <div className="modal-action">
+                <div className="modal-action gap-x-4">
                     <button
                         className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                         onClick={onClose}
                     >
-                        {t("SignOut.cancel")}
+                        {t("SignOut.cancelButton")}
                     </button>
                     <button
                         className="w-20 btn btn-error btn-sm font-medium text-[.9rem] text-white"
                         onClick={handleLogout}
                     >
-                        {t("SignOut.cancel")}
+                        {t("SignOut.logoutButton")}
                     </button>
                 </div>
             </div>

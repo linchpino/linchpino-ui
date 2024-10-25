@@ -62,7 +62,7 @@ const BeMentor = () => {
                     </label>
                     <button disabled={empty(watch("email"))} type="submit"
                             className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
-                        Next
+                        {t("BeMentor.nextButton")}
                     </button>
                 </form>
             )

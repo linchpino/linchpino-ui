@@ -249,7 +249,7 @@ const InterviewType = () => {
             <div className="mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4">
                     <h1 className="text-md font-bold">{t("InterviewType.title")}</h1>
-                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
+                    <div className="gap-x-3 flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
                         <input
                             type="text"
                             placeholder={t("InterviewType.searchPlaceholder")}
@@ -274,10 +274,10 @@ const InterviewType = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
                                 <th className='w-2/5'>{t("InterviewType.tableName")}</th>
                                 <th>{t("InterviewType.tableJobPosition")}</th>
-                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl">{t("InterviewType.actions")}</th>
+                                <th className="w-16 text-center rounded-tr-none rounded-tl-xl">{t("InterviewType.actions")}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -345,7 +345,7 @@ const InterviewType = () => {
                                     >
                                         <AsyncPaginate
                                             classNames={{
-                                                control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
+                                                control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 me-2",
                                                 container: () => "text-sm rounded w-full text-gray-400 ",
                                                 menu: () => "bg-gray-100 rounded border py-2",
                                                 option: ({isSelected, isFocused}) =>
@@ -374,7 +374,7 @@ const InterviewType = () => {
                                             onChange={(e) => setNewName(e.target.value)}
                                             className="input input-bordered w-full my-4 h-10"
                                         />
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
@@ -391,7 +391,7 @@ const InterviewType = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    (selectedInterviewType ? t("InterviewType.saveButton") : 't("InterviewType.addButton")')
+                                                    (selectedInterviewType ? t("InterviewType.saveButton") : t("InterviewType.addButton"))
                                                 )}
                                             </button>
                                         </div>

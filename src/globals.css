@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdn.rawgit.com/rastikerdar/vazir-font/master/font-face.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
     --foreground-rgb: 0, 0, 0;
@@ -9,15 +10,19 @@
     --background-end-rgb: 255, 255, 255;
 }
 
-/*body {*/
-/*    font-family: 'Vazir', sans-serif;*/
-/*    direction: rtl;*/
-/*}*/
+
 .font-vazir {
     font-family: 'Vazir', sans-serif;
 }
 .font-poppins {
     font-family: 'Poppins', sans-serif;
+}
+[dir="rtl"] .text-dir {
+    text-align: right;
+}
+
+[dir="ltr"] .text-dir {
+    text-align: left;
 }
 .mentor-scroll-bar {
     scrollbar-width: auto;

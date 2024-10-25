@@ -30,7 +30,7 @@
     "repeatPasswordCharacterLength": "تکرار رمز عبور الزامی است.",
     "repeatPasswordPattern": "تکرار رمز عبور باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
     "passwordMatch": "رمزهای عبور مطابقت ندارند.",
-    "fistName": "نام",
+    "firstName": "نام",
     "firstNameRequired": "نام الزامی است.",
     "lastName": "نام خانوادگی",
     "lastNameRequired": "نام خانوادگی الزامی است.",
@@ -53,7 +53,7 @@
     "navHome": "خانه",
     "navAbout": "درباره ما",
     "navContact": "تماس با ما",
-    "navInvite": "دوستان را دعوت کنید"
+    "navInvite": "دعوت از دوستان"
   },
   "Countdown": {
     "days": "{{days}} روز",
@@ -99,14 +99,14 @@
   "SignIn": {
     "title": "ورود",
     "register": "ثبت نام",
-    "forgetPassword": "رمز عبور خود را فراموش کرده‌اید"
+    "forgetPassword": "فراموشی رمز عبور"
   },
   "SignUp": {
     "title": "ثبت نام",
     "success": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
     "signIn": "ورود",
     "register": "ثبت نام",
-    "forgetPassword": "رمز عبور خود را فراموش کرده‌اید",
+    "forgetPassword": "فراموشی رمز عبور",
     "error": "ثبت نام ناموفق بود!"
   },
   "Schedule": {
@@ -118,7 +118,7 @@
     "defaultStep": "به دنبال چه چیزی هستید؟",
     "email": "آدرس ایمیل خود را وارد کنید:",
     "confirmButton": "تأیید",
-    "unavailableTimeSlot": "برای این زمان، زمان موجود نیست.",
+    "unavailableTimeSlot": "برای این تاریخ، زمان موجود نیست.",
     "unavailableDate": "هیچ تاریخی در دسترس نیست.",
     "finalMessage": "هیچ تاریخی در دسترس نیست."
   },
@@ -133,7 +133,10 @@
     "backToHome": "بازگشت به خانه",
     "backButton": "بازگشت",
     "confirmButton": "تأیید",
-    "backToBeMentor": "به صفحه مشاوران برگردید"
+    "backToBeMentor": "به صفحه مشاوران برگردید",
+    "nextButton": "مرحله ی بعد",
+    "expertise": "مهارت ها: ",
+    "interviewPlaceholder": "نوع مصاحبه"
   },
   "JobseekerActivation": {
     "registrationError": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
@@ -148,7 +151,7 @@
   "InterviewType": {
     "title": "انواع مصاحبه",
     "success": "نوع مصاحبه با موفقیت اضافه شد",
-    "failedAdd": "اضافه کردن نوع مصاحبه ناموفق بود",
+    "failedAdd": "افزودن نوع مصاحبه ناموفق بود",
     "successUpdate": "نوع مصاحبه با موفقیت به‌روزرسانی شد",
     "failedUpdate": "به‌روزرسانی نوع مصاحبه ناموفق بود",
     "successDelete": "نوع مصاحبه با موفقیت حذف شد",
@@ -158,20 +161,20 @@
     "tableJobPosition": "موقعیت شغلی",
     "actions": "عملیات",
     "editLabel": "ویرایش نوع مصاحبه",
-    "addLabel": "اضافه کردن نوع مصاحبه",
+    "addLabel": "افزودن نوع مصاحبه",
     "deleteLabel": "عملیات",
     "jobPosition": "موقعیت شغلی",
     "interviewTypeName": "نام نوع مصاحبه",
     "saveButton": "ذخیره",
-    "addButton": "اضافه کردن",
+    "addButton": "افزودن",
     "cancelButton": "لغو",
     "delete": "حذف",
     "deleteMessage": "آیا مطمئن هستید که می‌خواهید این نوع مصاحبه را حذف کنید؟"
   },
-  "JobPosition": {
+  "JobPositions": {
     "title": "موقعیت شغلی",
     "success": "موقعیت شغلی با موفقیت اضافه شد",
-    "failedAdd": "اضافه کردن موقعیت شغلی ناموفق بود",
+    "failedAdd": "افزودن موقعیت شغلی ناموفق بود",
     "successUpdate": "موقعیت شغلی با موفقیت به‌روزرسانی شد",
     "failedUpdate": "به‌روزرسانی موقعیت شغلی ناموفق بود",
     "successDelete": "موقعیت شغلی با موفقیت حذف شد",
@@ -181,12 +184,12 @@
     "tableJobPosition": "موقعیت شغلی",
     "actions": "عملیات",
     "editLabel": "ویرایش موقعیت شغلی",
-    "addLabel": "اضافه کردن موقعیت شغلی",
+    "addLabel": "افزودن موقعیت شغلی",
     "deleteLabel": "عملیات",
     "jobPosition": "موقعیت شغلی",
     "interviewTypeName": "نام موقعیت شغلی",
     "saveButton": "ذخیره",
-    "addButton": "اضافه کردن",
+    "addButton": "افزودن",
     "cancelButton": "لغو",
     "delete": "حذف",
     "deleteMessage": "آیا مطمئن هستید که می‌خواهید این موقعیت شغلی را حذف کنید؟"
@@ -262,7 +265,7 @@
       "monthly": "ماهانه"
     },
     "AddScheduleModal": {
-      "header": "اضافه کردن برنامه",
+      "header": "افزودن برنامه",
       "start": "شروع",
       "end": "پایان",
       "duration": "مدت زمان",
@@ -270,7 +273,7 @@
       "numberOf": "تعداد...",
       "on": "در",
       "daysOfMonth": "روزهای ماه",
-      "addButton": "اضافه کردن",
+      "addButton": "افزودن",
       "closeButton": "✕",
       "loadingButton": "در حال بارگذاری..."
     },
@@ -282,11 +285,12 @@
       "recurrenceType": "نوع تکرار",
       "interval": "فاصله",
       "weekDays": "روزهای هفته",
-      "monthDays": "روزهای ماه"
+      "monthDays": "روزهای ماه",
+      "min": "دقیقه"
     }
   },
   "ProfileTimeSlot": {
-    "addNewTimeSlot": "اضافه کردن زمان جدید",
+    "addNewTimeSlot": "افزودن زمان جدید",
     "createSlotDescription": "یک زمان جدید برای دسترسی خود ایجاد کنید.",
     "startTime": "زمان شروع",
     "startTimePlaceholder": "زمان شروع را انتخاب کنید",
@@ -297,7 +301,7 @@
     "daily": "روزانه",
     "weekly": "هفتگی",
     "monthly": "ماهانه",
-    "addButton": "اضافه کردن زمان"
+    "addButton": "افزودن زمان"
   },
   "ResetPassword": {
     "successMessage": "رمز عبور با موفقیت تغییر یافت!",
@@ -313,7 +317,7 @@
   "User": {
     "users": "کاربران",
     "searchPlaceholder": "جستجو بر اساس نام",
-    "filterPlaceholder": "فیلتر بر اساس نقش",
+    "filterPlaceholder": "فیلتر نقش ها",
     "roleOptions": {
       "all": "همه",
       "guest": "مهمان",

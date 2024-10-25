@@ -5,7 +5,7 @@ import {AsyncPaginate, LoadOptions} from "react-select-async-paginate";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import useStore from "@/store/store";
-import {useRouter} from "next/navigation";
+import {useRouter} from "../../i18n/routing";
 import {useTranslations} from "next-intl";
 
 interface OptionsType {
@@ -26,7 +26,7 @@ const JobSearchSection: React.FC = () => {
         }
     }, [jobValue]);
     //@ts-ignore
-    const loadJob: LoadOptions<OptionsType, { page: number }> = async (search, loadedOptions, {page}) => {
+    const loadJob: LoadOptions<OptionsType, { page: number }> = async (search, loadedOptions, {page}) =>    {
         try {
             const response = await axios.get(`${BASE_URL_API}jobposition/search`, {
                 params: {
@@ -129,7 +129,7 @@ const JobSearchSection: React.FC = () => {
                     className="flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 mt-4 sm:absolute sm:top-[15%] md:top-0 md:left-[-3rem] w-72 border-2 border-[#F9A826] rounded-lg gap-y-8">
                     <AsyncPaginate
                         classNames={{
-                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2",
+                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
                             menu: () => "bg-gray-100 rounded border py-2",
                             option: ({isSelected, isFocused}) =>
@@ -152,7 +152,7 @@ const JobSearchSection: React.FC = () => {
                         cacheUniqs={[jobValue]}
                         selectRef={interViewRef}
                         classNames={{
-                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2",
+                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
                             menu: () => "bg-gray-100 rounded border py-2",
                             option: ({isSelected, isFocused}) =>

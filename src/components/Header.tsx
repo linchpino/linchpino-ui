@@ -81,9 +81,9 @@ const Header: React.FC<Props> = () => {
                             })}
 
                         </div>
-                        <div className='lg:flex items-center justify-end mt-6'>
+                        <div className='lg:flex items-center justify-end mt-6 gap-x-4'>
                             <div
-                                className="input input-bordered input-md bg-transparent rounded-md w-[60%] flex items-center gap-2 mr-4">
+                                className="input input-bordered input-md bg-transparent rounded-md w-[65%] flex items-center ">
                                 <input type="text" className="grow" placeholder={t("Header.navSearh")}/>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                                      className="w-4 h-4 opacity-70">

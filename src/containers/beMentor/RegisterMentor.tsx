@@ -106,16 +106,14 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>{t("Forms.firstName")}</span>
+                    <span className="label-text text-[#3F3D56]">{t("Forms.firstName")}</span>
                 </div>
                 <input {...register("firstName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.firstName && <p className='text-red-500 mt-1 text-left'>{errors.firstName.message}</p>}
             </label>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>{t("Forms.lastName")}</span>
+                    <span className="label-text text-[#3F3D56]">{t("Forms.lastName")}</span>
                 </div>
                 <input {...register("lastName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.lastName && <p className='text-red-500 mt-1 text-left'>{errors.lastName.message}</p>}
@@ -160,13 +158,12 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </div>
             <label className="w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>{t("BeMentor.expertise")}</span>
+                    <span className="label-text text-[#3F3D56]">{t("BeMentor.expertise")}</span>
                 </div>
                 <AsyncPaginate
                     classNames={{
-                        control: () => "border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 mr-2 py-2",
-                        container: () => "text-sm rounded w-full text-[#000000] text-left",
+                        control: () => "border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 me-2 py-2",
+                        container: () => "text-sm rounded w-full text-[#000000] text-dir",
                         menu: () => "bg-gray-100 rounded border py-2",
                         option: ({isSelected, isFocused}) => isSelected
                             ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"

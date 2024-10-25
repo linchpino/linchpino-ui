@@ -133,9 +133,9 @@
     "backToHome": "Back To Home",
     "backButton": "Back",
     "confirmButton": "Confirm",
-    "nextButton": "Confirm",
     "expertise": "Field of expertise: ",
-    "interviewPlaceholder": "Interview Type"
+    "interviewPlaceholder": "Interview Type",
+    "nextButton": "Next"
   },
   "JoinInterview": {
     "earlySessionMessage": "Hi there! It looks like you're a bit early for your session scheduled on {{startTime}}. Your session is set to last {{duration}}. Feel free to explore, ask any questions, or let us know if there's anything specific you'd like to prepare for. We’ll be ready to start soon!",
@@ -176,7 +176,7 @@
     "delete": "Delete",
     "deleteMessage": "Are you sure you want to delete this interview type?"
   },
-  "JobPosition": {
+  "JobPositions": {
     "title": "Job Position",
     "success": "Job Position added successfully",
     "failedAdd": "Failed to add job position",

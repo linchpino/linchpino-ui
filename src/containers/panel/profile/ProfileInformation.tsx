@@ -98,7 +98,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({ firstName, last
                     </label>
                     <label className="w-full md:col-span-2">
                         <div className="label">
-                            <span className="label-text">Email:</span>{t("Forms.email")}
+                            <span className="label-text">{t("Forms.email")}</span>
                         </div>
                         <input {...register("email", {
                             required: t("Forms.emailRequired"),

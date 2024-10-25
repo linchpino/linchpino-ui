@@ -75,11 +75,11 @@ const User = () => {
         setCurrentPage(0);
     };
     const roleOptions = [
-        { value: "", label: t('roleOptions.all') },
-        { value: 1, label: t('roleOptions.guest') },
-        { value: 2, label: t('roleOptions.jobseeker') },
-        { value: 3, label: t('roleOptions.mentor') },
-        { value: 4, label: t('roleOptions.admin') }
+        { value: "", label: t('User.roleOptions.all') },
+        { value: 1, label: t('User.roleOptions.guest') },
+        { value: 2, label: t('User.roleOptions.jobseeker') },
+        { value: 3, label: t('User.roleOptions.mentor') },
+        { value: 4, label: t('User.roleOptions.admin') }
     ];
 
     useEffect(() => {
@@ -130,10 +130,10 @@ const User = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
                                 <th>{t('User.filterPlaceholder')}</th>
                                 <th>{t('User.columns.email')}</th>
-                                <th className='w-20 rounded-tl-none rounded-tr-xl'>{t('User.columns.role')}</th>
+                                <th className='w-20 rounded-tr-none rounded-tl-xl'>{t('User.columns.role')}</th>
                             </tr>
                             </thead>
                             <tbody>

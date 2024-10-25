@@ -201,7 +201,7 @@ const JobPosition = () => {
             <div className="mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4">
                     <h1 className="text-md font-bold">{t("JobPositions.title")}</h1>
-                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
+                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4 gap-x-3">
                         <input
                             type="text"
                             placeholder={t("JobPositions.searchPlaceholder")}
@@ -226,9 +226,9 @@ const JobPosition = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
                                 <th>{t("JobPositions.tableName")}</th>
-                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl ">{t("JobPosition.actions")}</th>
+                                <th className="w-16 text-center rounded-tr-none rounded-tl-xl ">{t("JobPositions.actions")}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -289,7 +289,7 @@ const JobPosition = () => {
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center">
-                                        {selectedJobPosition ? t("JobPosition.editLabel") : t("JobPosition.addLabel")}
+                                        {selectedJobPosition ? t("JobPositions.editLabel") : t("JobPositions.addLabel")}
                                     </h3>
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
@@ -298,18 +298,18 @@ const JobPosition = () => {
                                         <input
                                             ref={inputRef}
                                             type="text"
-                                            placeholder={t("JobPosition.tableName")}
+                                            placeholder={t("JobPositions.tableName")}
                                             value={newTitle}
                                             onChange={(e) => setNewTitle(e.target.value)}
                                             className="input input-bordered w-full my-4 h-10"
                                         />
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost text-center font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
-                                                Cancel
+                                                {t("JobPositions.cancelButton")}
                                             </button>
                                             <button
                                                 type="submit"
@@ -319,7 +319,7 @@ const JobPosition = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    selectedJobPosition ? t("JobPosition.saveButton") : t("JobPosition.addButton")
+                                                    selectedJobPosition ? t("JobPositions.saveButton") : t("JobPositions.addButton")
                                                 )}
                                             </button>
                                         </div>
@@ -329,19 +329,19 @@ const JobPosition = () => {
                             ) : (
                                 <>
                                     <h3 className="text-center text-lg mt-4">
-                                        {t("JobPosition.deleteMessage")}
+                                        {t("JobPositions.deleteMessage")}
                                     </h3>
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
                                         handleDelete();
                                     }}>
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
-                                                {t("JobPosition.cancelButton")}
+                                                {t("JobPositions.cancelButton")}
                                             </button>
                                             <button
                                                 type="submit"
@@ -351,7 +351,7 @@ const JobPosition = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    t("JobPosition.delete")
+                                                    t("JobPositions.delete")
                                                 )}
                                             </button>
                                         </div>

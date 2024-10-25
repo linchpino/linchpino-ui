@@ -215,7 +215,7 @@ const ResetPassword = () => {
                         type="submit"
                         className="btn btn-primary bg-[#F9A826] text-white border-none px-6 py-2 mt-5 hover:bg-[#e39620] w-full max-w-[28rem]"
                     >
-                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : t("Forms.resetButton")}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : t("ResetPassword.resetButton")}
                     </button>
 
                 </form>

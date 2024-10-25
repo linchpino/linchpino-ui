@@ -21,22 +21,14 @@ export default async function LocaleLayout({
     if (!routing.locales.includes(locale as any)) {
         notFound();
     }
+    const fontClass = locale === 'fa' ? 'font-vazir' : 'font-poppins';
     const messages = await getMessages();
-    console.log(locale)
     return (
         <html dir={locale === 'fa' ? 'rtl' : 'ltr'} lang={locale} className="bg-white   ">
         <head>
-            <link
-                href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-                rel="stylesheet"
-            />
-            <link
-                href="https://cdn.rawgit.com/rastikerdar/vazir-font/master/font-face.css"
-                rel="stylesheet"
-            />
             <title>لینچپینو - برای آینده</title>
         </head>
-        <body className="bg-white font-Vazir">
+        <body className={`bg-white ${fontClass}`}>
         <NextIntlClientProvider messages={messages}>
             <QueryProvider>
                 <div className="min-h-screen flex flex-col justify-between">

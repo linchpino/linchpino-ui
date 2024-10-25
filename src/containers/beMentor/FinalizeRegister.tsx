@@ -6,6 +6,7 @@ import axios from 'axios';
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from '@/components/CustomToast';
 import {useTranslations} from "next-intl";
+import {ClipLoader} from "react-spinners";
 
 interface FinalizeRegisterProp {
     activeStep: number,
@@ -97,7 +98,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                 <button onClick={handleConfirm}
                         disabled={isLoading}
                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
-                    {isLoading ? 'Loading...' : t("BeMentor.confirmButton")}
+                    {isLoading ?  <ClipLoader size={18} color={"#fff"}/> : t("BeMentor.confirmButton")}
                 </button>
             </div>
 

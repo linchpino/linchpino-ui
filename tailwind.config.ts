@@ -9,6 +9,12 @@ const config: Config = {
     ],
 
     theme: {
+        extend: {
+            fontFamily: {
+                vazir: ['Vazir', 'sans-serif'],
+                poppins: ['Poppins', 'sans-serif'],
+            },
+        },
         container: {
             padding: '4rem',
             center: true,
