@@ -282,6 +282,11 @@
       "closeButton": "✕",
       "loadingButton": "Loading..."
     },
+    "DeleteScheduleModal": {
+      "header": "Delete Schedule",
+      "dangers": "Are you sure delete schedule?",
+      "success": "Delete schedule successfully."
+    },
     "scheduleInfo": {
       "startTime": "Start Time",
       "endTime": "End Time",

@@ -277,6 +277,11 @@
       "closeButton": "✕",
       "loadingButton": "در حال بارگذاری..."
     },
+    "DeleteScheduleModal": {
+      "header": "حذف برنامه",
+      "dangers": "آیا از حذف برنامه ی خود اطمینان دارید؟",
+      "success": "برنامه با موفقیت حذف شد"
+    },
     "scheduleInfo": {
       "startTime": "زمان شروع",
       "endTime": "زمان پایان",

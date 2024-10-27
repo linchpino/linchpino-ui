@@ -5,7 +5,7 @@ import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import Select, {MultiValue, SingleValue} from "react-select";
 import "react-multi-date-picker/styles/colors/yellow.css";
-import {useMutation,useQueryClient} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import axios from "axios";
 import useStore from "@/store/store";
@@ -15,6 +15,7 @@ import {BASE_URL_API} from "@/utils/system";
 import {BsPlus} from 'react-icons/bs'
 import moment from "moment/moment";
 import {useTranslations} from "next-intl";
+import JobPosition from "@/app/(main)/panel/job-position/page";
 
 type DurationOption = {
     id: number;
@@ -29,6 +30,7 @@ type RepeatOption = {
     value: string;
     label: string;
 };
+
 interface ProfileTimeSlotProps {
     startTime: string;
     endTime: string;
@@ -40,7 +42,26 @@ interface ProfileTimeSlotProps {
     monthDays: number[];
 }
 
-const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, durationTime, accountId, recurrenceType, interval, weekDays, monthDays}) => {
+const deleteSchedule = async (token: string | null) => {
+    const {data} = await axios.delete(`${BASE_URL_API}accounts/mentors/schedule`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return data;
+};
+
+
+const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
+                                                             startTime,
+                                                             endTime,
+                                                             durationTime,
+                                                             accountId,
+                                                             recurrenceType,
+                                                             interval,
+                                                             weekDays,
+                                                             monthDays
+                                                         }) => {
     const t = useTranslations();
 
     const formattedStartTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
@@ -83,7 +104,11 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
     const [selectedRepeat, setSelectedRepeat] = useState<SingleValue<RepeatOption>>(repeatOptions[0]);
     const [selectedDaysOfMonth, setSelectedDaysOfMonth] = useState<number[]>([]);
     const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -128,7 +153,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
 
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['profileData']});
-            toastSuccess({message:t("Profile.success")});
+            toastSuccess({message: t("Profile.success")});
             setIsOpenAddModal(false)
         },
         onError: (error: any) => {
@@ -159,10 +184,41 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
         }
         mutation.mutate(timeSlotData);
     };
+
+    const deleteMutation = useMutation({
+        mutationFn: () => deleteSchedule(token),
+        onSuccess: () => {
+            toastSuccess({message: t("Profile.DeleteScheduleModal")});
+            queryClient.invalidateQueries({queryKey: ['profileData']});
+            closeDeleteModal();
+        },
+        onError: (error: any) => {
+            const errorMessage = error.response?.data?.error || t("Errors.unknowServerError");
+            toastError({message: errorMessage});
+        }
+    });
+    const handleDelete = () => {
+        setLoading(true);
+        deleteMutation.mutate(undefined, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({queryKey: ['profileData']});
+                closeDeleteModal();
+                setLoading(false);
+            },
+            onError: () => setLoading(false)
+        });
+    };
+    const openDeleteModal = (jobPosition: JobPosition | null = null, deleteMode: boolean = false) => {
+        setIsDeleteModalOpen(true);
+    };
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
     return (
         <>
             <div className="flex gap-x-2 mt-8">
-                    <h1 className="text-md font-bold">{t("Profile.scheduleTitle")}</h1>
+                <h1 className="text-md font-bold">{t("Profile.scheduleTitle")}</h1>
                 {empty(startTime) && empty(endTime) &&
                     <button onClick={handleLoginClick}
                             className="bg-amber-400 flex items-center justify-center text-[22px] text-white w-6 h-6 rounded-full">
@@ -339,46 +395,65 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     </div>
                 </div>
             </dialog>
-            {!empty(startTime)&&!empty(endTime) &&
-                <div className="grid grid-cols-1 gap-x-6 mt-4 gap-y-6">
+            {!empty(startTime) && !empty(endTime) &&
+                <div className="grid grid-cols-1 gap-x-6 mt-4 gap-y-6 relative">
+                    <div
+                        className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
+
                     <div className="relative bg-white rounded-lg shadow-xl text-xs sm:text-sm md:text-base lg:text-sm">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
+                        <div className="absolute top-4 left-2 flex gap-1">
+                            <button className="p-1 rounded-full bg-blue-500 text-white hover:bg-blue-600 w-6 h-6">
+                                <i className="fas fa-edit">x</i>
+                            </button>
+                            <button className="p-1 rounded-full bg-red-500 text-white hover:bg-red-600 w-6 h-6">
+                                <i className="fas fa-trash-alt">+</i>
+                            </button>
+                        </div>
+                        <div
+                            className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-[#F9A826] rounded-t-lg"></div>
                         <div className="card-body px-4 sm:px-6 py-6 flex flex-col">
-                            {/*<h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-4">Schedule Information</h3>*/}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 space-y-3 text-gray-600">
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.startTime")}:</span>
+                                    <span
+                                        className="font-medium text-gray-700">{t("Profile.scheduleInfo.startTime")}:</span>
                                     <span className="ms-0 sm:ms-2">{formattedStartTime}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.endTime")}:</span>
+                                    <span
+                                        className="font-medium text-gray-700">{t("Profile.scheduleInfo.endTime")}:</span>
                                     <span className="ms-0 sm:ms-2">{formattedEndTime}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.duration")}:</span>
-                                    <span className="ms-0 sm:ms-2">{durationTime} {t("Profile.scheduleInfo.minutes")}</span>
+                                    <span
+                                        className="font-medium text-gray-700">{t("Profile.scheduleInfo.duration")}:</span>
+                                    <span
+                                        className="ms-0 sm:ms-2">{durationTime} {t("Profile.scheduleInfo.minutes")}</span>
                                 </p>
                                 {/*<p className="flex flex-col sm:flex-row items-start sm:items-center">*/}
                                 {/*    <span className="font-medium text-gray-700">Account ID:</span>*/}
                                 {/*    <span className="ml-0 sm:ml-2">{accountId}</span>*/}
                                 {/*</p>*/}
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.recurrenceType")}:</span>
+                                    <span
+                                        className="font-medium text-gray-700">{t("Profile.scheduleInfo.recurrenceType")}:</span>
                                     <span className="ms-0 sm:ms-2">{recurrenceType}</span>
                                 </p>
                                 <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                    <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.interval")}:</span>
+                                    <span
+                                        className="font-medium text-gray-700">{t("Profile.scheduleInfo.interval")}:</span>
                                     <span className="ms-0 sm:ms-2">{interval}</span>
                                 </p>
                                 {weekDays.length > 0 && (
                                     <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                        <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.weekDays")}:</span>
+                                        <span
+                                            className="font-medium text-gray-700">{t("Profile.scheduleInfo.weekDays")}:</span>
                                         <span className="ms-0 sm:ms-2">{weekDays.join(', ')}</span>
                                     </p>
                                 )}
                                 {monthDays.length > 0 && (
                                     <p className="flex flex-col sm:flex-row items-start sm:items-center">
-                                        <span className="font-medium text-gray-700">{t("Profile.scheduleInfo.monthDays")}:</span>
+                                        <span
+                                            className="font-medium text-gray-700">{t("Profile.scheduleInfo.monthDays")}:</span>
                                         <span className="ms-0 sm:ms-2">{monthDays.join(', ')}</span>
                                     </p>
                                 )}
@@ -387,6 +462,43 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
                     </div>
                 </div>
             }
+            {isModalOpen && (
+                <div className="modal modal-open" data-theme="light">
+                    <div className="modal-box">
+                        <button onClick={closeDeleteModal}
+                                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                        </button>
+                        <h3 className="text-center text-lg mt-4">
+                            {t("JobPositions.deleteMessage")}
+                        </h3>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            handleDelete();
+                        }}>
+                            <div className="modal-action gap-x-2">
+                                <button
+                                    type="button"
+                                    className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
+                                    onClick={closeDeleteModal}
+                                >
+                                    {t("JobPositions.cancelButton")}
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="w-20 btn btn-error btn-sm font-medium text-[.9rem] text-white"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <PulseLoader color="#FFFFFF" size={5}/>
+                                    ) : (
+                                        t("JobPositions.delete")
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
