@@ -17,7 +17,7 @@ export default async function LocaleLayout({
     const locale = await getLocale();
     const messages = await getMessages();
     return (
-        <html dir={'rtl'} lang={locale} className="bg-white">
+            <html dir={'rtl'} lang={locale} className="bg-white">
         <head>
             <title>لینچپینو - برای آینده</title>
         </head>

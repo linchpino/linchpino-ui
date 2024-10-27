@@ -89,16 +89,16 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                 ))}
             </div>
             <div className="flex items-center justify-between w-full max-w-xs mt-10">
+                <button onClick={handleConfirm}
+                        disabled={isLoading}
+                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
+                    {isLoading ? <ClipLoader size={18} color={"#fff"}/> : t("BeMentor.confirmButton")}
+                </button>
                 <button onClick={() => {
                     setActiveStep(activeStep - 1)
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                     {t("BeMentor.backButton")}
-                </button>
-                <button onClick={handleConfirm}
-                        disabled={isLoading}
-                        className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
-                    {isLoading ?  <ClipLoader size={18} color={"#fff"}/> : t("BeMentor.confirmButton")}
                 </button>
             </div>
 

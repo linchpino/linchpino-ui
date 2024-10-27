@@ -182,12 +182,21 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     additional={{page: 0}}
                 />
             </label>
-            <button
-                type="submit"
-                disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
-                className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
-                {t("BeMentor.nextButton")}
-            </button>
+            <div className="flex items-center justify-between w-full max-w-xs mt-10">
+                <button
+                    type="submit"
+                    disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
+                    className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs'>
+                    {t("BeMentor.nextButton")}
+                </button>
+
+                <button onClick={() => {
+                    setActiveStep(activeStep - 1)
+                }}
+                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                    {t("BeMentor.backButton")}
+                </button>
+            </div>
         </form>
     );
 };
