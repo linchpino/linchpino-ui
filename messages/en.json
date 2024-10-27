@@ -13,7 +13,7 @@
     "email": "Email",
     "emailRequired": "Email is required",
     "emailInvalid": "Invalid email address",
-    "emailPlaceholder": "Your email address",
+    "emailPlaceholder": "example@gmail.com",
     "password": "Password",
     "passwordCharacterLength": "Password must contain at least 6 character(s)",
     "passwordPattern": "Password must include at least one letter, one number, or one special character",

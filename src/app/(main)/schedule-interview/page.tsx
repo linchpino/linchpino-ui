@@ -121,7 +121,7 @@ const ScheduleInterview = () => {
                                     message: t("Forms.emailInvalid")
                                 }
                             })} type="text"
-                                   placeholder="***@gmail.com"
+                                   placeholder={t("Forms.emailPlaceholder")}
                                    className="input input-bordered w-full  bg-white"/>
                             {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 

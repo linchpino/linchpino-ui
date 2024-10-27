@@ -106,14 +106,14 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]">{t("Forms.firstName")}</span>
+                    <span className="label-text ">{t("Forms.firstName")}</span>
                 </div>
                 <input {...register("firstName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.firstName && <p className='text-red-500 mt-1 text-left'>{errors.firstName.message}</p>}
             </label>
             <label className="form-control w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]">{t("Forms.lastName")}</span>
+                    <span className="label-text ">{t("Forms.lastName")}</span>
                 </div>
                 <input {...register("lastName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.lastName && <p className='text-red-500 mt-1 text-left'>{errors.lastName.message}</p>}
@@ -156,9 +156,9 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     )}
                 </label>
             </div>
-            <label className="w-full">
-                <div className="label">
-                    <span className="label-text text-[#3F3D56]">{t("BeMentor.expertise")}</span>
+            <label className="w-full ">
+                <div className="label mt-4">
+                    <span className="label-text ">{t("BeMentor.expertise")}</span>
                 </div>
                 <AsyncPaginate
                     classNames={{

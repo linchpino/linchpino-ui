@@ -6,7 +6,7 @@ import Select from 'react-select';
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
-import ProtectedPage from "@/app/[locale]/panel/ProtectedPage";
+import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {textWithTooltip} from "@/utils/helper";
 import {useTranslations} from "next-intl";
 

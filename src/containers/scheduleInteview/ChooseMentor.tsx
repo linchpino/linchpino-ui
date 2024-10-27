@@ -2,7 +2,7 @@
 import React, {FC, useEffect} from "react";
 import {Calendar, DateObject} from "react-multi-date-picker"
 import MentorListItem from "@/containers/scheduleInteview/MentorListItem";
-import '../../globals.css'
+import '../../app/globals.css'
 import "react-multi-date-picker/styles/colors/yellow.css"
 import {empty} from "@/utils/helper";
 import type {Value} from "react-multi-date-picker"

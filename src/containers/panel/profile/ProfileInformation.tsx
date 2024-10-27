@@ -6,7 +6,7 @@ import {toastError, toastSuccess} from "@/components/CustomToast";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import '../../../globals.css'
+import '../../../app/globals.css'
 import {useTranslations} from "next-intl";
 
 interface ProfileInformationProps {
@@ -106,7 +106,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({ firstName, last
                                 value: ValidateEmailPattern,
                                 message: t("Forms.emailInvalid")
                             }
-                        })} type="email" placeholder="***@gmail.com"
+                        })} type="email" placeholder={t("Forms.emailPlaceholder")}
                                className="input input-bordered w-full bg-white"/>
                         {errors.email && (
                             <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>

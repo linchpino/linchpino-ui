@@ -1,38 +1,30 @@
-import '../../globals.css';
-import QueryProvider from '@/QueryProvider';
+import './globals.css';
+import QueryProvider from '@/app/QueryProvider';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import React, {Suspense} from "react";
-import Loading from "@/loading";
+import Loading from "@/app/loading";
 import {ToastContainer} from 'react-toastify';
 import {NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import {getMessages, getLocale} from 'next-intl/server';
 
 export default async function LocaleLayout({
                                                children,
-                                               params: {locale}
                                            }: Readonly<{
     children: React.ReactNode;
-    params: { locale: string };
 }>) {
-    if (!routing.locales.includes(locale as any)) {
-        notFound();
-    }
-    const fontClass = locale === 'fa' ? 'font-vazir' : 'font-poppins';
+    const locale = await getLocale();
     const messages = await getMessages();
     return (
-        <html dir={locale === 'fa' ? 'rtl' : 'ltr'} lang={locale} className="bg-white   ">
+        <html dir={'rtl'} lang={locale} className="bg-white">
         <head>
             <title>لینچپینو - برای آینده</title>
         </head>
-        <body className={`bg-white ${fontClass}`}>
+        <body className="bg-white font-vazir">
         <NextIntlClientProvider messages={messages}>
             <QueryProvider>
                 <div className="min-h-screen flex flex-col justify-between">
-
                     <Header/>
                     <Suspense fallback={<Loading/>}>
                         {children}

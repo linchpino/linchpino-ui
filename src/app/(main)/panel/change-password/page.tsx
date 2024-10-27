@@ -4,7 +4,7 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
-import ProtectedPage from "@/app/[locale]/panel/ProtectedPage";
+import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import axiosInstance from '../../../../utils/axiosInstance';
 import {useMutation} from "@tanstack/react-query";

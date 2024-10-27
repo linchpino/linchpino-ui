@@ -157,7 +157,7 @@ export default function SignIn() {
                     <div className="label">
                         <span className="label-text">{t("Forms.email")}</span>
                     </div>
-                    <input type="text" placeholder="Your registered email address"
+                    <input type="text" placeholder={t("Forms.emailPlaceholder")}
                            className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
                            {...register('email', {
                                required: t("Forms.emailRequired"),

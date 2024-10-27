@@ -5,7 +5,7 @@ import Spinner from "@/components/Spinner";
 import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
-import ProtectedPage from "@/app/[locale]/panel/ProtectedPage";
+import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {useTranslations} from "next-intl";
 
 type Interview = {
