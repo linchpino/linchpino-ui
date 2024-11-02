@@ -22,7 +22,7 @@ export default async function LocaleLayout({
     return (
         <html dir={direction} lang={locale} className="bg-white">
         <head>
-            <title>لینچپینو - برای آینده</title>
+            <title>Linchpino</title>
         </head>
         <body className="bg-white font-vazir">
         <NextIntlClientProvider messages={messages}>

@@ -47,7 +47,8 @@
     "navContact": "Contact Us",
     "navSignInButton": "Sign In / Register",
     "navPanel": "Panel",
-    "navSearh": "Search Here ..."
+    "navSearh": "Search Here ...",
+    "head" : "Linchpino"
   },
   "Footer": {
     "donateButton": "Donate now",
