@@ -32,6 +32,7 @@
     "passwordMatch": "رمزهای عبور مطابقت ندارند.",
     "firstName": "نام",
     "firstNameRequired": "نام الزامی است.",
+    "firstNamePlaceholder": "نام شما",
     "lastName": "نام خانوادگی",
     "lastNameRequired": "نام خانوادگی الزامی است.",
     "lastNamePlaceholder": "نام خانوادگی شما",

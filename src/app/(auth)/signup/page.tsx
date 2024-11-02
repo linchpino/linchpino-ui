@@ -107,7 +107,7 @@ export default function SignUp() {
                                     message: t("Forms.emailInvalid")
                                 }
                             })} type="email" placeholder={t("Forms.emailPlaceholder")}
-                                   className="input input-bordered w-full bg-white"/>
+                                   className="input input-bordered w-full bg-white text-leeft"/>
                             {errors.email && (
                                 <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                             )}
@@ -121,7 +121,7 @@ export default function SignUp() {
                                 <div className="flex items-center justify-between relative">
                                     <input {...register("password")} type={showPassword ? "text" : "password"}
                                            placeholder="********"
-                                           className="input input-bordered w-full bg-white pr-8 "/>
+                                           className="input input-bordered w-full bg-white pr-8  text-left"/>
                                     <button type="button" onClick={toggleShowPassword}
                                             className="absolute right-3 flex items-center text-gray-700">
                                         {showPassword ? <BsEyeSlashFill color="#686868"/> :
@@ -139,7 +139,7 @@ export default function SignUp() {
                                 <div className="flex items-center justify-between relative">
                                     <input {...register("repeat_password")}
                                            type={showRepeatPassword ? "text" : "password"} placeholder="********"
-                                           className="input input-bordered w-full bg-white pr-8"/>
+                                           className="input input-bordered w-full bg-white pr-8 text-left"/>
                                     <button type="button" onClick={toggleShowRepeatPassword}
                                             className="absolute right-3 flex items-center text-gray-700">
                                         {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :

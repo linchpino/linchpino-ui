@@ -32,6 +32,7 @@
     "passwordMatch": "Passwords don't match",
     "fistName": "First Name",
     "firstNameRequired": "First name is required",
+    "firstNamePlaceholder": "Your first name",
     "lastName": "Last Name",
     "lastNameRequired": "Last name is required",
     "lastNamePlaceholder": "Your last name",

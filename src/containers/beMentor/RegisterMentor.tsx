@@ -126,7 +126,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     <div className="flex items-center justify-between relative">
                         <input {...register("password")} type={showPassword ? "text" : "password"}
                                placeholder="********"
-                               className="input input-bordered w-full bg-white pr-8"/>
+                               className="input input-bordered w-full bg-white pr-8 text-left"/>
                         <button type="button" onClick={toggleShowPassword}
                                 className="absolute right-3 flex items-center text-gray-700">
                             {showPassword ? <BsEyeSlashFill color="#686868"/> :
@@ -144,7 +144,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     <div className="flex items-center justify-between relative">
                         <input {...register("repeatPassword")}
                                type={showRepeatPassword ? "text" : "password"} placeholder="********"
-                               className="input input-bordered w-full bg-white pr-8"/>
+                               className="input input-bordered w-full bg-white pr-8 text-left"/>
                         <button type="button" onClick={toggleShowRepeatPassword}
                                 className="absolute right-3 flex items-center text-gray-700">
                             {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :

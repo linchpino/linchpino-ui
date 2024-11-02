@@ -56,7 +56,7 @@ const BeMentor = () => {
                             }
                         })} type="text"
                                placeholder={t("Forms.emailPlaceholder")}
-                               className="input input-bordered w-full  bg-white"/>
+                               className="input input-bordered w-full  bg-white text-left"/>
                         {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 
                     </label>

@@ -1,7 +1,7 @@
 import {getRequestConfig} from 'next-intl/server';
 
 export default getRequestConfig(async () => {
-    const locale = 'fa'
+    const locale = process.env.NEXT_PUBLIC_LANGUAGE
     return {
         locale,
         messages: (await import(`../../messages/${locale}.json`)).default

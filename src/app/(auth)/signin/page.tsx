@@ -158,7 +158,7 @@ export default function SignIn() {
                         <span className="label-text">{t("Forms.email")}</span>
                     </div>
                     <input type="text" placeholder={t("Forms.emailPlaceholder")}
-                           className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
+                           className={`input input-bordered w-full text-left max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
                            {...register('email', {
                                required: t("Forms.emailRequired"),
                                pattern: {
@@ -173,7 +173,7 @@ export default function SignIn() {
                         <span className="label-text">{t("Forms.password")}</span>
                     </div>
                     <input type="password" placeholder="********"
-                           className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
+                           className={`input input-bordered w-full text-left max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
                            {...register('password', {required: t("Forms.passwordCharacterLength")})} />
                     {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
                 </label>
@@ -182,16 +182,17 @@ export default function SignIn() {
                         disabled={isLoading}>
                     {isLoading ? <ClipLoader size={24} color={"#fff"}/> : t("SignIn.title")}
                 </button>
-                <div className='flex items-center'>
-                    <button onClick={() => router.push('/signup')} className='text-[#F9A826] text-sm'>
-                        {t("SignIn.register")}
-                    </button>
-                    /
-                    <button onClick={() => router.push('/')} className='text-[#F9A826] text-sm'>
-                        {t("SignIn.forgetPassword")}
-                    </button>
-                </div>
+
             </form>
+            <div className='flex items-center justify-center mt-6'>
+                <button onClick={() => router.push('/signup')} className='text-[#F9A826] text-sm'>
+                    {t("SignIn.register")}
+                </button>
+                /
+                <button onClick={() => router.push('/')} className='text-[#F9A826] text-sm'>
+                    {t("SignIn.forgetPassword")}
+                </button>
+            </div>
         </div>
     );
 }

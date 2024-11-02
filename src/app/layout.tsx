@@ -14,10 +14,13 @@ export default async function LocaleLayout({
                                            }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const locale = await getLocale();
+    // const locale = await getLocale();
+    const locale = process.env.NEXT_PUBLIC_LANGUAGE
     const messages = await getMessages();
+    const direction = locale === 'en' ? 'ltr' : 'rtl';
+
     return (
-        <html dir={'rtl'} lang={locale} className="bg-white">
+        <html dir={direction} lang={locale} className="bg-white">
         <head>
             <title>لینچپینو - برای آینده</title>
         </head>
