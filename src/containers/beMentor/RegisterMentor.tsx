@@ -49,9 +49,9 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
 
 
     const paymentOptions = [
-        {value: "PAY_AS_YOU_GO", label: "Pay As You Go"},
-        {value: "FIX_PRICE", label: "Fix Price"},
-        {value: "FREE", label: "Free"},
+        {value: "PAY_AS_YOU_GO", label: t("BeMentor.payAsYouGo")},
+        {value: "FIX_PRICE", label: t("BeMentor.fixPrice")},
+        {value: "FREE", label: t("BeMentor.free")},
     ]
     const {mentorInformation, setMentorInformation} = useStore();
     const {register, handleSubmit, watch, control, formState: {errors}} = useForm<Inputs>({
@@ -119,7 +119,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 additional: {page: page + 1},
             };
         } catch (error) {
-            console.error("Error loading interviews:", error);
+            console.error(error);
             return {options: [], additional: {page: page + 1}};
         }
     };
@@ -136,20 +136,19 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
     console.log(paymentMethod)
 
     // @ts-ignore
+    // @ts-ignore
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs space-y-5'>
             <div className="w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>First Name:</span>
+                    <span className="label-text">{t("Forms.firstName")}</span>
                 </div>
                 <input {...register("firstName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.firstName && <p className='text-red-500 mt-1 text-left'>{errors.firstName.message}</p>}
             </div>
             <div className=" w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>Last Name:</span>
+                    <span className="label-text ">{t("Forms.lastName")}</span>
                 </div>
                 <input {...register("lastName")} type="text" className="input input-bordered w-full bg-white"/>
                 {errors?.lastName && <p className='text-red-500 mt-1 text-left'>{errors.lastName.message}</p>}
@@ -157,13 +156,12 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             <div className="flex flex-col md:flex-row flex-nowrap md:flex-wrap gap-x-2 w-full gap-y-5">
                 <label className="w-full lg:w-[20rem]">
                     <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>Password:</span>
+                    <span className="label-text">{t("Forms.password")}</span>
                     </div>
                     <div className="flex items-center justify-between relative">
                         <input {...register("password")} type={showPassword ? "text" : "password"}
                                placeholder="********"
-                               className="input input-bordered w-full bg-white pr-8"/>
+                               className="input input-bordered w-full bg-white pr-8 text-left"/>
                         <button type="button" onClick={toggleShowPassword}
                                 className="absolute right-3 flex items-center text-gray-700">
                             {showPassword ? <BsEyeSlashFill color="#686868"/> :
@@ -199,9 +197,10 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 </div>
                 <AsyncPaginate
                     classNames={{
-                        control: () => "border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 me-2 py-2",
-                        container: () => "text-sm rounded w-full text-[#000000] text-dir",
-                        menu: () => "bg-gray-100 rounded border py-2",
+                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] mt-1 text-sm px-3 text-dir",
+                        container: () => "text-sm rounded w-full text-gray-500 text-dir",
+                        menu: () => "bg-gray-50 rounded border py-2 text-dir",
+                        placeholder:() => "text-gray-400",
                         option: ({isSelected, isFocused}) => isSelected
                             ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
                             : isFocused
@@ -209,7 +208,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                                 : "px-4 py-2",
                         multiValue: () => "bg-[#F9A82699] rounded border p-1 mx-1 truncate my-1 max-w-40",
                     }}
-                    value={mentorInformation.interviewTypeIDs}
+                    defaultValue={mentorInformation.interviewTypeIDs}
                     //@ts-ignore
                     onChange={handleInterviewChange}
                     isMulti
@@ -217,24 +216,27 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     //@ts-ignore
                     loadOptions={loadInterview}
                     additional={{page: 0}}
+                    noOptionsMessage={() => t("Errors.selectNoOption")}
+                    loadingMessage={() => t("Errors.selectLoading")}
                     unstyled
                 />
             </label>
             <div className="w-full">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Payment Method:</span>
+                    <span className="label-text">{t("BeMentor.paymentMethod")}</span>
                 </div>
                 <Select
+                    //@ts-ignore
                     options={paymentOptions}
-                    placeholder="Select payment method"
+                    placeholder={t("BeMentor.paymentMethodPlaceholder")}
                     unstyled
                     isSearchable={false}
                     //@ts-ignore
                     onChange={setPaymentMethod}
                     classNames={{
-                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] mt-1 text-sm px-3 mr-2 text-left",
-                        container: () => "text-sm rounded w-full text-gray-500 ",
-                        menu: () => "bg-gray-50 rounded border py-2 text-left",
+                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] mt-1 text-sm px-3 text-dir",
+                        container: () => "text-sm rounded w-full text-gray-500 text-dir",
+                        menu: () => "bg-gray-50 rounded border py-2 text-dir",
                         option: ({isSelected, isFocused}) =>
                             isSelected
                                 ? " bg-gray-200 px-4 py-2"
@@ -242,45 +244,54 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                                     ? "bg-gray-100 px-4 py-2"
                                     : "px-4 py-2",
                     }}
-                    defaultValue={mentorInformation.paymentMethodRequest.type}
+                    defaultValue={mentorInformation.paymentMethodRequest.type.label}
                 />
             </div>
             {paymentMethod?.value === "PAY_AS_YOU_GO" &&
                 <div className=" w-full flex flex-col md:flex-row justify-between gap-x-3">
 
-                        <input {...register("min")} type="text" className="input input-bordered w-full bg-white"
-                               placeholder="Min"/>
-                        {errors?.min && <p className='text-red-500 mt-1 text-left'>{errors.min.message}</p>}
+                    <input {...register("min")} type="text" className="input input-bordered w-full bg-white text-sm"
+                           placeholder={t("BeMentor.min")}/>
+                    {errors?.min && <p className='text-red-500 mt-1 text-left'>{errors.min.message}</p>}
 
 
-                        <input {...register("max")} type="text" className="input input-bordered w-full bg-white"
-                               placeholder="Max"/>
-                        {errors?.max && <p className='text-red-500 mt-1 text-left'>{errors.max.message}</p>}
+                    <input {...register("max")} type="text" className="input input-bordered w-full bg-white text-sm"
+                           placeholder={t("BeMentor.max")}/>
+                    {errors?.max && <p className='text-red-500 mt-1 text-left'>{errors.max.message}</p>}
 
                 </div>
             }
             {paymentMethod?.value === "FIX_PRICE" &&
-                <div className="w-full">
-                    <input {...register("fixPrice")} type="text" className="input input-bordered w-full bg-white"
-                           placeholder="Fix price"/>
+                <div className="w-full text-xs">
+                    <input {...register("fixPrice")} type="text" className="input input-bordered w-full bg-white text-sm"
+                           placeholder={t("BeMentor.fixPrice")}/>
                     {errors?.fixPrice && <p className='text-red-500 mt-1 text-left'>{errors.fixPrice.message}</p>}
                 </div>
             }
             <div className="w-full relative">
                 <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>IBAN:</span>
-                    <span className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>DE</span>
+                    <span className="label-text">{t("BeMentor.iban")}</span>
+                    <span
+                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>{t("BeMentor.ibanRegion")}</span>
                 </div>
                 <input {...register("iban")} type="text" className="input input-bordered w-full bg-white pl-10"/>
                 {errors?.iban && <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
             </div>
-            <button
-                type="submit"
-                disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
-                className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
-                {t("BeMentor.nextButton")}
-            </button>
+            <div className="flex items-center justify-between w-full max-w-xs py-5">
+                <button
+                    type="submit"
+                    disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
+                    className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs'>
+                    {t("BeMentor.nextButton")}
+                </button>
+
+                <button onClick={() => {
+                    setActiveStep(activeStep - 1)
+                }}
+                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                    {t("BeMentor.backButton")}
+                </button>
+            </div>
         </form>
     );
 };

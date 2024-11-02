@@ -131,7 +131,7 @@ const JobSearchSection: React.FC = () => {
                         classNames={{
                             control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
-                            menu: () => "bg-gray-100 rounded border py-2",
+                            menu: () => "bg-gray-100 rounded border py-2 text-dir",
                             option: ({isSelected, isFocused}) =>
                                 isSelected
                                     ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
@@ -147,6 +147,8 @@ const JobSearchSection: React.FC = () => {
                         placeholder={t("Home.jobSectionDreamJob")}
                         loadOptions={loadJob}
                         additional={{page: 0}}
+                        noOptionsMessage={() => t("Errors.selectNoOption")}
+                        loadingMessage={() => t("Errors.selectLoading")}
                     />
                     <AsyncPaginate
                         cacheUniqs={[jobValue]}
@@ -154,7 +156,7 @@ const JobSearchSection: React.FC = () => {
                         classNames={{
                             control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
-                            menu: () => "bg-gray-100 rounded border py-2",
+                            menu: () => "bg-gray-100 rounded border py-2 text-dir",
                             option: ({isSelected, isFocused}) =>
                                 isSelected
                                     ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
@@ -170,6 +172,8 @@ const JobSearchSection: React.FC = () => {
                         placeholder={t("Home.jobSectionInterviewType")}
                         loadOptions={loadInterview}
                         additional={{page: 0}}
+                        noOptionsMessage={() => t("Errors.selectNoOption")}
+                        loadingMessage={() => t("Errors.selectLoading")}
                     />
                     <button
                         onClick={() => {
