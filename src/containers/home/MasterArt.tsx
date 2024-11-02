@@ -1,16 +1,17 @@
 'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
+import {useTranslations} from "next-intl";
 
 export default function MasterArt() {
+    const t = useTranslations()
     return (
         <HomeSectionLayout
             isLtr={true}
             imageSource='/home/MasterArt.svg'
-            title='Master the art!'
-            description="Elevate your skills with our insightful blogs. Dive into expert tips for success and conquer your
-                    next interview with confidence"
-            buttonText="Explore techniques"
-            onClick={()=> console.log(1)}
+            title={t('Home.masterTitle')}
+            description={t("Home.masterDescription")}
+            buttonText={t("Home.masterButton")}
+            onClick={() => console.log(1)}
             clickable={false}
         />
     )

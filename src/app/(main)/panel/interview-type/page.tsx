@@ -13,6 +13,7 @@ import {AsyncPaginate} from "react-select-async-paginate";
 import {useLoadJob} from "@/utils/hooks/useLoadJob";
 import {empty, textWithTooltip} from "@/utils/helper";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {useTranslations} from "next-intl";
 
 interface InterviewType {
     id: number;
@@ -75,6 +76,8 @@ const deleteInterviewType = async (id: number, token: string | null) => {
 };
 
 const InterviewType = () => {
+    const t = useTranslations()
+
     const queryClient = useQueryClient();
 
     const [selectedInterviewType, setSelectedInterviewType] = useState<InterviewType | null>(null);
@@ -106,7 +109,7 @@ const InterviewType = () => {
             setIsLastPage(data.last);
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to fetch interview types'});
+            toastError({message: error.message || t("Errors.unknowServerError")});
         }
     });
 
@@ -118,11 +121,11 @@ const InterviewType = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['interviewTypes']});
             setJobValue(null);
-            toastSuccess({message: 'Interview Type added successfully'});
+            toastSuccess({message: t("InterviewType.success")});
             closeModal();
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to add interview type';
+            const errorMessage = error.response?.data?.error || t("InterviewType.failedAdd");
             toastError({message: errorMessage});
         }
     });
@@ -134,11 +137,11 @@ const InterviewType = () => {
         }) => editInterviewType(updatedInterviewType, token),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['interviewTypes']});
-            toastSuccess({message: 'Interview Type updated successfully'});
+            toastSuccess({message: t("InterviewType.successUpdate")});
             closeModal();
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to update interview type';
+            const errorMessage = error.response?.data?.error || t("InterviewType.failedUpdate");
             toastError({message: errorMessage});
         }
     });
@@ -147,10 +150,10 @@ const InterviewType = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['interviewTypes']});
             closeModal();
-            toastSuccess({message: 'Interview Type deleted successfully'});
+            toastSuccess({message: t("InterviewType.successDelete")});
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to delete interview type';
+            const errorMessage = error.response?.data?.error || t("InterviewType.failedDelete");
             toastError({message: errorMessage});
         }
     });
@@ -164,7 +167,7 @@ const InterviewType = () => {
         } catch (error) {
             console.error("Failed to fetch interview type:", error);
             // @ts-ignore
-            toastError({message: error.response?.data?.error || 'Failed to fetch interview type'});
+            toastError({message: error.response?.data?.error || t("Errors.unknowServerError")});
             return null;
         }
     };
@@ -245,11 +248,11 @@ const InterviewType = () => {
         <ProtectedPage>
             <div className="mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-                    <h1 className="text-md font-bold">Interview Types</h1>
-                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
+                    <h1 className="text-md font-bold">{t("InterviewType.title")}</h1>
+                    <div className="gap-x-3 flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
                         <input
                             type="text"
-                            placeholder="Search by name"
+                            placeholder={t("InterviewType.searchPlaceholder")}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="input input-bordered w-full max-w-xs h-8 text-sm bg-white"
@@ -258,7 +261,7 @@ const InterviewType = () => {
                             className="btn btn-sm w-full md:w-24 bg-[#F9A826] text-white border-none md:ml-4 font-medium text-xs"
                             onClick={() => openModal()}
                         >
-                            Add New
+                            {t("InterviewType.addButton")}
                         </button>
                     </div>
                 </div>
@@ -271,10 +274,10 @@ const InterviewType = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
-                                <th className='w-2/5'>Name</th>
-                                <th>Job Position</th>
-                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl">Actions</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
+                                <th className='w-2/5'>{t("InterviewType.tableName")}</th>
+                                <th>{t("InterviewType.tableJobPosition")}</th>
+                                <th className="w-16 text-center rounded-tr-none rounded-tl-xl">{t("InterviewType.actions")}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -331,7 +334,7 @@ const InterviewType = () => {
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center mt-3">
-                                        {selectedInterviewType ? 'Edit Interview Type' : 'Add Interview Type'}
+                                        {selectedInterviewType ? t("InterviewType.editLabel") : t("InterviewType.addLabel")}
                                     </h3>
 
                                     <form
@@ -342,7 +345,7 @@ const InterviewType = () => {
                                     >
                                         <AsyncPaginate
                                             classNames={{
-                                                control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 mr-2",
+                                                control: () => "border border-gray-300 w-full rounded-lg h-[40px] mt-5 text-[1rem] px-3 me-2",
                                                 container: () => "text-sm rounded w-full text-gray-400 ",
                                                 menu: () => "bg-gray-100 rounded border py-2",
                                                 option: ({isSelected, isFocused}) =>
@@ -357,7 +360,7 @@ const InterviewType = () => {
                                             //@ts-ignore
                                             loadOptions={loadJobOptions}
                                             unstyled
-                                            placeholder="Job Position"
+                                            placeholder={t("InterviewType.jobPosition")}
                                             //@ts-ignore
                                             additional={{page: 0}}
                                             onMenuOpen={() => setIsOpenJobBox(true)}
@@ -366,18 +369,19 @@ const InterviewType = () => {
                                         <input
                                             ref={inputRef}
                                             type="text"
-                                            placeholder="Interview Type Name"
+                                            placeholder={t("InterviewType.interviewTypeName")}
                                             value={newName}
                                             onChange={(e) => setNewName(e.target.value)}
                                             className="input input-bordered w-full my-4 h-10"
                                         />
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
-                                                Cancel
+                                                {t("InterviewType.cancelButton")}
+
                                             </button>
                                             <button
                                                 type="submit"
@@ -387,7 +391,7 @@ const InterviewType = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    (selectedInterviewType ? 'Save' : 'Add')
+                                                    (selectedInterviewType ? t("InterviewType.saveButton") : t("InterviewType.addButton"))
                                                 )}
                                             </button>
                                         </div>
@@ -396,7 +400,7 @@ const InterviewType = () => {
                             ) : (
                                 <>
                                     <h3 className="text-center text-lg mt-4">
-                                        Are you sure you want to delete this interview type?
+                                        {t("InterviewType.deleteMessage")}
                                     </h3>
                                     <div className="modal-action">
                                         <button
@@ -413,7 +417,7 @@ const InterviewType = () => {
                                             {isLoadingAction ? (
                                                 <PulseLoader color="#FFFFFF" size={5}/>
                                             ) : (
-                                                'Delete'
+                                                t("InterviewType.delete")
                                             )}
                                         </button>
                                     </div>

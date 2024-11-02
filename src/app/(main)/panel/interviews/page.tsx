@@ -6,6 +6,7 @@ import {BASE_URL_API} from "@/utils/system";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
+import {useTranslations} from "next-intl";
 
 type Interview = {
     intervieweeId: number;
@@ -25,6 +26,8 @@ interface InterviewDataProps {
 }
 
 const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPast, role}) => {
+    const t = useTranslations()
+
     const {token} = useStore(state => ({
         token: state.token,
         decodedToken: state.decodedToken,
@@ -56,7 +59,7 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
                 <div>
                     <h1 className="text-md font-bold">{title}</h1>
                     {data?.content.length === 0 ? (
-                        <p className="text-left text-gray-500 mt-4">No interviews available at the moment.</p>
+                        <p className="text-left text-gray-500 mt-4">{t("Interview.empty")}</p>
                     ) : (
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-2'>
                             {data?.content.map((interview: Interview) => (
@@ -78,6 +81,8 @@ const InterviewData: React.FC<InterviewDataProps> = ({url, queryKey, title, isPa
 };
 
 const Interviews: React.FC = () => {
+    const t = useTranslations()
+
     const {decodedToken} = useStore(state => ({
         decodedToken: state.decodedToken,
     }));
@@ -92,9 +97,9 @@ const Interviews: React.FC = () => {
         : `${BASE_URL_API}interviews/jobseekers/past`;
     return (
         <ProtectedPage>
-            <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title="Upcoming Interviews" isPast={false}
+            <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title={t("Interview.upcoming")} isPast={false}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
-            <InterviewData url={pastUrl} queryKey="pastInterviews" title="Past Interviews" isPast={true}
+            <InterviewData url={pastUrl} queryKey="pastInterviews" title={t("Interview.upcoming")} isPast={true}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
         </ProtectedPage>
     );

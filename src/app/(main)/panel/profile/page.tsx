@@ -56,7 +56,7 @@ const Profile: React.FC = () => {
         token: state.token,
     }));
 
-        const {data, isLoading, error} = useQuery({
+    const {data, isLoading, error} = useQuery({
         queryKey: ['profileData'],
         queryFn: () => fetchProfileData(token),
         enabled: !!token,

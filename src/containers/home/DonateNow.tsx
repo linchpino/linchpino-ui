@@ -1,16 +1,16 @@
 'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
+import {useTranslations} from "next-intl";
 
 export default function DonateNow() {
+    const t = useTranslations()
     return (
         <HomeSectionLayout
             isLtr={false}
             imageSource='/home/DonateNow.svg'
-            title='Do you know what is the best nation in the world?'
-            description="DoNation! Join us in creating a world where potential knows no bounds. Your donation, no matter how
-                    small, amplifies the impact of our initiative. Together, let's build a community where everyone has
-                    the tools they need to succeed."
-            buttonText="Donate now"
+            title={t('Home.donateTitle')}
+            description={t("Home.donateDescription")}
+            buttonText={t("Home.donateButton")}
             onClick={()=> console.log(1)}
             clickable={false}
         />

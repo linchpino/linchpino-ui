@@ -5,7 +5,8 @@ import {AsyncPaginate, LoadOptions} from "react-select-async-paginate";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import useStore from "@/store/store";
-import {useRouter} from "next/navigation";
+import {useRouter} from "../../i18n/routing";
+import {useTranslations} from "next-intl";
 
 interface OptionsType {
     value: number;
@@ -25,7 +26,7 @@ const JobSearchSection: React.FC = () => {
         }
     }, [jobValue]);
     //@ts-ignore
-    const loadJob: LoadOptions<OptionsType, { page: number }> = async (search, loadedOptions, {page}) => {
+    const loadJob: LoadOptions<OptionsType, { page: number }> = async (search, loadedOptions, {page}) =>    {
         try {
             const response = await axios.get(`${BASE_URL_API}jobposition/search`, {
                 params: {
@@ -88,7 +89,7 @@ const JobSearchSection: React.FC = () => {
             return {options: [], hasMore: false, additional: {page: page + 1}};
         }
     };
-
+    const t = useTranslations()
     return (
         <div className="flex flex-col items-center justify-center text-black mt-8 md:mt-0">
             <Image
@@ -113,9 +114,7 @@ const JobSearchSection: React.FC = () => {
             </div>
             <div className="flex flex-col items-center justify-between relative">
                 <h2 className="relative z-5 text-center md:ml-[40%] ">
-                    Empower Your Job Search
-                    <br/>
-                    Participate in a Free Mock Interview with Professionals
+                    {t("Home.jobSection")}
                 </h2>
                 <div className="flex flex-col justify-between items-center">
                     <Image
@@ -130,7 +129,7 @@ const JobSearchSection: React.FC = () => {
                     className="flex flex-col items-center text-left backdrop-blur bg-black/5 px-5 py-10 mt-4 sm:absolute sm:top-[15%] md:top-0 md:left-[-3rem] w-72 border-2 border-[#F9A826] rounded-lg gap-y-8">
                     <AsyncPaginate
                         classNames={{
-                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2",
+                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
                             menu: () => "bg-gray-100 rounded border py-2",
                             option: ({isSelected, isFocused}) =>
@@ -145,7 +144,7 @@ const JobSearchSection: React.FC = () => {
                             setJobValue(e);
                         }}
                         unstyled
-                        placeholder="Dream job"
+                        placeholder={t("Home.jobSectionDreamJob")}
                         loadOptions={loadJob}
                         additional={{page: 0}}
                     />
@@ -153,7 +152,7 @@ const JobSearchSection: React.FC = () => {
                         cacheUniqs={[jobValue]}
                         selectRef={interViewRef}
                         classNames={{
-                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 mr-2",
+                            control: () => "border border-gray-300 w-full rounded-md h-[48px] mt-1 text-sm px-3 me-2 text-dir",
                             container: () => "text-sm rounded w-full text-[#000000]",
                             menu: () => "bg-gray-100 rounded border py-2",
                             option: ({isSelected, isFocused}) =>
@@ -168,7 +167,7 @@ const JobSearchSection: React.FC = () => {
                             setInterviewValue(e);
                         }}
                         unstyled
-                        placeholder="Interview Type"
+                        placeholder={t("Home.jobSectionInterviewType")}
                         loadOptions={loadInterview}
                         additional={{page: 0}}
                     />
@@ -183,7 +182,7 @@ const JobSearchSection: React.FC = () => {
                         disabled={!jobValue || !interviewValue}
                         className="btn btn-sm w-2/3 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs"
                     >
-                        Schedule the interview
+                        {t("Home.jobSectionScheduleButton")}
                     </button>
                 </div>
             </div>

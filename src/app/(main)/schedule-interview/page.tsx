@@ -14,6 +14,7 @@ import {BASE_URL_API} from "../../../utils/system";
 import {ClipLoader} from "react-spinners";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import {AxiosError} from 'axios';
+import {useTranslations} from "next-intl";
 
 type ScheduleInterviewData = {
     interviewTypeId: number | null | string;
@@ -30,6 +31,8 @@ type Inputs = {
 };
 
 const ScheduleInterview = () => {
+    const t = useTranslations()
+
     const {scheduleInterview, setScheduleInterviewItem} = useStore();
     const [activeStep, setActiveStep] = useState(1);
     const [isLoadingSendForm, setIsLoadingSendForm] = useState(false);
@@ -49,14 +52,15 @@ const ScheduleInterview = () => {
             if (axios.isAxiosError(error)) {
                 throw error;
             } else {
-                throw new Error('Error sending interview data');
+                throw new Error(t("Schedule.fetchError"));
+
             }
         }
     };
     const interviewMutation = useMutation({
         mutationFn: sendInterviewData,
         onSuccess: () => {
-            toastSuccess({message: 'Successful :) ! We sent you an email, please check it.'});
+            toastSuccess({message: t("Schedule.createSuccessful")});
             setActiveStep(activeStep + 1);
             setIsLoadingSendForm(false);
         },
@@ -69,7 +73,7 @@ const ScheduleInterview = () => {
 
                 toastError({message: errorMessage});
             } else {
-                toastError({message: 'Network error. Please check your internet connection.'});
+                toastError({message: t("Errors.networkError")});
             }
         },
     });
@@ -89,17 +93,17 @@ const ScheduleInterview = () => {
     };
     const renderStepperTitle = () => {
         if (activeStep === 1) {
-            return "Choose a mentor and schedule an interview"
+            return t("Schedule.chooseMentor")
         } else if (activeStep === 2) {
-            return "Finalize the interview session"
-
+            return t("Schedule.finalize")
         } else if (activeStep === 3) {
-            return "Confirmation"
+            return t("Schedule.confirmation")
         }
-        return "What are you looking for?"
+        return t("defaultStep")
     }
     const renderCurrentStepComponent = () => {
         if (activeStep === 1) {
+
             return <ChooseMentor calendarValue={calendarValue} setCalendarValue={setCalendarValue}
                                  activeStep={activeStep} setActiveStep={setActiveStep}/>
         } else if (activeStep === 2) {
@@ -108,16 +112,16 @@ const ScheduleInterview = () => {
                     <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
                         <label className="form-control w-full ">
                             <div className="label">
-                                <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
+                                <span className="label-text text-[#3F3D56]">{t("Schedule.email")}</span>
                             </div>
                             <input {...register("email", {
-                                required: "Email is required",
+                                required: t("Forms.emailRequired"),
                                 pattern: {
                                     value: ValidateEmailPattern,
-                                    message: "Invalid email address"
+                                    message: t("Forms.emailInvalid")
                                 }
                             })} type="text"
-                                   placeholder="***@gmail.com"
+                                   placeholder={t("Forms.emailPlaceholder")}
                                    className="input input-bordered w-full  bg-white"/>
                             {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 
@@ -130,7 +134,7 @@ const ScheduleInterview = () => {
                                 </button>
                                 <button disabled={isLoadingSendForm || empty(watch("email"))} type='submit'
                                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945] ${isLoadingSendForm && 'cursor-not-allowed'}`}>
-                                    {isLoadingSendForm ? <ClipLoader size={24} color={"#fff"}/> : 'Confirm'}
+                                    {isLoadingSendForm ? <ClipLoader size={24} color={"#fff"}/> : t("Schedule.confirmButton")}
 
                                 </button>
                             </div>

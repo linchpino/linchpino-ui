@@ -9,30 +9,8 @@ import {z} from "zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {empty} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 import Select from "react-select";
-
-const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-// const ibanPattern = /^\d{24}$/;
-
-const schema = z.object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    password: z.string().min(6, "Password must contain at least 6 character(s)").regex(passwordPattern, "Password must include at least one letter, one number, or one special character"),
-    repeatPassword: z.string().min(6, "Re-Password must contain at least 6 character(s)").regex(passwordPattern, "Re-Password must include at least one letter, one number, or one special character"),
-    iban: z.string(),
-    // iban: z.string().regex(ibanPattern, "Invalid iban format"),
-    min: z.string().optional(),
-    max: z.string().optional(),
-    fixPrice: z.string().optional(),
-
-})
-    .refine((data) => data.password === data.repeatPassword, {
-        message: "Passwords don't match",
-        path: ["repeatPassword"],
-    })
-
-
-type Inputs = z.infer<typeof schema>;
 
 export interface PaymentMethodRequest {
     type: {
@@ -50,6 +28,26 @@ interface RegisterMentorProps {
 }
 
 const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) => {
+    const t = useTranslations()
+
+    type Inputs = z.infer<typeof schema>;
+
+    const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const schema = z.object({
+        firstName: z.string().min(1, t("Forms.firstNameRequired")),
+        lastName: z.string().min(1, t("Forms.lastNameRequired")),
+        iban: z.string(),
+        password: z.string().min(6, t("Forms.passwordCharacterLength")).regex(passwordPattern, t("Forms.passwordPattern")),
+        repeatPassword: z.string().min(6, t("Forms.passwordCharacterLength")).regex(passwordPattern, t("Forms.passwordPattern")),
+        min: z.string().optional(),
+        max: z.string().optional(),
+        fixPrice: z.string().optional(),
+    }).refine((data) => data.password === data.repeatPassword, {
+        message: t("Form.matchPassword"),
+        path: ["repeatPassword"],
+    });
+
+
     const paymentOptions = [
         {value: "PAY_AS_YOU_GO", label: "Pay As You Go"},
         {value: "FIX_PRICE", label: "Fix Price"},
@@ -178,13 +176,12 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 </label>
                 <label className="w-full lg:w-[20rem]">
                     <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span
-                        className='text-[#F9A826]'>*</span>Re-Password:</span>
+                        <span className="label-text">{t("Forms.repeatPassword")}</span>
                     </div>
                     <div className="flex items-center justify-between relative">
                         <input {...register("repeatPassword")}
                                type={showRepeatPassword ? "text" : "password"} placeholder="********"
-                               className="input input-bordered w-full bg-white pr-8"/>
+                               className="input input-bordered w-full bg-white pr-8 text-left"/>
                         <button type="button" onClick={toggleShowRepeatPassword}
                                 className="absolute right-3 flex items-center text-gray-700">
                             {showRepeatPassword ? <BsEyeSlashFill color="#686868"/> :
@@ -196,33 +193,33 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                     )}
                 </label>
             </div>
-            <div className="w-full">
-                <div className="label">
-                    <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Field of expertise:</span>
+            <label className="w-full ">
+                <div className="label mt-4">
+                    <span className="label-text ">{t("BeMentor.expertise")}</span>
                 </div>
                 <AsyncPaginate
                     classNames={{
-                        control: () => "border border-gray-200 w-full rounded-lg min-h-[48px] mt-1 text-sm px-3 mr-2 py-2",
-                        container: () => "text-sm rounded w-full text-gray-500  text-left",
+                        control: () => "border border-gray-300 w-full rounded-md min-h-[48px] mt-1 text-sm px-3 me-2 py-2",
+                        container: () => "text-sm rounded w-full text-[#000000] text-dir",
                         menu: () => "bg-gray-100 rounded border py-2",
                         option: ({isSelected, isFocused}) => isSelected
                             ? "dark:bg-base-content dark:text-base-200 bg-gray-400 text-gray-50 px-4 py-2"
                             : isFocused
                                 ? "bg-gray-200 px-4 py-2"
                                 : "px-4 py-2",
-                        multiValue: () => "bg-[#F9A82699] text-black rounded border p-1 mx-1 truncate my-1 max-w-40",
+                        multiValue: () => "bg-[#F9A82699] rounded border p-1 mx-1 truncate my-1 max-w-40",
                     }}
                     value={mentorInformation.interviewTypeIDs}
                     //@ts-ignore
                     onChange={handleInterviewChange}
                     isMulti
-                    placeholder="Interview Type"
+                    placeholder={t("BeMentor.interviewPlaceholder")}
                     //@ts-ignore
                     loadOptions={loadInterview}
                     additional={{page: 0}}
                     unstyled
                 />
-            </div>
+            </label>
             <div className="w-full">
                 <div className="label">
                     <span className="label-text text-[#3F3D56]"><span className='text-[#F9A826]'>*</span>Payment Method:</span>
@@ -280,18 +277,9 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             </div>
             <button
                 type="submit"
-                disabled={
-                    empty(watch('firstName')) ||
-                    empty(watch('lastName')) ||
-                    empty(mentorInformation.interviewTypeIDs.length) ||
-                    empty(watch('password')) ||
-                    empty(watch('repeatPassword')) ||
-                    empty(watch('iban')) ||
-                    (paymentMethod?.value === "PAY_AS_YOU_GO" && (empty(watch('min')) || empty(watch('max')))) ||
-                    (paymentMethod?.value === "FIX_PRICE" && empty(watch('fixPrice')))
-                }
-                className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-12 py-2 px-3'>
-                Next
+                disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
+                className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
+                {t("BeMentor.nextButton")}
             </button>
         </form>
     );

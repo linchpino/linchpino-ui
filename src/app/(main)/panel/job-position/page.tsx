@@ -10,6 +10,7 @@ import Spinner from "@/components/Spinner";
 import PulseLoader from "react-spinners/PulseLoader";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {empty} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 
 interface JobPosition {
     id: number;
@@ -64,6 +65,8 @@ const deleteJobPosition = async (id: number, token: string | null) => {
 };
 
 const JobPosition = () => {
+    const t = useTranslations()
+
     const queryClient = useQueryClient();
 
     const [selectedJobPosition, setSelectedJobPosition] = useState<JobPosition | null>(null);
@@ -94,30 +97,30 @@ const JobPosition = () => {
             setIsLastPage(data.last);
         },
         onError: (error: any) => {
-            toastError({message: error.message || 'Failed to fetch job positions'});
+            toastError({message: error.message || t("Errors.unknowServerError")});
         }
     });
     const addMutation = useMutation({
         mutationFn: (newJobPosition: { title: string }) => addJobPosition(newJobPosition, token),
         onSuccess: () => {
-            toastSuccess({message: 'Job Position added successfully'});
+            toastSuccess({message: t("JobPosition.success")});
             queryClient.invalidateQueries({queryKey: ['jobPositions']});
             closeModal();
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to add job position';
+            const errorMessage = error.response?.data?.error || t("Errors.unknowServerError");
             toastError({message: errorMessage});
         }
     });
     const editMutation = useMutation({
         mutationFn: (updatedJobPosition: { id: number; title: string }) => editJobPosition(updatedJobPosition, token),
         onSuccess: () => {
-            toastSuccess({message: 'Job Position updated successfully'});
+            toastSuccess({message: t("JobPosition.successUpdate")});
             queryClient.invalidateQueries({queryKey: ['jobPositions']});
             closeModal();
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to update job position';
+            const errorMessage = error.response?.data?.error || t("Errors.unknowServerError");
             toastError({message: errorMessage});
         }
     });
@@ -129,7 +132,7 @@ const JobPosition = () => {
             closeModal();
         },
         onError: (error: any) => {
-            const errorMessage = error.response?.data?.error || 'Failed to delete job position';
+            const errorMessage = error.response?.data?.error || t("Errors.unknowServerError");
             toastError({message: errorMessage});
         }
     });
@@ -197,11 +200,11 @@ const JobPosition = () => {
         <ProtectedPage>
             <div className="mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-                    <h1 className="text-md font-bold">Job Positions</h1>
-                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4">
+                    <h1 className="text-md font-bold">{t("JobPositions.title")}</h1>
+                    <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4 gap-x-3">
                         <input
                             type="text"
-                            placeholder="Search by title"
+                            placeholder={t("JobPositions.searchPlaceholder")}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="input input-bordered w-full max-w-xs h-8 text-sm bg-white"
@@ -210,7 +213,7 @@ const JobPosition = () => {
                             className="btn btn-sm w-full md:w-24 bg-[#F9A826] text-white border-none md:ml-4 font-medium text-xs"
                             onClick={() => openModal()}
                         >
-                            Add New
+                            {t("JobPositions.addButton")}
                         </button>
                     </div>
                 </div>
@@ -223,9 +226,9 @@ const JobPosition = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
-                                <th>Title</th>
-                                <th className="w-16 text-center rounded-tl-none rounded-tr-xl ">Actions</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
+                                <th>{t("JobPositions.tableName")}</th>
+                                <th className="w-16 text-center rounded-tr-none rounded-tl-xl ">{t("JobPositions.actions")}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -286,7 +289,7 @@ const JobPosition = () => {
                             {!isDeleteMode ? (
                                 <>
                                     <h3 className="text-lg text-center">
-                                        {selectedJobPosition ? 'Edit Job Position' : 'Add Job Position'}
+                                        {selectedJobPosition ? t("JobPositions.editLabel") : t("JobPositions.addLabel")}
                                     </h3>
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
@@ -295,18 +298,18 @@ const JobPosition = () => {
                                         <input
                                             ref={inputRef}
                                             type="text"
-                                            placeholder="Job Title"
+                                            placeholder={t("JobPositions.tableName")}
                                             value={newTitle}
                                             onChange={(e) => setNewTitle(e.target.value)}
                                             className="input input-bordered w-full my-4 h-10"
                                         />
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost text-center font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
-                                                Cancel
+                                                {t("JobPositions.cancelButton")}
                                             </button>
                                             <button
                                                 type="submit"
@@ -316,7 +319,7 @@ const JobPosition = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    selectedJobPosition ? 'Save' : 'Add'
+                                                    selectedJobPosition ? t("JobPositions.saveButton") : t("JobPositions.addButton")
                                                 )}
                                             </button>
                                         </div>
@@ -326,19 +329,19 @@ const JobPosition = () => {
                             ) : (
                                 <>
                                     <h3 className="text-center text-lg mt-4">
-                                        Are you sure you want to delete this job position?
+                                        {t("JobPositions.deleteMessage")}
                                     </h3>
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
                                         handleDelete();
                                     }}>
-                                        <div className="modal-action">
+                                        <div className="modal-action gap-x-2">
                                             <button
                                                 type="button"
                                                 className="w-20 btn btn-sm btn-outline btn-ghost font-medium text-[.9rem] border-[.1px] hover:bg-transparent hover:border-gray-400 hover:text-gray-400"
                                                 onClick={closeModal}
                                             >
-                                                Cancel
+                                                {t("JobPositions.cancelButton")}
                                             </button>
                                             <button
                                                 type="submit"
@@ -348,7 +351,7 @@ const JobPosition = () => {
                                                 {isLoadingAction ? (
                                                     <PulseLoader color="#FFFFFF" size={5}/>
                                                 ) : (
-                                                    'Delete'
+                                                    t("JobPositions.delete")
                                                 )}
                                             </button>
                                         </div>

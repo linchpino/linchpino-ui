@@ -5,12 +5,15 @@ import useStore from "@/store/store";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import PulseLoader from "react-spinners/PulseLoader";
+import {useTranslations} from "next-intl";
 
 type Inputs = {
     children: any;
 }
 
 const Finalize: FC<Inputs> = (props) => {
+    const t = useTranslations()
+
     const {children} = props;
     const now = new DateObject();
     const {scheduleInterview} = useStore();
@@ -53,7 +56,7 @@ const Finalize: FC<Inputs> = (props) => {
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
             <p className="text-[20px] text-[#F9A826]">
-                {localStartTime ? localStartTime : "No Date Available"}
+                {localStartTime ? localStartTime : t('Schedule.unavailableDate')}
             </p>
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
                 <div className="relative h-32 w-32 mx-auto flex items-center justify-center">

@@ -7,8 +7,9 @@ import axios from 'axios';
 import { BASE_URL_API } from "@/utils/system";
 import { toastError, toastSuccess } from '@/components/CustomToast';
 import {ToastContainer} from "react-toastify";
-
 import 'react-toastify/dist/ReactToastify.css';
+import {useTranslations} from "next-intl";
+import {ClipLoader} from "react-spinners";
 
 interface FinalizeRegisterProp {
     activeStep: number,
@@ -28,6 +29,8 @@ const shortenText = (text: string, maxLength: number) => {
 };
 
 const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
+    const t = useTranslations();
+
     const { activeStep, setActiveStep } = props;
     const { mentorInformation, setMentorInformation } = useStore();
     const [isLoading, setIsLoading] = useState(false);
@@ -44,20 +47,25 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             setIsLoading(false);
         },
         onSuccess: () => {
-            toastSuccess({ message: "Your information submitted successfully!" });
+            toastSuccess({message: t("BeMentor.finalizeStepSuccessMessage")});
             setActiveStep(activeStep + 1);
         },
         onError: (error: any) => {
             setIsLoading(false);
             if (error.response) {
                 const status = error.response.status;
-                let errorMessage = "An error occurred";
-                if (status === 400 || status === 401 || status === 500) {
-                    errorMessage = error.response.data.error || "An unexpected error occurred.";
+                const errorMessage = error.response.data.error;
+                if (status === 400) {
+                    toastError({message: errorMessage});
+                } else if (status === 401) {
+                    toastError({message: errorMessage});
+                } else if (status === 500) {
+                    toastError({message: errorMessage});
+                } else {
+                    toastError({message: errorMessage});
                 }
-                toastError({ message: errorMessage });
             } else {
-                toastError({ message: "Network Error. Please check your internet connection." });
+                toastError({message: t("Errors.networkError")});
             }
         }
     });
@@ -111,12 +119,12 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                     setActiveStep(activeStep - 1)
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
-                    Back
+                    {t("BeMentor.backButton")}
                 </button>
                 <button onClick={handleConfirm}
                         disabled={isLoading}
                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
-                    {isLoading ? 'Loading...' : 'Confirm'}
+                    {isLoading ?  <ClipLoader size={18} color={"#fff"}/> : t("BeMentor.confirmButton")}
                 </button>
             </div>
             <ToastContainer/>

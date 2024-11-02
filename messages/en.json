@@ -1,0 +1,346 @@
+{
+  "Errors": {
+    "signInSuccess": "Yes! You are logged in.",
+    "catchError": "Login failed",
+    "unknowServerError": "An unknown error occurred while fetching data.",
+    "networkError": "Network error. Please check your internet connection.",
+    "internalServerError": "Server error. Please try again later.",
+    "unexpectedSignInError": "An unknown error occurred during login.",
+    "unexpectedError": "An unexpected error occurred ",
+    "joinInterviewLoadError": "Unfortunately, your request encountered an error."
+  },
+  "Forms": {
+    "email": "Email",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email address",
+    "emailPlaceholder": "example@gmail.com",
+    "password": "Password",
+    "passwordCharacterLength": "Password must contain at least 6 character(s)",
+    "passwordPattern": "Password must include at least one letter, one number, or one special character",
+    "newPassword": "new Password",
+    "newPasswordCharacterLength": "new Password must contain at least 6 character(s)",
+    "newPasswordPattern": "new Password must include at least one letter, one number, or one special character",
+    "repeatNewPassword": "Repeat New Password",
+    "repeatNewPasswordCharacterLength": "Repeat New Password must contain at least 6 character(s)",
+    "repeatNewPasswordPattern": "Repeat New Password must include at least one letter, one number, or one special character",
+    "currentPassword": "Current Password",
+    "currentPasswordCharacterLength": "Current Password must contain at least 6 character(s)",
+    "currentPasswordPattern": "Current Password must include at least one letter, one number, or one special character",
+    "repeatPassword": "Re-Password",
+    "repeatPasswordCharacterLength": "Repeat password is required",
+    "repeatPasswordPattern": "Repeat Password must include at least one letter, one number, or one special character",
+    "passwordMatch": "Passwords don't match",
+    "fistName": "First Name",
+    "firstNameRequired": "First name is required",
+    "firstNamePlaceholder": "Your first name",
+    "lastName": "Last Name",
+    "lastNameRequired": "Last name is required",
+    "lastNamePlaceholder": "Your last name",
+    "bio": "Bio",
+    "bioRequired": "Bio is required",
+    "bioPlaceholder": "Your Bio"
+  },
+  "Header": {
+    "navService": "Our Services",
+    "navBlog": "Blog",
+    "navAbout": "About Us",
+    "navContact": "Contact Us",
+    "navSignInButton": "Sign In / Register",
+    "navPanel": "Panel",
+    "navSearh": "Search Here ...",
+    "head" : "Linchpino"
+  },
+  "Footer": {
+    "donateButton": "Donate now",
+    "navHome": "Home",
+    "navAbout": "About Us",
+    "navContact": "Contact Us",
+    "navInvite": "Invite Friends"
+  },
+  "Countdown": {
+    "days": "{{days}} days",
+    "hours": "{{hours}} hours",
+    "minutes": "{{minutes}} minutes",
+    "seconds": "{{seconds}} seconds",
+    "now": "Now",
+    "targetDate": "Target Date: {{date}}",
+    "betweenDates": "We are between the start and end dates.",
+    "noTimeRemaining": "Time is up!"
+  },
+  "sidebar": {
+    "profile": "Profile",
+    "interviews": "Interviews",
+    "users": "Users",
+    "jobPositions": "Job Positions",
+    "interviewTypes": "Interview Types",
+    "changePassword": "Change Password",
+    "resetPassword": "Reset Password",
+    "signOut": "Sign Out"
+  },
+  "Home": {
+    "jobSection": "Empower Your Job Search Participate in a Free Mock Interview with Professionals",
+    "jobSectionDreamJob": "Dream job",
+    "jobSectionInterviewType": "Interview Type",
+    "jobSectionScheduleButton": "Schedule the interview",
+    "beMentorTitle": "Mentorship magic",
+    "beMentorDescription": "Join our platform as a potential mentor and contribute to shaping future talent. Sign up! Your application will be reviewed and endorsed by our community of established mentors, ensuring quality and expertise in guiding aspiring professionals.",
+    "beMentorButtonText": "Be a mentor",
+    "scheduleTitle": "Free mock interviews await!",
+    "scheduleDescription": "Prepare for your next interview with confidence! Request a meeting with a mentor from our network. Our mentors will review your request, offering guidance and acceptance, ensuring you're well-prepared to ace your interview.",
+    "scheduleButton": "Schedule and interview",
+    "attendTitle": "Start the interview meeting!",
+    "attendDescription": "If you have already scheduled an interview appointment and received confirmation, please click here to join your interview. You will also find the joining link in your email.",
+    "attendButton": "Attend the interview",
+    "masterTitle": "Master the art",
+    "masterDescription": "Elevate your skills with our insightful blogs. Dive into expert tips for success and conquer your next interview with confidence",
+    "masterButton": "Explore techniques",
+    "donateTitle": "Do you know what is the best nation in the world?",
+    "donateDescription": "DoNation! Join us in creating a world where potential knows no bounds. Your donation, no matter how small, amplifies the impact of our initiative. Together, let's build a community where everyone has the tools they need to succeed.",
+    "donateButton": "Donate now"
+  },
+  "SignIn": {
+    "title": "Sign In",
+    "register": "Register",
+    "forgetPassword": "Forgot Password"
+  },
+  "SignUp": {
+    "title": "Sign Up",
+    "success": "Registration failed. Please try again.'",
+    "signIn": "Sign In",
+    "register": "Register",
+    "forgetPassword": "Forgot Password",
+    "error": "Signup failed!"
+  },
+  "Schedule": {
+    "fetchError": "Error sending interview data",
+    "createSuccessful": "Successful :) ! We sent you an email, please check it.",
+    "chooseMentor": "Choose a mentor and schedule an interview",
+    "finalize": "Finalize the interview session",
+    "confirmation": "Confirmation",
+    "defaultStep": "What are you looking for?",
+    "email": "Enter Your Email Address:",
+    "confirmButton": "Confirm",
+    "unavailableTimeSlot": "For this time not slot available",
+    "unavailableDate": "No Date Available",
+    "finalMessage": "No Date Available"
+  },
+  "BeMentor": {
+    "emailStep": "Sign Up",
+    "infoStep": "Register yourself as a mentor",
+    "finalizeStep": "Finalize your registration",
+    "finalizeStepSuccessMessage": "Your information submitted successfully!",
+    "confirmationStep": "Confirmation",
+    "enterEmail": "Enter Your Email Address: ",
+    "registrationSuccess": "Registration successfully completed. Confirmation sent via email.",
+    "backToHome": "Back To Home",
+    "backButton": "Back",
+    "confirmButton": "Confirm",
+    "expertise": "Field of expertise: ",
+    "interviewPlaceholder": "Interview Type",
+    "nextButton": "Next"
+  },
+  "JoinInterview": {
+    "earlySessionMessage": "Hi there! It looks like you're a bit early for your session scheduled on {{startTime}}. Your session is set to last {{duration}}. Feel free to explore, ask any questions, or let us know if there's anything specific you'd like to prepare for. We’ll be ready to start soon!",
+    "messageBoxTitle": "Interview Summary",
+    "errorBoxTitle": "Error",
+    "requestTitle": "Checking your request..."
+  },
+  "JobseekerActivation": {
+    "registrationError": "Registration failed. Please try again.",
+    "registrationSuccessful": "Registration successful!",
+    "title": "Activate Your Account",
+    "confirmButton": "Complete"
+  },
+  "ChangePassword": {
+    "title": "Change Password",
+    "changeSuccess": "Password changed successfully!"
+  },
+  "InterviewType": {
+    "title": "Interview Types",
+    "success": "Interview Type added successfully",
+    "failedAdd": "Failed to add interview type",
+    "successUpdate": "Interview Type updated successfully",
+    "failedUpdate": "Failed to update interview type",
+    "successDelete": "Interview Type deleted successfully",
+    "failedDelete": "Failed to delete interview type",
+    "searchPlaceholder": "Search by name ",
+    "tableName": "Name",
+    "tableJobPosition": "Job Position",
+    "actions": "Actions",
+    "editLabel": "Edit Interview Type",
+    "addLabel": "Add Interview Type",
+    "deleteLabel": "Actions",
+    "jobPosition": "Job Position",
+    "interviewTypeName": "Interview Type Name",
+    "saveButton": "Save",
+    "addButton": "Add",
+    "cancelButton": "Cancel",
+    "delete": "Delete",
+    "deleteMessage": "Are you sure you want to delete this interview type?"
+  },
+  "JobPositions": {
+    "title": "Job Position",
+    "success": "Job Position added successfully",
+    "failedAdd": "Failed to add job position",
+    "successUpdate": "Job Position updated successfully",
+    "failedUpdate": "Failed to update job position",
+    "successDelete": "Job Position deleted successfully",
+    "failedDelete": "Failed to delete job position",
+    "searchPlaceholder": "Search by title",
+    "tableName": "Title",
+    "tableJobPosition": "Job Position",
+    "actions": "Actions",
+    "editLabel": "Edit Job Position",
+    "addLabel": "Add Job Position",
+    "deleteLabel": "Actions",
+    "jobPosition": "Job Position",
+    "interviewTypeName": "Job Position Name",
+    "saveButton": "Save",
+    "addButton": "Add",
+    "cancelButton": "Cancel",
+    "delete": "Delete",
+    "deleteMessage": "Are you sure you want to delete this job position?"
+  },
+  "Interview": {
+    "upcoming": "Upcoming Interviews",
+    "past": "Past Interviews",
+    "empty": "No interviews available at the moment.",
+    "jobseeker": "Jobseeker",
+    "mentor": "Mentor",
+    "from": "From:",
+    "start": "Start:",
+    "duration": "Duration:",
+    "interviewType": "Interview Type:",
+    "feedbackButton": "Feedback",
+    "thankYouMessage": "Thank you for attending the interview",
+    "feelingPrompt": "What is your feeling?",
+    "tellUsPrompt": "Tell us what do you want?",
+    "writeSomethingPlaceholder": "Write something...",
+    "feedbackSent": "Feedback sent successfully!",
+    "feedbackError": "An error occurred",
+    "cancel": "Cancel",
+    "send": "Send"
+  },
+  "Profile": {
+    "scheduleTitle": "Schedule",
+    "fetchError": "Error loading profile data",
+    "fetchErrorAvatar": "Error loading profile avatar : ",
+    "uploadImageSuccessfully": "Upload successful!",
+    "uploadImageFailed": "Upload failed with unexpected status!",
+    "removeImage": "Picture removed successfully!",
+    "imageTitle": "Profile Picture",
+    "chooseImage": "Choose Picture",
+    "removeImageButton": "Remove Picture",
+    "failedSaveInformation": "Registration failed. Please try again.",
+    "successSave": "Registration successful!",
+    "informationTitle": "Your Information",
+    "success": "Time slot added successfully!",
+    "error": "Error adding time slot!",
+    "Days": {
+      "sunday": {
+        "full": "Sunday",
+        "abbr": "Su"
+      },
+      "monday": {
+        "full": "Monday",
+        "abbr": "Mo"
+      },
+      "tuesday": {
+        "full": "Tuesday",
+        "abbr": "Tu"
+      },
+      "wednesday": {
+        "full": "Wednesday",
+        "abbr": "We"
+      },
+      "thursday": {
+        "full": "Thursday",
+        "abbr": "Th"
+      },
+      "friday": {
+        "full": "Friday",
+        "abbr": "Fr"
+      },
+      "saturday": {
+        "full": "Saturday",
+        "abbr": "Sa"
+      }
+    },
+    "RepeatOptions": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "AddScheduleModal": {
+      "header": "Add Schedule",
+      "start": "Start",
+      "end": "End",
+      "duration": "Duration",
+      "interval": "Interval",
+      "numberOf": "Number of...",
+      "on": "On",
+      "daysOfMonth": "Days of month",
+      "addButton": "Add",
+      "closeButton": "✕",
+      "loadingButton": "Loading..."
+    },
+    "scheduleInfo": {
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "minutes": "minutes",
+      "recurrenceType": "Recurrence Type",
+      "interval": "Interval",
+      "weekDays": "Week Days",
+      "monthDays": "Month Days"
+    }
+  },
+  "ProfileTimeSlot": {
+    "addNewTimeSlot": "Add New Time Slot",
+    "createSlotDescription": "Create a new time slot for your availability.",
+    "startTime": "Start Time",
+    "startTimePlaceholder": "Select start time",
+    "endTime": "End Time",
+    "endTimePlaceholder": "Select end time",
+    "recurrenceType": "Recurrence Type",
+    "noRecurrence": "No Recurrence",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "addButton": "Add Time Slot"
+  },
+  "ResetPassword": {
+    "successMessage": "Password changed successfully!",
+    "defaultError": "There was an issue, please try again.",
+    "userError": "There was an issue, please try again.",
+    "header": "Reset Password",
+    "userLabel": "Users",
+    "userPlaceholder": "Users List",
+    "newPasswordLabel": "New Password:",
+    "repeatNewPasswordLabel": "Repeat New Password:",
+    "resetButton": "Reset Password"
+  },
+  "User": {
+    "users": "Users",
+    "searchPlaceholder": "Search by name",
+    "filterPlaceholder": "Filter by role",
+    "roleOptions": {
+      "all": "ALL",
+      "guest": "GUEST",
+      "jobseeker": "JOBSEEKER",
+      "mentor": "MENTOR",
+      "admin": "ADMIN"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role"
+    }
+  },
+  "SignOut": {
+    "header": "Confirm Sign Out",
+    "areSure": "Are you sure you want to sign out?",
+    "cancelButton": "Cancel",
+    "logoutButton": "Sign Out"
+  }
+}

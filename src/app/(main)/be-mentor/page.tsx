@@ -7,15 +7,18 @@ import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
 import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
 import useStore from '../../../store/store';
+import {useTranslations} from "next-intl";
 
 type Inputs = {
-    email:string
-    emailRequired:string
+    email: string
+    emailRequired: string
 }
 
 const BeMentor = () => {
+    const t = useTranslations()
+
     const [activeStep, setActiveStep] = useState(1);
-    const { setMentorInformation } = useStore();
+    const {setMentorInformation} = useStore();
     const {
         register,
         handleSubmit,
@@ -28,46 +31,47 @@ const BeMentor = () => {
     }
     const renderStepperTitle = () => {
         if (activeStep === 1) {
-            return "Sign Up"
+            return t("BeMentor.emailStep")
         } else if (activeStep === 2) {
-            return "Register yourself as a mentor"
+            return t("BeMentor.infoStep")
         } else if (activeStep === 3) {
-            return "Finalize your registration"
+            return t("BeMentor.finalizeStep")
         }
-        return "Confirmation"
+        return t("BeMentor.confirmationStep")
 
     }
     const renderCurrentStepComponent = () => {
         if (activeStep === 1) {
             return (
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs'>
-                    <label className="form-control w-full " >
+                    <label className="form-control w-full ">
                         <div className="label">
-                            <span className="label-text text-[#3F3D56]">Enter Your Email Address:</span>
+                            <span className="label-text text-[#3F3D56]">{t("BeMentor.enterEmail")}</span>
                         </div>
                         <input {...register("email", {
-                            required: "Email is required!",
+                            required: t("Forms.emailRequired"),
                             pattern: {
                                 value: ValidateEmailPattern,
-                                message: "Invalid email address"
+                                message: t("Forms.emailInvalid")
                             }
                         })} type="text"
-                               placeholder="***@gmail.com"
-                               className="input input-bordered w-full  bg-white"/>
+                               placeholder={t("Forms.emailPlaceholder")}
+                               className="input input-bordered w-full  bg-white text-left"/>
                         {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 
                     </label>
-                    <button disabled={empty(watch("email"))} type="submit" className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
-                        Next
+                    <button disabled={empty(watch("email"))} type="submit"
+                            className='btn btn-warning w-52 bg-[#F9A826] text-white rounded-md shadow-md mt-8 py-2 px-3'>
+                        {t("BeMentor.nextButton")}
                     </button>
                 </form>
             )
-        }else if (activeStep === 2) {
+        } else if (activeStep === 2) {
             return <RegisterMentor activeStep={activeStep} setActiveStep={setActiveStep}/>
-        }else if (activeStep === 3){
-            return  <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
-        }else if (activeStep === 4){
-            return  <ConfirmationMentor/>
+        } else if (activeStep === 3) {
+            return <FinalizeRegister activeStep={activeStep} setActiveStep={setActiveStep}/>
+        } else if (activeStep === 4) {
+            return <ConfirmationMentor/>
         }
     }
     return (

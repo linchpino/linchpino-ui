@@ -13,6 +13,7 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import 'moment-timezone';
 import useStore from "@/store/store";
+import {useTranslations} from "next-intl";
 
 interface ChooseMentorProp {
     calendarValue: Value;
@@ -22,6 +23,7 @@ interface ChooseMentorProp {
 }
 
 const ChooseMentor: FC<ChooseMentorProp> = (props) => {
+    const t = useTranslations()
     const {scheduleInterview, setScheduleInterviewItem} = useStore();
     const interviewId = scheduleInterview.interviewTypeId
     const {calendarValue, setCalendarValue, activeStep, setActiveStep} = props
@@ -48,7 +50,7 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
         if (isLoading || isRefetching) {
             return <Spinner loading={isLoading || isRefetching}/>
         } else if (empty(data.length)) {
-            return <p className='text-[#F9A826] mt-8'>For this time not slot available</p>
+            return <p className='text-[#F9A826] mt-8'>{t("Schedule.unavailableTimeSlot")}</p>
         } else {
             return (
                 <div
@@ -56,7 +58,6 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                     {
                         !empty(data) && !empty(data.length) &&
                         data.map((mentorItem, index) => {
-                            console.log(mentorItem)
                             const mentorFullName = mentorItem.mentorFirstName + " " + mentorItem.mentorLastName
                             const isoDate=!empty(mentorItem.validWindow?.start) ?  moment(mentorItem.validWindow?.start).format('ddd, D MMMM YYYY, HH:mm') : ""
                             return <MentorListItem

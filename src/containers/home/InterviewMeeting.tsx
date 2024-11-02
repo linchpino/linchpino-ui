@@ -1,15 +1,16 @@
 'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
+import {useTranslations} from "next-intl";
 
 export default function InterviewMeeting() {
+    const t = useTranslations()
     return (
         <HomeSectionLayout
             isLtr={false}
             imageSource='/home/InterviewMeeting.svg'
-            title='Start the interview meeting!'
-            description="If you have already scheduled an interview appointment and received confirmation, please click here
-                    to join your interview. You will also find the joining link in your email."
-            buttonText="Attend the interview"
+            title={t('Home.attendTitle')}
+            description={t("Home.attendDescription")}
+            buttonText={t("Home.attendButton")}
             onClick={()=> console.log(1)}
             clickable={false}
         />
