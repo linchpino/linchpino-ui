@@ -133,9 +133,6 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
         });
         setState(!state);
     };
-    console.log(paymentMethod)
-
-    // @ts-ignore
     // @ts-ignore
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-xs space-y-5'>
@@ -272,7 +269,7 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 <div className="label">
                     <span className="label-text">{t("BeMentor.iban")}</span>
                     <span
-                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>{t("BeMentor.ibanRegion")}</span>
+                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>{process.env.NEXT_PUBLIC_IBAN}</span>
                 </div>
                 <input {...register("iban")} type="text" className="input input-bordered w-full bg-white pl-10"/>
                 {errors?.iban && <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
