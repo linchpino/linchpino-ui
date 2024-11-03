@@ -122,6 +122,7 @@
     "defaultStep": "What are you looking for?",
     "email": "Enter Your Email Address:",
     "confirmButton": "Confirm",
+    "backButton": "Back",
     "unavailableTimeSlot": "For this time not slot available",
     "unavailableDate": "No Date Available",
     "finalMessage": "No Date Available"
