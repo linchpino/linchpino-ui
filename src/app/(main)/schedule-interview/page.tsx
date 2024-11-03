@@ -4,7 +4,7 @@ import MobileStepper from '@mui/material/MobileStepper';
 import ChooseMentor from "../../../containers/scheduleInteview/ChooseMentor";
 import Finalize from "../../../containers/scheduleInteview/Finalize";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {empty, ValidateEmailPattern} from "../../../utils/helper";
+import {empty, updateUrl, ValidateEmailPattern} from "../../../utils/helper";
 import Confirmation from "../../../containers/scheduleInteview/Confirmation";
 import {Value} from "react-multi-date-picker";
 import useStore from "../../../store/store";
@@ -15,6 +15,7 @@ import {ClipLoader} from "react-spinners";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import {AxiosError} from 'axios';
 import {useTranslations} from "next-intl";
+import {useSearchParams} from "next/navigation";
 
 type ScheduleInterviewData = {
     interviewTypeId: number | null | string;
@@ -34,7 +35,13 @@ const ScheduleInterview = () => {
     const t = useTranslations()
 
     const {scheduleInterview, setScheduleInterviewItem} = useStore();
-    const [activeStep, setActiveStep] = useState(1);
+
+    const searchParams = useSearchParams();
+    const [activeStep, setActiveStep] = useState(() => {
+        const step = searchParams.get('step');
+        return step ? parseInt(step) : 1;
+    });
+
     const [isLoadingSendForm, setIsLoadingSendForm] = useState(false);
     const [calendarValue, setCalendarValue] = useState<Value>('');
     const {
@@ -61,7 +68,11 @@ const ScheduleInterview = () => {
         mutationFn: sendInterviewData,
         onSuccess: () => {
             toastSuccess({message: t("Schedule.createSuccessful")});
-            setActiveStep(activeStep + 1);
+            setActiveStep((prevStep) => {
+                const newStep = prevStep + 1;
+                updateUrl(newStep);
+                return newStep;
+            });
             setIsLoadingSendForm(false);
         },
         onError: (error: AxiosError) => {
@@ -122,20 +133,26 @@ const ScheduleInterview = () => {
                                 }
                             })} type="text"
                                    placeholder={t("Forms.emailPlaceholder")}
-                                   className="input input-bordered w-full  bg-white"/>
+                                   className="input input-bordered w-full  bg-white text-left"/>
                             {errors?.email && <p className='text-red-500 mt-1 text-left'>{errors.email.message}</p>}
 
                         </label>
                         {activeStep === 2 &&
                             <div className="flex items-center justify-between w-full max-w-xs mt-10">
-                                <button onClick={() => setActiveStep(activeStep - 1)}
-                                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
-                                    Back
-                                </button>
                                 <button disabled={isLoadingSendForm || empty(watch("email"))} type='submit'
                                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945] ${isLoadingSendForm && 'cursor-not-allowed'}`}>
                                     {isLoadingSendForm ? <ClipLoader size={24} color={"#fff"}/> : t("Schedule.confirmButton")}
 
+                                </button>
+                                <button onClick={() => {
+                                    setActiveStep((prevStep) => {
+                                        const newStep = prevStep - 1;
+                                        updateUrl(newStep);
+                                        return newStep;
+                                    });
+                                }}
+                                        className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
+                                    {t("Schedule.backButton")}
                                 </button>
                             </div>
                         }

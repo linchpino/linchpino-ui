@@ -4,7 +4,7 @@ import {Calendar, DateObject} from "react-multi-date-picker"
 import MentorListItem from "@/containers/scheduleInteview/MentorListItem";
 import '../../app/globals.css'
 import "react-multi-date-picker/styles/colors/yellow.css"
-import {empty} from "@/utils/helper";
+import {empty, updateUrl} from "@/utils/helper";
 import type {Value} from "react-multi-date-picker"
 import {useQuery} from "@tanstack/react-query";
 import moment from "moment/moment";
@@ -73,7 +73,11 @@ const ChooseMentor: FC<ChooseMentorProp> = (props) => {
                                     setScheduleInterviewItem('mentorName', mentorFullName);
                                     setScheduleInterviewItem('isoDate', isoDate);
                                     setScheduleInterviewItem('avatar', mentorItem.avatar);
-                                    setActiveStep(activeStep + 1)
+                                    setActiveStep((prevStep) => {
+                                        const newStep = prevStep + 1;
+                                        updateUrl(newStep);
+                                        return newStep;
+                                    });
                                 }}
                             />
                         })

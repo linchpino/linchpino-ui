@@ -2,12 +2,13 @@
 import React, {useState} from "react";
 import MobileStepper from '@mui/material/MobileStepper';
 import {SubmitHandler, useForm} from "react-hook-form";
-import {empty, ValidateEmailPattern} from "@/utils/helper";
+import {empty, updateUrl, ValidateEmailPattern} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
 import ConfirmationMentor from "@/containers/beMentor/ConfirmationMentor";
 import useStore from '../../../store/store';
 import {useTranslations} from "next-intl";
+import {useSearchParams} from "next/navigation";
 
 type Inputs = {
     email: string
@@ -17,7 +18,13 @@ type Inputs = {
 const BeMentor = () => {
     const t = useTranslations()
 
-    const [activeStep, setActiveStep] = useState(1);
+    const searchParams = useSearchParams();
+    const [activeStep, setActiveStep] = useState(() => {
+        const step = searchParams.get('step');
+        return step ? parseInt(step) : 1;
+    });
+
+
     const {setMentorInformation} = useStore();
     const {
         register,
@@ -25,10 +32,16 @@ const BeMentor = () => {
         watch,
         formState: {errors},
     } = useForm<Inputs>()
+
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         setMentorInformation(data);
-        setActiveStep(activeStep + 1)
+        setActiveStep((prevStep) => {
+            const newStep = prevStep + 1;
+            updateUrl(newStep);
+            return newStep;
+        });
     }
+
     const renderStepperTitle = () => {
         if (activeStep === 1) {
             return t("BeMentor.emailStep")
