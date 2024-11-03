@@ -7,7 +7,9 @@
     "internalServerError": "Server error. Please try again later.",
     "unexpectedSignInError": "An unknown error occurred during login.",
     "unexpectedError": "An unexpected error occurred ",
-    "joinInterviewLoadError": "Unfortunately, your request encountered an error."
+    "joinInterviewLoadError": "Unfortunately, your request encountered an error.",
+    "selectNoOption" : "No Option Found",
+    "selectLoading" : "Loading..."
   },
   "Forms": {
     "email": "Email",
@@ -137,7 +139,16 @@
     "confirmButton": "Confirm",
     "expertise": "Field of expertise: ",
     "interviewPlaceholder": "Interview Type",
-    "nextButton": "Next"
+    "nextButton": "Next",
+    "payAsYouGo" : "Pay As You Go",
+    "fixPrice": "Fix Price",
+    "free" : "Free",
+    "paymentMethod" : "Payment Method",
+    "paymentMethodPlaceholder" : "Select Payment Method",
+    "min" : "Min",
+    "max" : "Max",
+    "iban" : "IBAN",
+    "ibanRegion" : "DE"
   },
   "JoinInterview": {
     "earlySessionMessage": "Hi there! It looks like you're a bit early for your session scheduled on {{startTime}}. Your session is set to last {{duration}}. Feel free to explore, ask any questions, or let us know if there's anything specific you'd like to prepare for. We’ll be ready to start soon!",
