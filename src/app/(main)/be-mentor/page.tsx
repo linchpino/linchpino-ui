@@ -2,6 +2,7 @@
 import React, {useState} from "react";
 import MobileStepper from '@mui/material/MobileStepper';
 import {SubmitHandler, useForm} from "react-hook-form";
+//@ts-ignore
 import {empty, updateUrl, ValidateEmailPattern} from "@/utils/helper";
 import RegisterMentor from "@/containers/beMentor/RegisterMentor";
 import FinalizeRegister from "@/containers/beMentor/FinalizeRegister";
