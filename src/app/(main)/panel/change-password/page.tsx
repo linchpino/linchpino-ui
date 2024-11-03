@@ -12,6 +12,7 @@ import {BASE_URL_API} from "@/utils/system";
 import axios, {AxiosError} from 'axios';
 import {ClipLoader} from "react-spinners";
 import {empty} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 
 interface ErrorResponse {
     error?: string;
@@ -20,20 +21,24 @@ interface ErrorResponse {
 const isAxiosError = (error: unknown): error is AxiosError<ErrorResponse> => {
     return axios.isAxiosError(error);
 };
-const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
-const schema = z.object({
-    currentPassword: z.string().min(6, "Current password must contain at least 6 character(s)").regex(passwordPattern, "Current password must include at least one letter, one number, or one special character"),
-    newPassword: z.string().min(6, "New password must contain at least 6 character(s)").regex(passwordPattern, "New password must include at least one letter, one number, or one special character"),
-    repeatNewPassword: z.string().min(6, "Repeat new password must contain at least 6 character(s)").regex(passwordPattern, "Repeat new password must include at least one letter, one number, or one special character"),
-}).refine((data) => data.newPassword === data.repeatNewPassword, {
-    message: "Passwords don't match",
-    path: ["repeatNewPassword"],
-});
 
-type FormData = z.infer<typeof schema>;
 
 const ChangePasswrod = () => {
+    const t = useTranslations()
+
+    const passwordPattern = /^(?=.*[A-Za-z\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+    const schema = z.object({
+        currentPassword: z.string().min(6, t("Forms.currentPasswordCharacterLength")).regex(passwordPattern, t("Forms.currentPasswordPattern")),
+        newPassword: z.string().min(6, t("Forms.newPasswordCharacterLength")).regex(passwordPattern, t("Forms.newPasswordPattern")),
+        repeatNewPassword: z.string().min(6, t("Forms.repeatNewPasswordCharacterLength")).regex(passwordPattern, t("Forms.repeatNewPasswordPattern")),
+    }).refine((data) => data.newPassword === data.repeatNewPassword, {
+        message: t("Forms.passwordMatch"),
+        path: ["repeatNewPassword"],
+    });
+    type FormData = z.infer<typeof schema>;
+
     const [isLoading, setIsLoading] = useState(false);
 
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -69,16 +74,16 @@ const ChangePasswrod = () => {
             }
         },
         onSuccess: () => {
-            toastSuccess({ message: 'Password changed successfully!' });
+            toastSuccess({ message: t("ChangePassword.changeSuccess") });
             setIsLoading(false);
         },
         onError: (error) => {
             setIsLoading(false);
             if (isAxiosError(error)) {
-                const errorMessage = error.response?.data?.error || 'There was an issue, please try again.';
+                const errorMessage = error.response?.data?.error || t("Errors.internalServerError");
                 toastError({ message: errorMessage });
             } else {
-                toastError({ message: 'There was an issue, please try again.' });
+                toastError({ message: t("Errors.internalServerError")});
             }
         }
     });
@@ -92,13 +97,13 @@ const ChangePasswrod = () => {
         <ProtectedPage>
             <div className="mx-auto w-full">
                 <div className="flex text-left">
-                    <h1 className="text-md font-bold">Change Password</h1>
+                    <h1 className="text-md font-bold">{t("ChangePassword.title")}</h1>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}
                       className="gap-y-6 mt-6 w-full flex flex-col justify-center items-center ">
                     <label className="w-full max-w-[28rem]">
                         <div className="label">
-                            <span className="label-text">Current Password:</span>
+                            <span className="label-text">{t("Forms.currentPassword")}</span>
                         </div>
                         <div className="flex items-center justify-between relative">
                             <input
@@ -125,7 +130,7 @@ const ChangePasswrod = () => {
 
                     <label className="w-full max-w-[28rem]">
                         <div className="label">
-                            <span className="label-text">New Password:</span>
+                            <span className="label-text">{t("Forms.newPassword")}</span>
                         </div>
                         <div className="flex items-center justify-between relative">
                             <input
@@ -151,7 +156,7 @@ const ChangePasswrod = () => {
 
                     <label className="w-full max-w-[28rem]">
                         <div className="label">
-                            <span className="label-text">Repeat New Password:</span>
+                            <span className="label-text">{t("Forms.repeatNewPassword")}</span>
                         </div>
                         <div className="flex items-center justify-between relative">
                             <input
@@ -180,7 +185,7 @@ const ChangePasswrod = () => {
                         type="submit"
                         className="btn btn-primary bg-[#F9A826] text-white border-none px-6 py-2 mt-5 hover:bg-[#e39620] w-full max-w-[28rem]"
                     >
-                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : 'Change Password'}
+                        {isLoading ? <ClipLoader size={24} color={"#fff"} /> : t("ChangePassword.title")}
                     </button>
 
                 </form>

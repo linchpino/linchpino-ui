@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import moment from 'moment';
+import {useTranslations} from "next-intl";
 
 type CountdownProps = {
     targetDate: string;
@@ -17,6 +18,7 @@ type TimeRemaining = {
 };
 
 const Countdown: React.FC<CountdownProps> = ({ targetDate, startDate, endDate }) => {
+    const t = useTranslations()
     const [isClient, setIsClient] = useState(false);
     const calculateTimeRemaining = useCallback((): TimeRemaining => {
         const now = moment();
@@ -57,20 +59,18 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, startDate, endDate })
     }, [startDate, endDate]);
 
     const formatDate = (date: string) => {
-        return <div>{moment(date).format('YYYY-MM-DD HH:mm:ss')}</div>;
+        return <div>{t('Countdown.targetDate', { date: moment(date).format('YYYY-MM-DD HH:mm:ss') })}</div>;
     };
-
     const formatNow = () => {
-        return <div className="font-bold text-green-500">Now</div>;
+        return <div className="font-bold text-green-500">{t('Countdown.now')}</div>;
     };
-
     const formatTimeRemaining = (days: number, hours: number, minutes: number, seconds: number, textColor: string) => {
         const displayParts: string[] = [];
 
-        if (days > 0) displayParts.push(`${days} days`);
-        if (hours > 0) displayParts.push(`${hours} hours`);
-        if (minutes > 0) displayParts.push(`${minutes} minutes`);
-        if (seconds > 0) displayParts.push(`${seconds} seconds`);
+        if (days > 0) displayParts.push(t('Countdown.days', { days }));
+        if (hours > 0) displayParts.push(t('Countdown.hours', { hours }));
+        if (minutes > 0) displayParts.push(t('Countdown.minutes', { minutes }));
+        if (seconds > 0) displayParts.push(t('Countdown.seconds', { seconds }));
 
         return (
             <div className={textColor}>
@@ -103,7 +103,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, startDate, endDate })
         }
 
         if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-            return null;
+            return <div>{t('Countdown.noTimeRemaining')}</div>;
         }
 
         const textColor = determineTextColor(days, hours);

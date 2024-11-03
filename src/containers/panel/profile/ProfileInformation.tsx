@@ -1,5 +1,5 @@
+//@ts-nocheck
 import React, {useState} from "react";
-import {ValidateEmailPattern} from "@/utils/helper";
 import axios from "axios";
 import {BASE_URL_API} from "@/utils/system";
 import {toastError, toastSuccess} from "@/components/CustomToast";
@@ -7,29 +7,12 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import '../../../app/globals.css'
+import {useTranslations} from "next-intl";
 import useStore from "@/store/store";
 import {ClipLoader} from "react-spinners";
 import Select from "react-select";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from "@/utils/axiosInstance";
-
-
-const schema = z.object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email("Invalid email address"),
-    detailsOfExpertise: z.string(),
-    iban: z.string(),
-    // iban: z.string().regex(ibanPattern, "Invalid iban format"),
-    paymentMethodRequest: z.object({
-        minPayment: z.string().optional(),
-        maxPayment: z.string().optional(),
-        fixRate: z.string().optional(),
-        type: z.string().optional(),
-    }).optional()
-})
-type UpdateFields = z.infer<typeof schema>;
 
 export interface PaymentMethodRequest {
     type: string | null,
@@ -55,6 +38,16 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                                                    iban,
                                                                    paymentMethodRequest
                                                                }) => {
+    const t = useTranslations()
+
+    const schema = z.object({
+        firstName: z.string().min(1, t("Forms.firstNameRequired")),
+        lastName: z.string().min(1, t("Forms.lastNameRequired")),
+        email: z.string().email(t("Forms.emailInvalid")),
+        detailsOfExpertise: z.string()
+    })
+    type UpdateFields = z.infer<typeof schema>;
+
     const {register, handleSubmit, formState: {errors}, setValue} = useForm<UpdateFields>({
         resolver: zodResolver(schema)
     });
@@ -99,18 +92,11 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingChanges, setIsLoadingChanges] = useState(false);
 
-    const sendUpdateForm = async (data: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        detailsOfExpertise: string;
-        iban: string;
-        paymentMethodRequest: PaymentMethodRequest
-    }) => {
-        setIsLoadingChanges(true);
+    const sendSignupForm = async (data: Omit<UpdateFields, 'repeat_password'> & { type: number }) => {
+        setIsLoading(true);
         try {
-            const response = await axiosInstance.put(`${BASE_URL_API}accounts/profile`, data);
-            toastSuccess({message: 'Update successful!'});
+            const response = await axios.post(`${BASE_URL_API}accounts`, data);
+            toastSuccess({message: 'Registration successful!'});
             return response.data;
         } catch (error) {
             console.log(error)
@@ -150,25 +136,24 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
             delete data.paymentMethodRequest?.maxPayment;
         }
         try {
-            // @ts-ignore
-            await sendUpdateForm(data);
+            await sendSignupForm({...dataToSubmit, type: 1});
         } catch (error) {
-            console.error('Signup failed', error);
+            console.error(t("Errors.unexpectedError"), error);
         }
     };
 
     return (
         <>
             <div className="flex text-left mt-8">
-                <h1 className="text-md font-bold">Your Information</h1>
+                <h1 className="text-md font-bold">{t("Profile.informationTitle")}</h1>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="gap-y-5 flex flex-col justify-center items-center mt-2">
                 <div data-theme="light" className="grid grid-cols-1 md:grid-cols-2 gap-x-6 w-full gap-y-5">
                     <label className="w-full">
                         <div className="label">
-                            <span className="label-text">First Name:</span>
+                            <span className="label-text">{t("Forms.firstName")}</span>
                         </div>
-                        <input {...register("firstName")} type="text" placeholder="Your first name"
+                        <input {...register("firstName")} type="text" placeholder={t("Forms.firstNamePlaceholder")}
                                className="input input-bordered w-full bg-white"/>
                         {errors.firstName && (
                             <div className="text-red-500 text-sm mt-1">{errors.firstName.message}</div>
@@ -176,9 +161,9 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                     </label>
                     <label className="w-full ">
                         <div className="label">
-                            <span className="label-text">Last Name:</span>
+                            <span className="label-text">{t("Forms.lastName")}</span>
                         </div>
-                        <input {...register("lastName")} type="text" placeholder="Your last name"
+                        <input {...register("lastName")} type="text" placeholder={t("Forms.lastNamePlaceholder")}
                                className="input input-bordered w-full bg-white"/>
                         {errors.lastName && (
                             <div className="text-red-500 text-sm mt-1">{errors.lastName.message}</div>
@@ -186,15 +171,16 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                     </label>
                     <label className="w-full md:col-span-2">
                         <div className="label">
-                            <span className="label-text">Email:</span>
+                            <span className="label-text">{t("Forms.email")}</span>
                         </div>
+                        <input {...register("email", {required: t("Forms.emailRequired")})} />
                         <input disabled {...register("email", {
                             required: "Email is required",
                             pattern: {
                                 value: ValidateEmailPattern,
-                                message: "Invalid email address"
+                                message: t("Forms.emailInvalid")
                             }
-                        })} type="email" placeholder="***@gmail.com"
+                        })} type="email" placeholder={t("Forms.emailPlaceholder")}
                                className="input input-bordered w-full bg-white"/>
                         {errors.email && (
                             <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
@@ -234,7 +220,8 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                     <div className="label">
                                         <span className="label-text">Fix Price:</span>
                                     </div>
-                                    <input {...register("paymentMethodRequest.fixRate")} inputMode="numeric" type="number"
+                                    <input {...register("paymentMethodRequest.fixRate")} inputMode="numeric"
+                                           type="number"
                                            placeholder="Enter Price"
                                            className="input input-bordered w-full bg-white"/>
                                     {errors.paymentMethodRequest?.fixRate && (
@@ -249,7 +236,8 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                         <div className="label">
                                             <span className="label-text">Min Payment:</span>
                                         </div>
-                                        <input inputMode="numeric" type="number" {...register("paymentMethodRequest.minPayment")}
+                                        <input inputMode="numeric"
+                                               type="number" {...register("paymentMethodRequest.minPayment")}
                                                placeholder="Min Payment"
                                                className="input input-bordered w-full bg-white"/>
                                         {errors.paymentMethodRequest?.minPayment && (
@@ -261,7 +249,8 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                         <div className="label">
                                             <span className="label-text">Max Payment:</span>
                                         </div>
-                                        <input inputMode="numeric" {...register("paymentMethodRequest.maxPayment")} type="number"
+                                        <input inputMode="numeric" {...register("paymentMethodRequest.maxPayment")}
+                                               type="number"
                                                placeholder="Max Payment"
                                                className="input input-bordered w-full bg-white"/>
                                         {errors.paymentMethodRequest?.maxPayment && (
@@ -288,8 +277,10 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
 
                     <label className="w-full md:col-span-2">
                         <div className="label">
-                            <span className="label-text">Bio:</span>
+                            <span className="label-text">{t("Forms.bio")}</span>
                         </div>
+                        <textarea className="textarea textarea-bordered w-full bg-white"
+                                  placeholder={t("Forms.bioPlaceholder")} {...register("detailsOfExpertise")}/>
                         <textarea className="textarea textarea-bordered w-full bg-white"
                                   placeholder="Your Details ..." {...register("detailsOfExpertise")}/>
 

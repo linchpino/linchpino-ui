@@ -8,6 +8,7 @@ import useStore from "@/store/store";
 import Spinner from "@/components/Spinner";
 import ProtectedPage from "@/app/(main)/panel/ProtectedPage";
 import {textWithTooltip} from "@/utils/helper";
+import {useTranslations} from "next-intl";
 
 interface UserType {
     id: number;
@@ -43,6 +44,7 @@ const fetchUsers = async (token: string | null, page: number, name: string, role
 };
 
 const User = () => {
+    const t = useTranslations();
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage] = useState(20);
     const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +63,7 @@ const User = () => {
             setIsLastPage(data.last);
         },
         onError: (error: any) => {
-            console.error('Failed to fetch users:', error);
+            console.error(t("Errors.unknowServerError"), error);
         }
     });
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,11 +75,11 @@ const User = () => {
         setCurrentPage(0);
     };
     const roleOptions = [
-        {value: "", label: "All"},
-        {value: 1, label: "GUEST"},
-        {value: 2, label: "JOBSEEKER"},
-        {value: 3, label: "MENTOR"},
-        {value: 4, label: "ADMIN"}
+        { value: "", label: t('User.roleOptions.all') },
+        { value: 1, label: t('User.roleOptions.guest') },
+        { value: 2, label: t('User.roleOptions.jobseeker') },
+        { value: 3, label: t('User.roleOptions.mentor') },
+        { value: 4, label: t('User.roleOptions.admin') }
     ];
 
     useEffect(() => {
@@ -92,11 +94,11 @@ const User = () => {
         <ProtectedPage>
             <div className="mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-                    <h1 className="text-md font-bold">Users</h1>
+                    <h1 className="text-md font-bold">{t('User.users')}</h1>
                     <div className="flex flex-col md:flex-row items-center mt-2 md:mt-0 gap-y-4 gap-x-4">
                         <input
                             type="text"
-                            placeholder="Search by name"
+                            placeholder={t('User.searchPlaceholder')}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="input input-bordered border-[.1px] rounded-md text-gray-900 border-gray-300 w-full max-w-xs h-10 text-sm bg-white"
@@ -104,7 +106,7 @@ const User = () => {
                         <Select
                             options={roleOptions}
                             isClearable
-                            placeholder="Filter by role"
+                            placeholder={t('User.filterPlaceholder')}
                             onChange={handleRoleChange}
                             classNames={{
                                 control: () => "border border-gray-50 w-full rounded-lg h-8 text-sm px-1 text-gray-100",
@@ -128,10 +130,10 @@ const User = () => {
                         <table className="table w-full mt-4">
                             <thead>
                             <tr className='text-[.9rem] font-medium border-b-0 bg-[#111B47] text-white h-16'>
-                                <th className="w-12 rounded-tr-none rounded-tl-xl">#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th className='w-20 rounded-tl-none rounded-tr-xl'>Role</th>
+                                <th className="w-12 rounded-tl-none rounded-tr-xl">#</th>
+                                <th>{t('User.filterPlaceholder')}</th>
+                                <th>{t('User.columns.email')}</th>
+                                <th className='w-20 rounded-tr-none rounded-tl-xl'>{t('User.columns.role')}</th>
                             </tr>
                             </thead>
                             <tbody>

@@ -7,9 +7,10 @@ import {ClipLoader} from 'react-spinners';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
-import {useRouter} from "next/navigation";
+import {useRouter} from "../../../i18n/routing";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import Cookies from "js-cookie";
+import {useTranslations} from "next-intl";
 
 interface SignInForm {
     email: string;
@@ -30,16 +31,15 @@ const fetchUserInfo = async (token: string) => {
     }
 };
 
-
 export default function SignIn() {
+    const t = useTranslations()
     const router = useRouter()
     const {register, handleSubmit, formState: {errors}} = useForm<SignInForm>();
     const [isLoading, setIsLoading] = useState(false);
-    const {setToken, setUserInfo, userInfo, setUserRoles} = useStore(state => ({
+    const {setToken, setUserInfo, setUserRoles} = useStore(state => ({
         setToken: state.setToken,
         setUserInfo: state.setUserInfo,
         setUserRoles: state.setUserRoles,
-        userInfo: state.userInfo,
     }));
 
     const onSubmit: SubmitHandler<SignInForm> = (data, event) => {
@@ -61,7 +61,7 @@ export default function SignIn() {
                     },
                 }
             );
-            const {token, expiresAt, userInfo} = response.data;
+            const {token, expiresAt,} = response.data;
 
             if (token && expiresAt) {
                 Cookies.set('token', token, {expires: new Date(expiresAt), secure: true, sameSite: 'Strict'});
@@ -70,12 +70,10 @@ export default function SignIn() {
                 Cookies.remove('token');
                 Cookies.remove('expiresAt');
             }
-
-
             setToken(token, expiresAt);
             return response.data;
         } catch (error) {
-            console.error('Login failed', error);
+            console.error(`${t("Errors.catchError")}`, error);
             throw error;
         } finally {
             setIsLoading(false);
@@ -84,7 +82,7 @@ export default function SignIn() {
     const signinMutation = useMutation({
         mutationFn: sendSigninForm,
         onSuccess: async (data: { token: string }) => {
-            toastSuccess({message: 'Yes! You are logged in.'});
+            toastSuccess({message: t("Errors.signInSuccess")});
             try {
                 setIsLoading(true);
                 const userInfo = await fetchUserInfo(data.token);
@@ -109,20 +107,20 @@ export default function SignIn() {
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     const status = error.response.status;
-                    const errorMessage = error.response.data?.error || 'An unknown error occurred while fetching user info.';
+                    const errorMessage = error.response.data?.error || t("Errors.unknowServerError");
 
                     if (status === 401) {
                         toastError({message: errorMessage});
                     } else if (status === 404) {
                         toastError({message: errorMessage});
                     } else if (status === 500) {
-                        toastError({message: 'Server error. Please try again later.'});
+                        toastError({message: t('Errors.internalServerError')});
                     } else {
                         toastError({message: errorMessage});
                     }
                 } else {
-                    console.error('An unexpected error occurred:', error);
-                    toastError({message: 'An unexpected error occurred.'});
+                    console.error(t("Errors.unexpectedError"), error);
+                    toastError({message: t("Errors.unexpectedError")});
                 }
             } finally {
                 setIsLoading(false);
@@ -131,71 +129,70 @@ export default function SignIn() {
         onError: (error: unknown) => {
             if (axios.isAxiosError(error) && error.response) {
                 const status = error.response.status;
-                const errorMessage = error.response.data?.error || 'An unknown error occurred during login.';
+                const errorMessage = error.response.data?.error || t("Errors.unexpectedSignInError");
                 if (status === 401) {
                     toastError({message: errorMessage});
                 } else if (status === 404) {
                     toastError({message: errorMessage});
                 } else if (status === 500) {
-                    toastError({message: 'Server error during login. Please try again.'});
+                    toastError({message: t("Errors.internalServerError")});
                 } else {
                     toastError({message: errorMessage});
                 }
             } else {
-                toastError({message: 'An unexpected error occurred.'});
+                toastError({message: t("Errors.unexpectedError")});
             }
             setIsLoading(false);
         }
     });
 
     return (
-        <>
-            <div className='bg-white container pb-5 lg:pb-0'>
-                <form onSubmit={handleSubmit(onSubmit)}
-                      className="flex flex-col items-center justify-center gap-y-8 mt-14"
-                      method="post"
-                >
-                    <h1 className='text-black text-3xl'>Sign In</h1>
-                    <label className="form-control w-full max-w-xs">
-                        <div className="label">
-                            <span className="label-text">Email Address:</span>
-                        </div>
-                        <input type="text" placeholder="Your registered email address"
-                               className={`input input-bordered w-full max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
-                               {...register('email', {
-                                   required: "Email is required",
-                                   pattern: {
-                                       value: ValidateEmailPattern,
-                                       message: "Invalid email address"
-                                   }
-                               })} />
-                        {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email.message}</p>}
-                    </label>
-                    <label className="form-control w-full max-w-xs">
-                        <div className="label">
-                            <span className="label-text">Password:</span>
-                        </div>
-                        <input type="password" placeholder="********"
-                               className={`input input-bordered w-full max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
-                               {...register('password', {required: "Password is required"})} />
-                        {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
-                    </label>
-                    <button type='submit'
-                            className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
-                            disabled={isLoading}>
-                        {isLoading ? <ClipLoader size={24} color={"#fff"}/> : 'Login'}
-                    </button>
-                    <div className='flex items-center'>
-                        <button onClick={() =>router.push('/signup')} className='text-[#F9A826] text-sm'>
-                            Register
-                        </button>
-                        /
-                        <button onClick={() => router.push('/')} className='text-[#F9A826] text-sm'>
-                            Forgot Password
-                        </button>
+        <div className='bg-white container pb-5 lg:pb-0'>
+            <form onSubmit={handleSubmit(onSubmit)}
+                  className="flex flex-col items-center justify-center gap-y-8 mt-14"
+                  method="post"
+            >
+                <h1 className='text-black text-3xl'>{t('SignIn.title')}</h1>
+                <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                        <span className="label-text">{t("Forms.email")}</span>
                     </div>
-                </form>
+                    <input type="text" placeholder={t("Forms.emailPlaceholder")}
+                           className={`input input-bordered w-full text-left max-w-xs bg-white ${errors.email ? 'input-error' : ''}`}
+                           {...register('email', {
+                               required: t("Forms.emailRequired"),
+                               pattern: {
+                                   value: ValidateEmailPattern,
+                                   message: t("Forms.emailInvalid")
+                               }
+                           })} />
+                    {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email.message}</p>}
+                </label>
+                <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                        <span className="label-text">{t("Forms.password")}</span>
+                    </div>
+                    <input type="password" placeholder="********"
+                           className={`input input-bordered w-full text-left max-w-xs bg-white ${errors.password ? 'input-error' : ''}`}
+                           {...register('password', {required: t("Forms.passwordCharacterLength")})} />
+                    {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
+                </label>
+                <button type='submit'
+                        className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
+                        disabled={isLoading}>
+                    {isLoading ? <ClipLoader size={24} color={"#fff"}/> : t("SignIn.title")}
+                </button>
+
+            </form>
+            <div className='flex items-center justify-center mt-6'>
+                <button onClick={() => router.push('/signup')} className='text-[#F9A826] text-sm'>
+                    {t("SignIn.register")}
+                </button>
+                /
+                <button onClick={() => router.push('/')} className='text-[#F9A826] text-sm'>
+                    {t("SignIn.forgetPassword")}
+                </button>
             </div>
-        </>
+        </div>
     );
 }

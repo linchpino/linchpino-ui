@@ -1,29 +1,45 @@
+"use client"
 import Image from "next/image";
-import React, {FC, useState} from "react";
+import React, { FC, useState } from "react";
 import useStore from "@/store/store";
-import {useMutation, } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import {BASE_URL_API} from "@/utils/system";
-import {toastError, toastSuccess} from '@/components/CustomToast';
+import { BASE_URL_API } from "@/utils/system";
+import { toastError, toastSuccess } from '@/components/CustomToast';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {useTranslations} from "next-intl";
+import {ClipLoader} from "react-spinners";
 
 interface FinalizeRegisterProp {
     activeStep: number,
     setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export interface PaymentMethodRequest {
+    type: string;
+    minPayment?: string;
+    maxPayment?: string;
+    fixRate?: string;
+}
+
 const MAX_LENGTH = 20;
 const shortenText = (text: string, maxLength: number) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 };
+
 const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
-    const {activeStep, setActiveStep} = props;
-    const {mentorInformation, setMentorInformation} = useStore();
+    const t = useTranslations();
+
+    const { activeStep, setActiveStep } = props;
+    const { mentorInformation, setMentorInformation } = useStore();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submitMentorInformation = async (data: any) => {
+    const submitMentorInformation = async (data: Omit<any, 'sheba'>) => {
         const response = await axios.post(`${BASE_URL_API}accounts/mentors`, data);
         return response.data;
     };
+
     const mutation = useMutation({
         mutationFn: async (data: any) => {
             setIsLoading(true);
@@ -31,7 +47,7 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             setIsLoading(false);
         },
         onSuccess: () => {
-            toastSuccess({message: "Your information submitted successfully!"});
+            toastSuccess({message: t("BeMentor.finalizeStepSuccessMessage")});
             setActiveStep(activeStep + 1);
         },
         onError: (error: any) => {
@@ -49,23 +65,37 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                     toastError({message: errorMessage});
                 }
             } else {
-                toastError({message: "Network Error. Please check your internet connection."});
+                toastError({message: t("Errors.networkError")});
             }
         }
     });
+
     const handleConfirm = () => {
         const interviewTypeIDsPush = mentorInformation.interviewTypeIDs.map(type => type.value);
-        const {interviewTypeIDs, ...rest} = mentorInformation;
+        const { interviewTypeIDs, sheba, ...rest } = mentorInformation;
+        const paymentMethodRequest: Partial<PaymentMethodRequest> = {
+            type: mentorInformation.paymentMethodRequest.type.value
+        };
+
+        if (mentorInformation.paymentMethodRequest.type.value === "PAY_AS_YOU_GO") {
+            paymentMethodRequest.minPayment = mentorInformation.paymentMethodRequest.min;
+            paymentMethodRequest.maxPayment = mentorInformation.paymentMethodRequest.max;
+        }
+
+        if (mentorInformation.paymentMethodRequest.type.value === "FIX_PRICE") {
+            paymentMethodRequest.fixRate = mentorInformation.paymentMethodRequest.fixRate;
+        }
+
         const dataToSend = {
             ...rest,
             interviewTypeIDs: interviewTypeIDsPush,
-            paymentMethodRequest: {
-                type: "FREE",
-            },
-            iban: "GB82 WEST 1234 5698 7654 32"
+            paymentMethodRequest,
+            iban: `IR${mentorInformation.sheba}`
         };
+
         mutation.mutate(dataToSend);
     };
+
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
             <div className='flex flex-col w-full items-center sm:w-full shadow-lg rounded gap-y-3 p-3'>
@@ -89,14 +119,15 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
                     setActiveStep(activeStep - 1)
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
-                    Back
+                    {t("BeMentor.backButton")}
                 </button>
                 <button onClick={handleConfirm}
                         disabled={isLoading}
                         className={`btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs`}>
-                    {isLoading ? 'Loading...' : 'Confirm'}
+                    {isLoading ?  <ClipLoader size={18} color={"#fff"}/> : t("BeMentor.confirmButton")}
                 </button>
             </div>
+            <ToastContainer/>
 
         </div>
     );

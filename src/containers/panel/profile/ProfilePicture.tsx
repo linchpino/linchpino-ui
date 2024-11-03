@@ -7,12 +7,14 @@ import {toastSuccess, toastError} from "@/components/CustomToast";
 import {FaCamera} from 'react-icons/fa';
 import {empty} from "@/utils/helper";
 import PulseLoader from "react-spinners/PulseLoader";
+import {useTranslations} from "next-intl";
 
 interface ProfilePictureProps {
     avatar: string | null;
 }
 
 const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
+    const t = useTranslations()
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -38,7 +40,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                         setPreview(imageUrl);
                     }
                 } catch (error) {
-                    console.error("Error fetching profile image:", error);
+                    console.error(t("Profile.fetchErrorAvatar"), error);
                 } finally {
                     setImageLoading(false);
                 }
@@ -73,16 +75,16 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
             });
 
             if (response.status === 200 || response.status === 201) {
-                toastSuccess({message: "Upload successful!"});
+                toastSuccess({message: t("Profile.uploadImageSuccessfully")});
             } else {
-                const errorMessage = response.data.error || "Upload failed with unexpected status!";
+                const errorMessage = response.data.error || t("Profile.uploadImageFailed");
                 toastError({message: errorMessage});
                 setPreview("");
                 setSelectedFile(null);
             }
         } catch (error) {
             // @ts-ignore
-            const errorMessage = error.response?.data?.error || error.message || "Upload failed!";
+            const errorMessage = error.response?.data?.error || error.message || t("Profile.uploadImageFailed");
             toastError({message: errorMessage});
             setPreview("");
             setSelectedFile(null);
@@ -94,7 +96,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
     const handleRemove = () => {
         setSelectedFile(null);
         setPreview("");
-        toastSuccess({message: "Picture removed successfully!"});
+        toastSuccess({message: t("Profile.removeImage")});
     };
 
     const handleChoosePicture = () => {
@@ -106,7 +108,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
     return (
         <>
             <div className="flex text-left">
-                <h1 className="text-md font-bold">Profile Picture</h1>
+                <h1 className="text-md font-bold">{t("Profile.imageTitle")}</h1>
             </div>
             <div className='flex flex-col md:flex-row items-center gap-x-8'>
                 <div className="avatar mt-3 relative w-36">
@@ -141,7 +143,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                     disabled={loading}
                     className={`btn btn-sm xs:w-32 w-28 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945] mt-3 md:mt-0 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
                 >
-                    Choose Picture
+                    {t("Profile.chooseImage")}
                 </button>
                 {!empty(selectedFile) &&
                     <button
@@ -149,7 +151,8 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({avatar}) => {
                         disabled={loading}
                         className={`btn btn-outline btn-error btn-sm xs:w-32 w-28 px-2 rounded-md shadow-md text-xs hover:bg-[#F9A945] mt-3 md:mt-0 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
                     >
-                        Remove Picture
+
+                    {t("Profile.removeImageButton")}
                     </button>
                 }
             </div>

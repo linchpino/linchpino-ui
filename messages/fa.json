@@ -1,0 +1,353 @@
+{
+  "Errors": {
+    "signInSuccess": "شما با موفقیت وارد شدید.",
+    "catchError": "ورود ناموفق بود.",
+    "unknowServerError": "یک خطای ناشناخته هنگام دریافت اطلاعات رخ داده است.",
+    "networkError": "خطای شبکه. لطفاً اتصال اینترنت خود را بررسی کنید.",
+    "internalServerError": "خطای سرور. لطفاً بعداً دوباره تلاش کنید.",
+    "unexpectedSignInError": "یک خطای ناشناخته در حین ورود رخ داده است.",
+    "unexpectedError": "یک خطای غیرمنتظره رخ داده است.",
+    "joinInterviewLoadError": "متأسفانه، درخواست شما با خطا مواجه شد.",
+    "selectNoOption" : "موردی یافت نشد",
+    "selectLoading" : "در حال بارگزاری..."
+  },
+  "Forms": {
+    "email": "ایمیل",
+    "emailRequired": "ایمیل الزامی است.",
+    "emailInvalid": "آدرس ایمیل نامعتبر است.",
+    "emailPlaceholder": "example@gmail.com",
+    "password": "رمز عبور",
+    "passwordCharacterLength": "رمز عبور باید حداقل 6 کاراکتر باشد.",
+    "passwordPattern": "رمز عبور باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
+    "newPassword": "رمز عبور جدید",
+    "newPasswordCharacterLength": "رمز عبور جدید باید حداقل 6 کاراکتر باشد.",
+    "newPasswordPattern": "رمز عبور جدید باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
+    "repeatNewPassword": "تکرار رمز عبور جدید",
+    "repeatNewPasswordCharacterLength": "تکرار رمز عبور جدید باید حداقل 6 کاراکتر باشد.",
+    "repeatNewPasswordPattern": "تکرار رمز عبور جدید باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
+    "currentPassword": "رمز عبور فعلی",
+    "currentPasswordCharacterLength": "رمز عبور فعلی باید حداقل 6 کاراکتر باشد.",
+    "currentPasswordPattern": "رمز عبور فعلی باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
+    "repeatPassword": "تکرار رمز عبور",
+    "repeatPasswordCharacterLength": "تکرار رمز عبور الزامی است.",
+    "repeatPasswordPattern": "تکرار رمز عبور باید شامل حداقل یک حرف، یک عدد، یا یک کاراکتر ویژه باشد.",
+    "passwordMatch": "رمزهای عبور مطابقت ندارند.",
+    "firstName": "نام",
+    "firstNameRequired": "نام الزامی است.",
+    "firstNamePlaceholder": "نام شما",
+    "lastName": "نام خانوادگی",
+    "lastNameRequired": "نام خانوادگی الزامی است.",
+    "lastNamePlaceholder": "نام خانوادگی شما",
+    "bio": "بیوگرافی",
+    "bioRequired": "بیوگرافی الزامی است.",
+    "bioPlaceholder": "بیوگرافی شما"
+  },
+  "Header": {
+    "navService": "خدمات ما",
+    "navBlog": "وبلاگ",
+    "navAbout": "درباره ما",
+    "navContact": "تماس با ما",
+    "navSignInButton": "ورود / ثبت نام",
+    "navPanel": "پنل کاربری",
+    "navSearh": "اینجا جستجو کنید ...",
+    "head": "لینچپینو - برای آینده"
+  },
+  "Footer": {
+    "donateButton": "هم‌اکنون حمایت کنید",
+    "navHome": "خانه",
+    "navAbout": "درباره ما",
+    "navContact": "تماس با ما",
+    "navInvite": "دعوت از دوستان"
+  },
+  "Countdown": {
+    "days": "{{days}} روز",
+    "hours": "{{hours}} ساعت",
+    "minutes": "{{minutes}} دقیقه",
+    "seconds": "{{seconds}} ثانیه",
+    "now": "اکنون",
+    "targetDate": "تاریخ هدف: {{date}}",
+    "betweenDates": "ما در بین تاریخ‌های شروع و پایان هستیم.",
+    "noTimeRemaining": "زمان تمام شده!"
+  },
+  "sidebar": {
+    "profile": "پروفایل",
+    "interviews": "مصاحبه‌ها",
+    "users": "کاربران",
+    "jobPositions": "موقعیت‌های شغلی",
+    "interviewTypes": "نوع‌های مصاحبه",
+    "changePassword": "تغییر رمز عبور",
+    "resetPassword": "بازنشانی رمز عبور",
+    "signOut": "خروج"
+  },
+  "Home": {
+    "jobSection": "به جستجوی شغلی خود قدرت دهید. در یک مصاحبه شبیه‌سازی رایگان با حرفه‌ای‌ها شرکت کنید.",
+    "jobSectionDreamJob": "شغل رویایی",
+    "jobSectionInterviewType": "نوع مصاحبه",
+    "jobSectionScheduleButton": "مصاحبه و برنامه‌ریزی",
+    "beMentorTitle": "جادوی راهنمایی",
+    "beMentorDescription": "به عنوان یک مشاور احتمالی به پلتفرم ما بپیوندید و به شکل‌دهی استعدادهای آینده کمک کنید. ثبت نام کنید! درخواست شما توسط جامعه مشاوران ما بررسی و تایید می‌شود، تا اطمینان حاصل شود که کیفیت و تخصص لازم را برای راهنمایی حرفه‌ای‌های آینده دارید.",
+    "beMentorButtonText": "به مشاور تبدیل شوید",
+    "scheduleTitle": "مصاحبه‌های شبیه‌سازی رایگان در انتظار شماست!",
+    "scheduleDescription": "برای مصاحبه بعدی خود با اعتماد به نفس آماده شوید! درخواست ملاقات با یک مشاور از شبکه ما را بدهید. مشاوران ما درخواست شما را بررسی خواهند کرد و راهنمایی و پذیرش لازم را ارائه خواهند داد تا اطمینان حاصل شود که شما برای مصاحبه‌تان به خوبی آماده هستید.",
+    "scheduleButton": "زمان مصاحبه را برنامه‌ریزی کنید",
+    "attendTitle": "جلسه مصاحبه را شروع کنید!",
+    "attendDescription": "اگر قبلاً یک وقت مصاحبه را برنامه‌ریزی کرده‌اید و تأیید دریافت کرده‌اید، لطفاً اینجا کلیک کنید تا به مصاحبه خود بپیوندید. همچنین لینک پیوستن را در ایمیل خود خواهید یافت.",
+    "attendButton": "به مصاحبه بپیوندید",
+    "masterTitle": "هنر را تسلط دهید",
+    "masterDescription": "مهارت‌های خود را با وبلاگ‌های مفید ما ارتقا دهید. به نکات تخصصی برای موفقیت بپردازید و با اعتماد به نفس به مصاحبه بعدی خود مسلط شوید.",
+    "masterButton": "تکنیک‌ها را بررسی کنید",
+    "donateTitle": "آیا می‌دانید بهترین ملت در جهان کدام است؟",
+    "donateDescription": "DoNation! به ما بپیوندید تا جهانی بسازیم که پتانسیل هیچ حد و مرزی نداشته باشد. کمک‌های شما، هر چقدر هم کوچک، تأثیر ابتکار ما را افزایش می‌دهد. بیایید با هم جامعه‌ای بسازیم که هرکس ابزارهای لازم برای موفقیت را داشته باشد.",
+    "donateButton": "هم‌اکنون حمایت کنید"
+  },
+  "SignIn": {
+    "title": "ورود",
+    "register": "ثبت نام",
+    "forgetPassword": "فراموشی رمز عبور"
+  },
+  "SignUp": {
+    "title": "ثبت نام",
+    "success": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "signIn": "ورود",
+    "register": "ثبت نام",
+    "forgetPassword": "فراموشی رمز عبور",
+    "error": "ثبت نام ناموفق بود!"
+  },
+  "Schedule": {
+    "fetchError": "خطا در ارسال داده‌های مصاحبه",
+    "createSuccessful": "موفقیت آمیز :)! ما برای شما یک ایمیل ارسال کردیم، لطفاً آن را بررسی کنید.",
+    "chooseMentor": "یک مشاور انتخاب کنید و مصاحبه‌ای برنامه‌ریزی کنید",
+    "finalize": "جلسه مصاحبه را نهایی کنید",
+    "confirmation": "تأیید",
+    "defaultStep": "به دنبال چه چیزی هستید؟",
+    "email": "آدرس ایمیل خود را وارد کنید",
+    "confirmButton": "تأیید",
+    "unavailableTimeSlot": "برای این تاریخ، زمان موجود نیست.",
+    "unavailableDate": "هیچ تاریخی در دسترس نیست.",
+    "finalMessage": "هیچ تاریخی در دسترس نیست."
+  },
+  "BeMentor": {
+    "emailStep": "ثبت نام",
+    "infoStep": "خود را به عنوان مشاور ثبت کنید",
+    "finalizeStep": "ثبت نام خود را نهایی کنید",
+    "finalizeStepSuccessMessage": "اطلاعات شما با موفقیت ارسال شد!",
+    "confirmationStep": "تأیید",
+    "enterEmail": "آدرس ایمیل خود را وارد کنید",
+    "registrationSuccess": "ثبت نام با موفقیت انجام شد. تأییدیه به ایمیل شما ارسال شد.",
+    "backToHome": "بازگشت به خانه",
+    "backButton": "بازگشت",
+    "confirmButton": "تأیید",
+    "backToBeMentor": "به صفحه مشاوران برگردید",
+    "nextButton": "مرحله ی بعد",
+    "expertise": "مهارت ها ",
+    "interviewPlaceholder": "نوع مصاحبه",
+    "payAsYouGo" : "پرداخت به ازای استفاده",
+    "fixPrice": "قیمت ثابت",
+    "free" : "رایگان",
+    "paymentMethod" : "نحوه پرداخت",
+    "paymentMethodPlaceholder" : "انتخاب پرداخت",
+    "min" : "حداقل",
+    "max" : "حداکثر",
+    "iban" : "شبا",
+    "ibanRegion" : "IR"
+  },
+  "JobseekerActivation": {
+    "registrationError": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "registrationSuccessful": "ثبت نام با موفقیت انجام شد!",
+    "title": "فعال‌سازی حساب کاربری شما",
+    "confirmButton": "تکمیل"
+  },
+  "ChangePassword": {
+    "title": "تغییر رمز عبور",
+    "changeSuccess": "رمز عبور با موفقیت تغییر یافت!"
+  },
+  "InterviewType": {
+    "title": "انواع مصاحبه",
+    "success": "نوع مصاحبه با موفقیت اضافه شد",
+    "failedAdd": "افزودن نوع مصاحبه ناموفق بود",
+    "successUpdate": "نوع مصاحبه با موفقیت به‌روزرسانی شد",
+    "failedUpdate": "به‌روزرسانی نوع مصاحبه ناموفق بود",
+    "successDelete": "نوع مصاحبه با موفقیت حذف شد",
+    "failedDelete": "حذف نوع مصاحبه ناموفق بود",
+    "searchPlaceholder": "جستجو بر اساس نام",
+    "tableName": "نام",
+    "tableJobPosition": "موقعیت شغلی",
+    "actions": "عملیات",
+    "editLabel": "ویرایش نوع مصاحبه",
+    "addLabel": "افزودن نوع مصاحبه",
+    "deleteLabel": "عملیات",
+    "jobPosition": "موقعیت شغلی",
+    "interviewTypeName": "نام نوع مصاحبه",
+    "saveButton": "ذخیره",
+    "addButton": "افزودن",
+    "cancelButton": "لغو",
+    "delete": "حذف",
+    "deleteMessage": "آیا مطمئن هستید که می‌خواهید این نوع مصاحبه را حذف کنید؟"
+  },
+  "JobPositions": {
+    "title": "موقعیت شغلی",
+    "success": "موقعیت شغلی با موفقیت اضافه شد",
+    "failedAdd": "افزودن موقعیت شغلی ناموفق بود",
+    "successUpdate": "موقعیت شغلی با موفقیت به‌روزرسانی شد",
+    "failedUpdate": "به‌روزرسانی موقعیت شغلی ناموفق بود",
+    "successDelete": "موقعیت شغلی با موفقیت حذف شد",
+    "failedDelete": "حذف موقعیت شغلی ناموفق بود",
+    "searchPlaceholder": "جستجو بر اساس عنوان",
+    "tableName": "عنوان",
+    "tableJobPosition": "موقعیت شغلی",
+    "actions": "عملیات",
+    "editLabel": "ویرایش موقعیت شغلی",
+    "addLabel": "افزودن موقعیت شغلی",
+    "deleteLabel": "عملیات",
+    "jobPosition": "موقعیت شغلی",
+    "interviewTypeName": "نام موقعیت شغلی",
+    "saveButton": "ذخیره",
+    "addButton": "افزودن",
+    "cancelButton": "لغو",
+    "delete": "حذف",
+    "deleteMessage": "آیا مطمئن هستید که می‌خواهید این موقعیت شغلی را حذف کنید؟"
+  },
+  "Interview": {
+    "upcoming": "مصاحبه‌های آینده",
+    "past": "مصاحبه‌های گذشته",
+    "empty": "در حال حاضر مصاحبه‌ای موجود نیست.",
+    "jobseeker": "جویای کار",
+    "mentor": "مشاور",
+    "from": "از:",
+    "start": "شروع:",
+    "duration": "مدت زمان:",
+    "interviewType": "نوع مصاحبه:",
+    "feedbackButton": "بازخورد",
+    "thankYouMessage": "از شرکت شما در مصاحبه سپاسگزاریم",
+    "feelingPrompt": "احساس شما چیست؟",
+    "tellUsPrompt": "به ما بگویید چه می‌خواهید؟",
+    "writeSomethingPlaceholder": "چیزی بنویسید...",
+    "feedbackSent": "بازخورد با موفقیت ارسال شد!",
+    "feedbackError": "یک خطا رخ داد",
+    "cancel": "لغو",
+    "send": "ارسال"
+  },
+  "Profile": {
+    "scheduleTitle": "برنامه",
+    "fetchError": "خطا در بارگذاری اطلاعات پروفایل",
+    "fetchErrorAvatar": "خطا در بارگذاری آواتار پروفایل: ",
+    "uploadImageSuccessfully": "بارگذاری با موفقیت انجام شد!",
+    "uploadImageFailed": "بارگذاری با وضعیت غیرمنتظره ناموفق بود!",
+    "removeImage": "عکس با موفقیت حذف شد!",
+    "imageTitle": "عکس پروفایل",
+    "chooseImage": "انتخاب عکس",
+    "removeImageButton": "حذف عکس",
+    "failedSaveInformation": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "successSave": "ثبت نام با موفقیت انجام شد!",
+    "informationTitle": "اطلاعات شما",
+    "success": "زمان با موفقیت اضافه شد!",
+    "error": "خطا در افزودن زمان!",
+    "Days": {
+      "sunday": {
+        "full": "یکشنبه",
+        "abbr": "ش"
+      },
+      "monday": {
+        "full": "دوشنبه",
+        "abbr": "د"
+      },
+      "tuesday": {
+        "full": "سه‌شنبه",
+        "abbr": "س"
+      },
+      "wednesday": {
+        "full": "چهارشنبه",
+        "abbr": "چ"
+      },
+      "thursday": {
+        "full": "پنج‌شنبه",
+        "abbr": "پ"
+      },
+      "friday": {
+        "full": "جمعه",
+        "abbr": "ج"
+      },
+      "saturday": {
+        "full": "شنبه",
+        "abbr": "ش"
+      }
+    },
+    "RepeatOptions": {
+      "daily": "روزانه",
+      "weekly": "هفتگی",
+      "monthly": "ماهانه"
+    },
+    "AddScheduleModal": {
+      "header": "افزودن برنامه",
+      "start": "شروع",
+      "end": "پایان",
+      "duration": "مدت زمان",
+      "interval": "فاصله",
+      "numberOf": "تعداد...",
+      "on": "در",
+      "daysOfMonth": "روزهای ماه",
+      "addButton": "افزودن",
+      "closeButton": "✕",
+      "loadingButton": "در حال بارگذاری..."
+    },
+    "scheduleInfo": {
+      "startTime": "زمان شروع",
+      "endTime": "زمان پایان",
+      "duration": "مدت زمان",
+      "minutes": "دقیقه",
+      "recurrenceType": "نوع تکرار",
+      "interval": "فاصله",
+      "weekDays": "روزهای هفته",
+      "monthDays": "روزهای ماه",
+      "min": "دقیقه"
+    }
+  },
+  "ProfileTimeSlot": {
+    "addNewTimeSlot": "افزودن زمان جدید",
+    "createSlotDescription": "یک زمان جدید برای دسترسی خود ایجاد کنید.",
+    "startTime": "زمان شروع",
+    "startTimePlaceholder": "زمان شروع را انتخاب کنید",
+    "endTime": "زمان پایان",
+    "endTimePlaceholder": "زمان پایان را انتخاب کنید",
+    "recurrenceType": "نوع تکرار",
+    "noRecurrence": "بدون تکرار",
+    "daily": "روزانه",
+    "weekly": "هفتگی",
+    "monthly": "ماهانه",
+    "addButton": "افزودن زمان"
+  },
+  "ResetPassword": {
+    "successMessage": "رمز عبور با موفقیت تغییر یافت!",
+    "defaultError": "مشکلی پیش آمد، لطفاً دوباره تلاش کنید.",
+    "userError": "مشکلی پیش آمد، لطفاً دوباره تلاش کنید.",
+    "header": "بازنشانی رمز عبور",
+    "userLabel": "کاربران",
+    "userPlaceholder": "لیست کاربران",
+    "newPasswordLabel": "رمز عبور جدید:",
+    "repeatNewPasswordLabel": "تکرار رمز عبور جدید:",
+    "resetButton": "بازنشانی رمز عبور"
+  },
+  "User": {
+    "users": "کاربران",
+    "searchPlaceholder": "جستجو بر اساس نام",
+    "filterPlaceholder": "فیلتر نقش ها",
+    "roleOptions": {
+      "all": "همه",
+      "guest": "مهمان",
+      "jobseeker": "جویای کار",
+      "mentor": "مشاور",
+      "admin": "مدیر"
+    },
+    "columns": {
+      "name": "نام",
+      "email": "ایمیل",
+      "role": "نقش"
+    }
+  },
+  "SignOut": {
+    "header": "تأیید خروج",
+    "areSure": "آیا مطمئن هستید که می‌خواهید خارج شوید؟",
+    "cancelButton": "لغو",
+    "logoutButton": "خروج"
+  }
+}
