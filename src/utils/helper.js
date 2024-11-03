@@ -54,3 +54,8 @@ export const validateIBAN= (str) => {
     let remainder = iso7064Mod97_10(newStr);
     return !(remainder !== 1);
 };
+export const updateUrl = (step) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('step', step.toString());
+        window.history.pushState({}, '', url);
+}
