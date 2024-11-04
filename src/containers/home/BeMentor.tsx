@@ -9,7 +9,7 @@ export default function BeMentor() {
     return (
         <HomeSectionLayout
             isLtr={false}
-            imageSource='/home/BeMentor.svg'
+            imageSource='/home/BeMentor.webp'
             title={t('Home.beMentorTitle')}
             description={t("Home.beMentorDescription")}
             buttonText={t("Home.beMentorButtonText")}

@@ -7,7 +7,7 @@ export default function DonateNow() {
     return (
         <HomeSectionLayout
             isLtr={false}
-            imageSource='/home/DonateNow.svg'
+            imageSource='/home/DonateNow.webp'
             title={t('Home.donateTitle')}
             description={t("Home.donateDescription")}
             buttonText={t("Home.donateButton")}

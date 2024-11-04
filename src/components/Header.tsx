@@ -46,10 +46,10 @@ const Header: React.FC<Props> = () => {
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
                 <button onClick={handleLogoClick} className="flex items-end">
-                    <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
+                    <Image src="/Logo.webp" alt='logo' width={80} height={107} style={{ width: 'auto', height: 'auto' }} loading="lazy"  />
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
-                        <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
-                        <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
+                        <Image src="/LinchpinoHeader.webp" alt='logo' width={280} height={42} style={{ width: 'auto', height: 'auto' }}  loading="lazy"/>
+                        <Image src="/LinchpinoHeaderContent.webp" alt='logo' width={280} height={20} style={{ width: 'auto', height: 'auto' }}  loading="lazy"/>
                     </div>
                 </button>
                 <nav>
