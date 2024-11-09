@@ -32,7 +32,7 @@
     "repeatPasswordCharacterLength": "Repeat password is required",
     "repeatPasswordPattern": "Repeat Password must include at least one letter, one number, or one special character",
     "passwordMatch": "Passwords don't match",
-    "fistName": "First Name",
+    "firstName": "First Name",
     "firstNameRequired": "First name is required",
     "firstNamePlaceholder": "Your first name",
     "lastName": "Last Name",
@@ -304,7 +304,8 @@
       "interval": "Interval",
       "weekDays": "Week Days",
       "monthDays": "Month Days"
-    }
+    },
+    "saveButton": "Save Changes"
   },
   "ProfileTimeSlot": {
     "addNewTimeSlot": "Add New Time Slot",

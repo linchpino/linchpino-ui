@@ -1,6 +1,6 @@
 'use client';
 import {useState, useEffect} from 'react';
-import {useRouter} from 'next/navigation';
+import {useRouter} from 'nextjs-progressloader';
 import {ReactNode, Suspense} from "react";
 import Loading from "@/app/(main)/panel/loading";
 // @ts-ignore

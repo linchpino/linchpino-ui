@@ -5,7 +5,7 @@ import {AsyncPaginate, LoadOptions} from "react-select-async-paginate";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import useStore from "@/store/store";
-import {useRouter} from "../../i18n/routing";
+import {useRouter} from "nextjs-progressloader";
 import {useTranslations} from "next-intl";
 
 interface OptionsType {
@@ -98,7 +98,7 @@ const JobSearchSection: React.FC = () => {
                 src="/home/HomeCloudTwo.webp"
                 alt="logo"
                 width={350}
-                height={107}
+                height={50}
 
             />
             <Image
@@ -107,12 +107,11 @@ const JobSearchSection: React.FC = () => {
                 src="/home/HomeCloudOne.webp"
                 alt="logo"
                 width={260}
-                height={119}
-
+                height={50}
             />
             <div className="hidden md:flex justify-between relative z-5">
-                <Image src="/home/HomeCloudThree.webp" alt="logo" width={312} height={61} style={{width:'auto',height:'auto'}}/>
-                <Image className="mt-5" src="/home/HomeCloudThree.webp" alt="logo" width={500} height={100} style={{width:'auto',height:'auto'}}/>
+                <Image src="/home/HomeCloudThree.webp" alt="logo" width={390} height={10} style={{width:'auto',height:'auto'}}/>
+                <Image className="mt-5" src="/home/HomeCloudThree.webp" alt="logo" width={280} height={100} style={{width:'auto',height:'auto'}}/>
             </div>
             <div className="flex flex-col items-center justify-between relative">
                 <h2 className="relative z-5 text-center md:ml-[40%] ">

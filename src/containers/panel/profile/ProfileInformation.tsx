@@ -13,6 +13,7 @@ import {ClipLoader} from "react-spinners";
 import Select from "react-select";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {ValidateEmailPattern} from "@/utils/helper";
 
 export interface PaymentMethodRequest {
     type: string | null,
@@ -173,9 +174,8 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                         <div className="label">
                             <span className="label-text">{t("Forms.email")}</span>
                         </div>
-                        <input {...register("email", {required: t("Forms.emailRequired")})} />
                         <input disabled {...register("email", {
-                            required: "Email is required",
+                            required: t("Forms.emailRequired"),
                             pattern: {
                                 value: ValidateEmailPattern,
                                 message: t("Forms.emailInvalid")
@@ -264,7 +264,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                 <div className="label">
                                     <span className="label-text text-[#3F3D56]">IBAN:</span>
                                     <span
-                                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>DE</span>
+                                        className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>{process.env.NEXT_PUBLIC_IBAN}</span>
                                 </div>
                                 <input maxLength={24} {...register("iban")} inputMode="numeric" type="number"
                                        className="input input-bordered w-full bg-white pl-10"/>
@@ -279,17 +279,16 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                         <div className="label">
                             <span className="label-text">{t("Forms.bio")}</span>
                         </div>
+
                         <textarea className="textarea textarea-bordered w-full bg-white"
-                                  placeholder={t("Forms.bioPlaceholder")} {...register("detailsOfExpertise")}/>
-                        <textarea className="textarea textarea-bordered w-full bg-white"
-                                  placeholder="Your Details ..." {...register("detailsOfExpertise")}/>
+                                  placeholder={t('Forms.bioPlaceholder')} {...register("detailsOfExpertise")}/>
 
                     </label>
                 </div>
                 <button type='submit'
                         className='btn btn-warning w-full max-w-xs bg-[#F9A826] text-white rounded-md shadow-md mt-6 py-2 px-3'
                         disabled={isLoadingChanges}>
-                    {isLoadingChanges ? <ClipLoader size={24} color={"#fff"}/> : 'Save Changes'}
+                    {isLoadingChanges ? <ClipLoader size={24} color={"#fff"}/> : t("Profile.saveButton")}
                 </button>
             </form>
             <ToastContainer/>
