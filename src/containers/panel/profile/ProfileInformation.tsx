@@ -13,6 +13,7 @@ import {ClipLoader} from "react-spinners";
 import Select from "react-select";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {ValidateEmailPattern} from "@/utils/helper";
 
 export interface PaymentMethodRequest {
     type: string | null,
@@ -173,7 +174,6 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                         <div className="label">
                             <span className="label-text">{t("Forms.email")}</span>
                         </div>
-                        <input {...register("email", {required: t("Forms.emailRequired")})} />
                         <input disabled {...register("email", {
                             required: "Email is required",
                             pattern: {
@@ -262,7 +262,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                             }
                             <div className="w-full md:col-span-2 mt-2 relative">
                                 <div className="label">
-                                    <span className="label-text text-[#3F3D56]">IBAN:</span>
+                                    <span className="label-text text-[#3F3D56]">{t("Forms.bio")}</span>
                                     <span
                                         className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>DE</span>
                                 </div>
@@ -279,8 +279,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                         <div className="label">
                             <span className="label-text">{t("Forms.bio")}</span>
                         </div>
-                        <textarea className="textarea textarea-bordered w-full bg-white"
-                                  placeholder={t("Forms.bioPlaceholder")} {...register("detailsOfExpertise")}/>
+
                         <textarea className="textarea textarea-bordered w-full bg-white"
                                   placeholder="Your Details ..." {...register("detailsOfExpertise")}/>
 

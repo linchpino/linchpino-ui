@@ -318,7 +318,13 @@
     "daily": "Daily",
     "weekly": "Weekly",
     "monthly": "Monthly",
-    "addButton": "Add Time Slot"
+    "addButton": "Add Time Slot",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "deleteMessageTitle": "Are you sure you want to delete your schedule?",
+    "deleteMessageBody": "By deleting this item, you will no longer have a schedule to offer.",
+    "cancelButton": "Cancel"
+
   },
   "ResetPassword": {
     "successMessage": "Password changed successfully!",
