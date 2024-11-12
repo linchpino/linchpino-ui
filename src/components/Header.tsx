@@ -8,10 +8,7 @@ import {useRouter} from 'nextjs-progressloader';
 import useStore from "@/store/store";
 import {useTranslations} from "next-intl";
 
-interface Props {
-}
-
-const Header: React.FC<Props> = () => {
+const Header = () => {
     const router = useRouter();
     const t = useTranslations()
 

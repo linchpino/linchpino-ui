@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "source-map-explorer '.next/static/chunks/*.js'"
+
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -49,6 +51,7 @@
     "autoprefixer": "^10.0.1",
     "daisyui": "^4.8.0",
     "postcss": "^8",
+    "source-map-explorer": "^2.5.3",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

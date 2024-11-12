@@ -1,6 +1,5 @@
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
-import React from "react";
 import {getMessages} from 'next-intl/server';
 import LocaleClientLayout from './LocalClientLayout';
 

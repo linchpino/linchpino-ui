@@ -7,6 +7,8 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
+    compress: true,
+
 };
 
 const withAnalyzer = withBundleAnalyzer({
