@@ -181,6 +181,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({startTime, endTime, du
         mutation.mutate(timeSlotData);
     };
 
+
     const deleteMutation = useMutation({
         mutationFn: () => deleteSchedule(token),
         onSuccess: () => {
