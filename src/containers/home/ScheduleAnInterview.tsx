@@ -11,7 +11,7 @@ export default ({onClick}: Readonly<ScheduleAnInterviewProps>) => {
     return (
         <HomeSectionLayout
             isLtr={true}
-            imageSource='/home/ScheduleAnInterview.svg'
+            imageSource='/home/ScheduleAnInterview.webp'
             title={t('Home.scheduleTitle')}
             description={t("Home.scheduleDescription")}
             buttonText={t("Home.scheduleButton")}

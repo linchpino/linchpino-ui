@@ -99,7 +99,7 @@ const Interviews: React.FC = () => {
         <ProtectedPage>
             <InterviewData url={upcomingUrl} queryKey="upcomingInterviews" title={t("Interview.upcoming")} isPast={false}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
-            <InterviewData url={pastUrl} queryKey="pastInterviews" title={t("Interview.upcoming")} isPast={true}
+            <InterviewData url={pastUrl} queryKey="pastInterviews" title={t("Interview.past")} isPast={true}
                            role={isMentor ? 'MENTOR' : "JOB_SEEKER"}/>
         </ProtectedPage>
     );

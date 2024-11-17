@@ -195,11 +195,11 @@ const UserProfile = () => {
                                                             {timeslotItem.id === activeDate ?
                                                                 <img
                                                                     className='xs:w-[74px] xs:h-[74px] w-[64px] h-[64px]'
-                                                                    src='calendar.png'/>
+                                                                    src='calendar.webp'/>
                                                                 :
                                                                 <img
                                                                     className='xs:w-[74px] xs:h-[74px] w-[64px] h-[64px]'
-                                                                    src='calendar-disable.png'/>
+                                                                    src='calendar-disable.webp'/>
                                                             }
                                                             <button onClick={() => {
                                                                 setActiveDate(timeslotItem.id)

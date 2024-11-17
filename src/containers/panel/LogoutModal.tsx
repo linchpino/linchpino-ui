@@ -1,6 +1,6 @@
 import React from 'react';
 import useStore from '@/store/store';
-import {useRouter} from '../../i18n/routing';
+import {useRouter} from 'nextjs-progressloader';
 import {useTranslations} from "next-intl";
 
 interface LogoutModalProps {

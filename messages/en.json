@@ -32,7 +32,7 @@
     "repeatPasswordCharacterLength": "Repeat password is required",
     "repeatPasswordPattern": "Repeat Password must include at least one letter, one number, or one special character",
     "passwordMatch": "Passwords don't match",
-    "fistName": "First Name",
+    "firstName": "First Name",
     "firstNameRequired": "First name is required",
     "firstNamePlaceholder": "Your first name",
     "lastName": "Last Name",
@@ -284,6 +284,8 @@
     },
     "AddScheduleModal": {
       "header": "Add Schedule",
+      "headerEdit": "Edit Schedule",
+      "editButton": "Edit",
       "start": "Start",
       "end": "End",
       "duration": "Duration",
@@ -304,7 +306,8 @@
       "interval": "Interval",
       "weekDays": "Week Days",
       "monthDays": "Month Days"
-    }
+    },
+    "saveButton": "Save Changes"
   },
   "ProfileTimeSlot": {
     "addNewTimeSlot": "Add New Time Slot",
@@ -318,7 +321,12 @@
     "daily": "Daily",
     "weekly": "Weekly",
     "monthly": "Monthly",
-    "addButton": "Add Time Slot"
+    "addButton": "Add Time Slot",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "deleteMessageTitle": "Are you sure you want to delete your schedule?",
+    "deleteMessageBody": "By deleting this item, you will no longer have a schedule to offer.",
+    "cancelButton": "Cancel"
   },
   "ResetPassword": {
     "successMessage": "Password changed successfully!",

@@ -1,11 +1,25 @@
-'use client'
-import {useRef} from 'react';
-import JobSearchSection from "@/containers/home/JobSearchSection";
-import BeMentor from "@/containers/home/BeMentor";
-import ScheduleAnInterview from "@/containers/home/ScheduleAnInterview";
-import InterviewMeeting from "@/containers/home/InterviewMeeting";
-import MasterArt from "@/containers/home/MasterArt";
-import DonateNow from "@/containers/home/DonateNow";
+'use client';
+import {Suspense, useRef} from 'react';
+import dynamic from 'next/dynamic';
+
+const JobSearchSection = dynamic(() => import('@/containers/home/JobSearchSection'), {
+    suspense: true,
+});
+const BeMentor = dynamic(() => import('@/containers/home/BeMentor'), {
+    suspense: true,
+});
+const ScheduleAnInterview = dynamic(() => import('@/containers/home/ScheduleAnInterview'), {
+    suspense: true,
+});
+const InterviewMeeting = dynamic(() => import('@/containers/home/InterviewMeeting'), {
+    suspense: true,
+});
+const MasterArt = dynamic(() => import('@/containers/home/MasterArt'), {
+    suspense: true,
+});
+const DonateNow = dynamic(() => import('@/containers/home/DonateNow'), {
+    suspense: true,
+});
 
 export default function Home() {
     const scheduleRef = useRef<HTMLDivElement>(null);
@@ -18,16 +32,29 @@ export default function Home() {
             });
         }
     }
+
     return (
-        <div className='bg-white  pb-5 lg:pb-0 overflow-x-hidden container'>
+        <div className='bg-white pb-5 lg:pb-0 overflow-x-hidden container'>
             <div ref={scheduleRef}>
-                <JobSearchSection/>
+                <Suspense fallback={<div>Loading Job Search...</div>}>
+                    <JobSearchSection />
+                </Suspense>
             </div>
-            <BeMentor/>
-            <ScheduleAnInterview onClick={scrollToSchedule}/>
-            <InterviewMeeting/>
-            <MasterArt/>
-            <DonateNow/>
+            <Suspense fallback={<div>Loading Be Mentor...</div>}>
+                <BeMentor />
+            </Suspense>
+            <Suspense fallback={<div>Loading Schedule Interview...</div>}>
+                <ScheduleAnInterview onClick={scrollToSchedule} />
+            </Suspense>
+            <Suspense fallback={<div>Loading Interview Meeting...</div>}>
+                <InterviewMeeting />
+            </Suspense>
+            <Suspense fallback={<div>Loading Master Art...</div>}>
+                <MasterArt />
+            </Suspense>
+            <Suspense fallback={<div>Loading Donate Now...</div>}>
+                <DonateNow />
+            </Suspense>
         </div>
     );
 }

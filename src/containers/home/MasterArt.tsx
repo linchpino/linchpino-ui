@@ -7,7 +7,7 @@ export default function MasterArt() {
     return (
         <HomeSectionLayout
             isLtr={true}
-            imageSource='/home/MasterArt.svg'
+            imageSource='/home/MasterArt.webp'
             title={t('Home.masterTitle')}
             description={t("Home.masterDescription")}
             buttonText={t("Home.masterButton")}

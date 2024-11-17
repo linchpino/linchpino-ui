@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname } from '../../../i18n/routing';
+import {  usePathname } from '../../../i18n/routing';
+import { useRouter } from 'nextjs-progressloader';
 import Cookies from 'js-cookie';
 import CrudSkeleton from '@/components/skeletonLoading/CrudSkeleon';
 import ProfileSkeleton from '@/components/skeletonLoading/ProfileSkeleton';
