@@ -53,9 +53,9 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
         resolver: zodResolver(schema)
     });
     const paymentOptions = [
-        {value: "PAY_AS_YOU_GO", label: "Pay As You Go"},
-        {value: "FIX_PRICE", label: "Fix Price"},
-        {value: "FREE", label: "Free"},
+        {value: "PAY_AS_YOU_GO", label: t("BeMentor.payAsYouGo")},
+        {value: "FIX_PRICE", label: t("BeMentor.fixPrice")},
+        {value: "FREE", label: t("BeMentor.free")},
     ]
     const [paymentMethod, setPaymentMethod] = useState(paymentOptions[2]);
 
@@ -181,7 +181,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                 message: t("Forms.emailInvalid")
                             }
                         })} type="email" placeholder={t("Forms.emailPlaceholder")}
-                               className="input input-bordered w-full bg-white"/>
+                               className="input input-bordered w-full bg-white text-left"/>
                         {errors.email && (
                             <div className="text-red-500 text-sm mt-1">{errors.email.message}</div>
                         )}
@@ -191,7 +191,7 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                             <div
                                 className={`w-full ${paymentMethod.value === "FREE" && "md:col-span-2"} ${paymentMethod.value === "PAY_AS_YOU_GO" && "md:col-span-2"} `}>
                                 <div className="label">
-                                    <span className="label-text text-[#3F3D56]">Payment Method:</span>
+                                    <span className="label-text text-[#3F3D56]">{t("BeMentor.paymentMethod")}</span>
                                 </div>
                                 <Select
                                     options={paymentOptions}
@@ -201,9 +201,9 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                     //@ts-ignore
                                     onChange={setPaymentMethod}
                                     classNames={{
-                                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] mt-1 text-sm px-3 mr-2 text-left",
-                                        container: () => "text-sm rounded w-full text-gray-500 ",
-                                        menu: () => "bg-gray-50 rounded border py-2 text-left",
+                                        control: () => "border border-gray-200 w-full rounded-lg h-[48px] text-sm px-3 text-dir",
+                                        container: () => "text-sm rounded w-full text-gray-500 text-dir",
+                                        menu: () => "bg-gray-50 rounded border py-2 text-dir",
                                         option: ({isSelected, isFocused}) =>
                                             isSelected
                                                 ? " bg-gray-200 px-4 py-2"
@@ -218,12 +218,12 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                             {paymentMethod.value === "FIX_PRICE" &&
                                 <label className="w-full">
                                     <div className="label">
-                                        <span className="label-text">Fix Price:</span>
+                                        <span className="label-text">{t("BeMentor.fixPrice")}</span>
                                     </div>
                                     <input {...register("paymentMethodRequest.fixRate")} inputMode="numeric"
                                            type="number"
-                                           placeholder="Enter Price"
-                                           className="input input-bordered w-full bg-white"/>
+                                           placeholder={t("BeMentor.fixPrice")}
+                                           className="input input-bordered w-full bg-white text-sm"/>
                                     {errors.paymentMethodRequest?.fixRate && (
                                         <div
                                             className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.fixRate.message}</div>
@@ -234,12 +234,12 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                 <>
                                     <label className="w-full">
                                         <div className="label">
-                                            <span className="label-text">Min Payment:</span>
+                                            <span className="label-text">{t("BeMentor.min")}</span>
                                         </div>
                                         <input inputMode="numeric"
                                                type="number" {...register("paymentMethodRequest.minPayment")}
-                                               placeholder="Min Payment"
-                                               className="input input-bordered w-full bg-white"/>
+                                               placeholder={t("BeMentor.min")}
+                                               className="input input-bordered w-full bg-white text-xs"/>
                                         {errors.paymentMethodRequest?.minPayment && (
                                             <div
                                                 className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.minPayment.message}</div>
@@ -247,12 +247,12 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                                     </label>
                                     <label className="w-full">
                                         <div className="label">
-                                            <span className="label-text">Max Payment:</span>
+                                            <span className="label-text">{t("BeMentor.max")}</span>
                                         </div>
                                         <input inputMode="numeric" {...register("paymentMethodRequest.maxPayment")}
                                                type="number"
-                                               placeholder="Max Payment"
-                                               className="input input-bordered w-full bg-white"/>
+                                               placeholder={t("BeMentor.max")}
+                                               className="input input-bordered w-full bg-white text-xs"/>
                                         {errors.paymentMethodRequest?.maxPayment && (
                                             <div
                                                 className="text-red-500 text-sm mt-1">{errors.paymentMethodRequest.maxPayment.message}</div>
@@ -262,12 +262,12 @@ const ProfileInformation: React.FC<ProfileInformationProps> = ({
                             }
                             <div className="w-full md:col-span-2 mt-2 relative">
                                 <div className="label">
-                                    <span className="label-text text-[#3F3D56]">IBAN:</span>
+                                    <span className="label-text text-[#3F3D56]">{t("BeMentor.iban")}</span>
                                     <span
                                         className={`absolute ${errors?.iban ? "top-[48px]" : "top-[48px]"} left-4 text-[#F9A826]`}>{process.env.NEXT_PUBLIC_IBAN}</span>
                                 </div>
                                 <input maxLength={24} {...register("iban")} inputMode="numeric" type="number"
-                                       className="input input-bordered w-full bg-white pl-10"/>
+                                       className="input input-bordered w-full bg-white pl-14 text-left"/>
                                 {errors?.iban &&
                                     <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
                             </div>

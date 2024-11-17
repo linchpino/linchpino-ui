@@ -241,7 +241,7 @@
     "failedSaveInformation": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
     "successSave": "ثبت نام با موفقیت انجام شد!",
     "informationTitle": "اطلاعات شما",
-    "success": "زمان با موفقیت اضافه شد!",
+    "success": "برنامه با موفقیت اضافه شد!",
     "error": "خطا در افزودن زمان!",
     "Days": {
       "sunday": {
@@ -280,6 +280,8 @@
     },
     "AddScheduleModal": {
       "header": "افزودن برنامه",
+      "headerEdit": "ویرایش برنامه",
+      "editButton": "ویرایش",
       "start": "شروع",
       "end": "پایان",
       "duration": "مدت زمان",
@@ -315,7 +317,12 @@
     "daily": "روزانه",
     "weekly": "هفتگی",
     "monthly": "ماهانه",
-    "addButton": "افزودن زمان"
+    "addButton": "افزودن زمان",
+    "editButton": "ویرایش",
+    "deleteButton": "حذف",
+    "deleteMessageTitle": "آیا از حذف برنامه ی خود اطمینان دارید؟",
+    "deleteMessageBody": "با حذف این آیتم شما دیگر برنامه ای برای ارائه ندارید",
+    "cancelButton": "انصراف"
   },
   "ResetPassword": {
     "successMessage": "رمز عبور با موفقیت تغییر یافت!",

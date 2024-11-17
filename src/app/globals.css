@@ -15,6 +15,9 @@
 [dir="ltr"] .text-dir {
     text-align: left;
 }
+.rmdp-time-picker div input {
+    background-color: white;
+}
 
 @layer utilities {
     .text-balance {
@@ -71,9 +74,6 @@
         font-size: 14px;
     }
 
-    .rmdp-time-picker div input {
-        background-color: white;
-    }
 
     .css-13cymwt-control {
 
