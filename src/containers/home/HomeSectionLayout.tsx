@@ -16,8 +16,8 @@ const HomeSectionLayout: FC<HomeLayoutProps> = (props) => {
     const {imageSource, title, description, buttonText, isLtr = false,onClick,clickable=false} = props
     return (
         <div className='lg:flex items-center mt-14'>
-            <Image className={`flex ${isLtr ? "order-2 lg:order-2" : "order-1 lg:order-1"}`} src={imageSource}
-                   alt='logo' width={480} height={364}/>
+            <Image loading="lazy" className={`flex ${isLtr ? "order-2 lg:order-2" : "order-1 lg:order-1"}`} src={imageSource}
+                   alt='logo' width={360} height={244} style={{width:'auto',height:'auto'}}/>
 
             <div
                 className={`flex flex-col items-start lg:px-20 ${isLtr ? "order-1 lg:order-1" : "order-2 lg:order-2"} `}>

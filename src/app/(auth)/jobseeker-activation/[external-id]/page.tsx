@@ -3,7 +3,8 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from "zod";
 import {useState} from 'react';
-import {usePathname, useRouter} from 'next/navigation'
+import {usePathname} from 'next/navigation'
+import {useRouter} from 'nextjs-progressloader'
 import 'react-toastify/dist/ReactToastify.css';
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs"
 import axios from "axios";

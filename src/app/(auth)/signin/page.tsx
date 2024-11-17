@@ -7,7 +7,7 @@ import {ClipLoader} from 'react-spinners';
 import {useState} from "react";
 import {ValidateEmailPattern} from "@/utils/helper";
 import useStore from "@/store/store";
-import {useRouter} from "../../../i18n/routing";
+import {useRouter} from "nextjs-progressloader";
 import {toastError, toastSuccess} from "@/components/CustomToast";
 import Cookies from "js-cookie";
 import {useTranslations} from "next-intl";

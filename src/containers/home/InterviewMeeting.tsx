@@ -7,7 +7,7 @@ export default function InterviewMeeting() {
     return (
         <HomeSectionLayout
             isLtr={false}
-            imageSource='/home/InterviewMeeting.svg'
+            imageSource='/home/InterviewMeeting.webp'
             title={t('Home.attendTitle')}
             description={t("Home.attendDescription")}
             buttonText={t("Home.attendButton")}

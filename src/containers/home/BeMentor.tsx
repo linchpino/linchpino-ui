@@ -1,6 +1,6 @@
 'use client'
 import HomeSectionLayout from "@/containers/home/HomeSectionLayout";
-import {useRouter} from '../../i18n/routing'
+import {useRouter} from 'nextjs-progressloader'
 import {useTranslations} from "next-intl";
 
 export default function BeMentor() {
@@ -9,7 +9,7 @@ export default function BeMentor() {
     return (
         <HomeSectionLayout
             isLtr={false}
-            imageSource='/home/BeMentor.svg'
+            imageSource='/home/BeMentor.webp'
             title={t('Home.beMentorTitle')}
             description={t("Home.beMentorDescription")}
             buttonText={t("Home.beMentorButtonText")}

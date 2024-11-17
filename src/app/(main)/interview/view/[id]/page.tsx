@@ -1,7 +1,8 @@
 'use client'
 import React, {useEffect, useState} from "react";
 import Spinner from "@/components/Spinner";
-import {useRouter, usePathname} from "next/navigation";
+import {usePathname} from "next/navigation";
+import {useRouter} from "nextjs-progressloader";
 import useStore from "@/store/store";
 import useFetchData from "@/utils/hooks/useFetchData";
 import {BASE_URL_API} from "@/utils/system";

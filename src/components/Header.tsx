@@ -4,14 +4,11 @@ import {
     BsFillPersonFill,
 } from 'react-icons/bs';
 import Image from "next/image";
-import {useRouter} from '../i18n/routing';
+import {useRouter} from 'nextjs-progressloader';
 import useStore from "@/store/store";
 import {useTranslations} from "next-intl";
 
-interface Props {
-}
-
-const Header: React.FC<Props> = () => {
+const Header = () => {
     const router = useRouter();
     const t = useTranslations()
 
@@ -46,10 +43,10 @@ const Header: React.FC<Props> = () => {
         <>
             <div className="flex items-center justify-between border-b border-[#5F5791] py-8 z-10 relative container">
                 <button onClick={handleLogoClick} className="flex items-end">
-                    <Image src="/Logo.svg" alt='logo' width={103} height={130}/>
+                    <Image src="/Logo.webp" alt='logo' priority width={80} height={107} style={{ width: 'auto', height: 'auto' }}   />
                     <div className='ml-4 hidden lg:flex lg:flex-col'>
-                        <Image src="/LinchpinoHeader.svg" alt='logo' width={331} height={73}/>
-                        <Image src="/LinchpinoHeaderContent.svg" alt='logo' width={330} height={20}/>
+                        <Image src="/LinchpinoHeader.webp" alt='logo' priority width={280} height={42} style={{ width: 'auto', height: 'auto' }}  />
+                        <Image src="/LinchpinoHeaderContent.webp" alt='logo' priority width={280} height={20} style={{ width: 'auto', height: 'auto' }}  />
                     </div>
                 </button>
                 <nav>

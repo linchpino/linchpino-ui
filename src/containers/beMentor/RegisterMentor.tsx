@@ -275,18 +275,19 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
                 {errors?.iban && <p className='text-red-500 mt-1 text-left'>{errors.iban.message}</p>}
             </div>
             <div className="flex items-center justify-between w-full max-w-xs py-5">
-                <button
-                    type="submit"
-                    disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
-                    className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs'>
-                    {t("BeMentor.nextButton")}
-                </button>
+
 
                 <button onClick={() => {
                     setActiveStep(activeStep - 1)
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                     {t("BeMentor.backButton")}
+                </button>
+                <button
+                    type="submit"
+                    disabled={empty(watch('firstName')) || empty(watch('lastName')) || empty(mentorInformation.interviewTypeIDs.length) || empty(watch('password')) || empty(watch('repeatPassword'))}
+                    className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs'>
+                    {t("BeMentor.nextButton")}
                 </button>
             </div>
         </form>

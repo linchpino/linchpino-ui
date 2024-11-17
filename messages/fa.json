@@ -228,6 +228,7 @@
     "send": "ارسال"
   },
   "Profile": {
+    "saveButton": "ذخیره ی تغییرات",
     "scheduleTitle": "برنامه",
     "fetchError": "خطا در بارگذاری اطلاعات پروفایل",
     "fetchErrorAvatar": "خطا در بارگذاری آواتار پروفایل: ",

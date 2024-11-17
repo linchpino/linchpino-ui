@@ -5,7 +5,7 @@ import {AsyncPaginate, LoadOptions} from "react-select-async-paginate";
 import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import useStore from "@/store/store";
-import {useRouter} from "../../i18n/routing";
+import {useRouter} from "nextjs-progressloader";
 import {useTranslations} from "next-intl";
 
 interface OptionsType {
@@ -94,23 +94,24 @@ const JobSearchSection: React.FC = () => {
         <div className="flex flex-col items-center justify-center text-black mt-8 md:mt-0">
             <Image
                 className="hidden md:flex"
-                style={{position: "absolute", top: 25, left: 0}}
-                src="/home/HomeCloudTwo.svg"
+                style={{position: "absolute", top: 25, left: 0,width:'auto',height:'auto'}}
+                src="/home/HomeCloudTwo.webp"
                 alt="logo"
                 width={350}
-                height={107}
+                height={50}
+
             />
             <Image
                 className="hidden md:flex"
-                style={{position: "absolute", top: 10, right: 200}}
-                src="/home/HomeCloudOne.svg"
+                style={{position: "absolute", top: 10, right: 200,width:'auto',height:'auto'}}
+                src="/home/HomeCloudOne.webp"
                 alt="logo"
                 width={260}
-                height={119}
+                height={50}
             />
             <div className="hidden md:flex justify-between relative z-5">
-                <Image src="/home/HomeCloudThree.svg" alt="logo" width={312} height={61}/>
-                <Image className="mt-5" src="/home/HomeCloudThree.svg" alt="logo" width={700} height={150}/>
+                <Image src="/home/HomeCloudThree.webp" alt="logo" width={390} height={10} style={{width:'auto',height:'auto'}}/>
+                <Image className="mt-5" src="/home/HomeCloudThree.webp" alt="logo" width={280} height={100} style={{width:'auto',height:'auto'}}/>
             </div>
             <div className="flex flex-col items-center justify-between relative">
                 <h2 className="relative z-5 text-center md:ml-[40%] ">
@@ -119,10 +120,11 @@ const JobSearchSection: React.FC = () => {
                 <div className="flex flex-col justify-between items-center">
                     <Image
                         className="hidden sm:flex mt-[-40px]"
-                        src="/home/JobSearch.svg"
+                        src="/home/JobSearch.webp"
                         alt="logo"
                         width={820}
                         height={180}
+                        style={{width:'auto',height:'auto'}}
                     />
                 </div>
                 <div
