@@ -8,7 +8,7 @@ import useStore from "../../store/store";
 import {z} from "zod";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {empty} from "@/utils/helper";
+import {empty, updateUrl} from "@/utils/helper";
 import {useTranslations} from "next-intl";
 import Select from "react-select";
 
@@ -96,7 +96,11 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
             paymentMethodRequest: paymentMethodRequest as PaymentMethodRequest,
             sheba: data.iban
         });
-        setActiveStep(activeStep + 1);
+        setActiveStep((prevStep) => {
+            const newStep = prevStep + 1;
+            updateUrl(newStep);
+            return newStep;
+        });
     };
 
     const loadInterview = async (search: string, loadedOptions: unknown[], {page}: {
@@ -278,7 +282,11 @@ const RegisterMentor: FC<RegisterMentorProps> = ({activeStep, setActiveStep}) =>
 
 
                 <button onClick={() => {
-                    setActiveStep(activeStep - 1)
+                    setActiveStep((prevStep) => {
+                        const newStep = prevStep - 1;
+                        updateUrl(newStep);
+                        return newStep;
+                    });
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                     {t("BeMentor.backButton")}

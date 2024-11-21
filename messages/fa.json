@@ -122,6 +122,7 @@
     "defaultStep": "به دنبال چه چیزی هستید؟",
     "email": "آدرس ایمیل خود را وارد کنید",
     "confirmButton": "تأیید",
+    "backButton": "بازگشت",
     "unavailableTimeSlot": "برای این تاریخ، زمان موجود نیست.",
     "unavailableDate": "هیچ تاریخی در دسترس نیست.",
     "finalMessage": "هیچ تاریخی در دسترس نیست."

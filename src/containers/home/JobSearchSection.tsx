@@ -182,7 +182,7 @@ const JobSearchSection: React.FC = () => {
                             if (jobValue && interviewValue) {
                                 setScheduleInterviewItem('interviewTypeId', interviewValue.value);
                                 setScheduleInterviewItem('jobPositionId', jobValue.value);
-                                router.push('/schedule-interview')
+                                router.push('/schedule-interview?step=1')
                             }
                         }}
                         disabled={!jobValue || !interviewValue}

@@ -10,6 +10,7 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useTranslations} from "next-intl";
 import {ClipLoader} from "react-spinners";
+import {updateUrl} from "@/utils/helper";
 
 interface FinalizeRegisterProp {
     activeStep: number,
@@ -48,7 +49,11 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
         },
         onSuccess: () => {
             toastSuccess({message: t("BeMentor.finalizeStepSuccessMessage")});
-            setActiveStep(activeStep + 1);
+            setActiveStep((prevStep) => {
+                const newStep = prevStep + 1;
+                updateUrl(newStep);
+                return newStep;
+            });
         },
         onError: (error: any) => {
             setIsLoading(false);
@@ -116,7 +121,11 @@ const FinalizeRegister: FC<FinalizeRegisterProp> = (props) => {
             </div>
             <div className="flex items-center justify-between w-full max-w-xs mt-10">
                 <button onClick={() => {
-                    setActiveStep(activeStep - 1)
+                    setActiveStep((prevStep) => {
+                        const newStep = prevStep - 1;
+                        updateUrl(newStep);
+                        return newStep;
+                    });
                 }}
                         className='btn btn-sm w-28 xs:w-36 border-none px-2 bg-[#3F3D56] text-[#F9A826] rounded-md shadow-md text-xs'>
                     {t("BeMentor.backButton")}

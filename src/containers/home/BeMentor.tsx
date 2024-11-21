@@ -13,7 +13,7 @@ export default function BeMentor() {
             title={t('Home.beMentorTitle')}
             description={t("Home.beMentorDescription")}
             buttonText={t("Home.beMentorButtonText")}
-            onClick={() => router.push('/be-mentor')}
+            onClick={() => router.push('/be-mentor?step=1')}
             clickable
         />
     )
