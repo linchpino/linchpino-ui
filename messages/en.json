@@ -246,6 +246,8 @@
     "successSave": "Registration successful!",
     "informationTitle": "Your Information",
     "success": "Time slot added successfully!",
+    "editSuccess": "Time slot updated successfully!",
+    "deleteSuccess": "Time slot deleted successfully!",
     "error": "Error adding time slot!",
     "Days": {
       "sunday": {

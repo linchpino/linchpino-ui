@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "analyze": "source-map-explorer '.next/static/chunks/*.js'"
-
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -20,6 +19,7 @@
     "@types/i18next": "^13.0.0",
     "@types/react-i18next": "^8.1.0",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.13",
     "i18next": "^23.16.0",
     "i18next-resources-to-backend": "^1.2.1",
     "js-cookie": "^3.0.5",

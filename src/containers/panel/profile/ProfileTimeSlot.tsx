@@ -16,6 +16,7 @@ import {BsPencilFill, BsPlus, BsTrashFill} from 'react-icons/bs'
 import moment from "moment/moment";
 import {useTranslations} from "next-intl";
 import axiosInstance from "@/utils/axiosInstance";
+import dayjs from "dayjs";
 
 type DurationOption = {
     id: number;
@@ -106,6 +107,8 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
     const [isFirstEnd, setIsFirstEnd] = useState(true);
     const [isFirstStartEdit, setIsFirstStartEdit] = useState(true);
     const [isFirstEndEdit, setIsFirstEndEdit] = useState(true);
+    const [isFirstStartDateEdit, setIsFirstStartDateEdit] = useState(true);
+    const [isFirstEndDateEdit, setIsFirstEndDateEdit] = useState(true);
 
 
     const [selectedStartEdit, setSelectedStartEdit] = useState<Date | null>(null);
@@ -124,6 +127,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
 
 
     const modalRef = useRef<HTMLDialogElement>(null);
+    const modalRefEdit = useRef<HTMLDialogElement>(null);
 
     const handleMenuOpen = () => {
         setIsOpenAddModal(true);
@@ -146,6 +150,18 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
     };
     const handleSelectDaysOfMonth = (selectedOptions: MultiValue<{ value: number; label: string }>) => {
         setSelectedDaysOfMonth(selectedOptions.map(option => option.value));
+    };
+
+    const handleSelectDayEdit = (day: string) => {
+        const isDaySelected = selectedDayEdit.includes(day);
+        if (isDaySelected) {
+            setSelectedDayEdit(prevState => prevState.filter(selected => selected !== day));
+        } else {
+            setSelectedDayEdit(prevState => [...prevState, day]);
+        }
+    };
+    const handleSelectDaysOfMonthEdit = (selectedOptions: MultiValue<{ value: number; label: string }>) => {
+        setSelectedDaysOfMonthEdit(selectedOptions.map(option => option.value));
     };
 
     const dayOfMonthOptions = Array.from({length: 31}, (_, i) => ({value: i + 1, label: `${i + 1}`}));
@@ -196,44 +212,45 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
             let sHour = selectedStartTime?.getHours()
             // @ts-ignore
             let sMin = selectedStartTime?.getMinutes()
-            formattedStart = `${sHour}:${sMin}:${sMin}Z`
+            formattedStart = `${String(sHour).padStart(2, '0')}:${String(sMin).padStart(2, '0')}:${String(sMin).padStart(2, '0')}`
         }
         if (typeof selectedEndTime === "object" && isFirstEnd) {
             // @ts-ignore
             let eHour = selectedEndTime?.getHours()
             // @ts-ignore
             let eMin = selectedEndTime?.getMinutes()
-            formattedEnd = `${eHour}:${eMin}:${eMin}Z`
+            formattedEnd = `${String(eHour).padStart(2, '0')}:${String(eMin).padStart(2, '0')}:${String(eMin).padStart(2, '0')}`
         }
 
         if (typeof selectedStart === "object") {
-
             // @ts-ignore
-            formattedStartDate = moment(selectedStart).format("YYYY-MM-DD")
+            formattedStartDate = selectedStart.format("YYYY-MM-DD")
+
         }
         if (typeof selectedEnd === "object") {
-
             // @ts-ignore
-            formattedEndDate =  moment(selectedStart).format("YYYY-MM-DD")
+            formattedEndDate =  selectedEnd.format("YYYY-MM-DD")
         }
-        sendStart = `${formattedStartDate}T${formattedStart}`;
-        sendEnd = `${formattedEndDate}T${formattedEnd}`;
+        sendStart = `${formattedStartDate}T${formattedStart}Z`;
+        sendEnd = `${formattedEndDate}T${formattedEnd}Z`;
 
         let timeSlotData: any = {
-            startTime: sendStart+"",
+            startTime: sendStart,
             duration: selectedDuration,
             recurrenceType: selectedRepeat?.value,
             interval: +selectedInterval,
-            endTime: sendEnd+"",
+            endTime: sendEnd,
         };
-        if (selectedRepeat?.value === "WEEKLY") {
+
+        console.log(formattedStartDate)
+        console.log(typeof formattedStartDate)
+            if (selectedRepeat?.value === "WEEKLY") {
             timeSlotData.weekDays = selectedDay;
         } else if (selectedRepeat?.value === "MONTHLY") {
             timeSlotData.monthDays = selectedDaysOfMonth;
         }
         mutation.mutate(timeSlotData);
     };
-
 
     const editTimeSlotFunction = async (timeSlotData: any) => {
         const response = await axios.put(`${BASE_URL_API}accounts/mentors/schedule`, timeSlotData, {
@@ -247,11 +264,10 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
         mutationFn: editTimeSlotFunction,
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['profileData']});
-            setIsOpenAddModal(false)
-            // @ts-ignore
-            modalRef.current.close()
-            toastSuccess({message: t("Profile.success")});
             setIsModalEdit(false)
+            // @ts-ignore
+            modalRefEdit.current.close()
+            toastSuccess({message: t("Profile.editSuccess")});
         },
         onError: (error: any) => {
             console.log(error)
@@ -270,58 +286,58 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
         let formattedStart = selectedStartTimeEdit
         let formattedEnd = selectedEndTimeEdit
         let formattedStartDate = selectedStartEdit
-        let formattedEndDate = selectedEnd
+        let formattedEndDate = selectedEndEdit
 
         if (typeof selectedStartTimeEdit === "object" && isFirstStartEdit) {
             // @ts-ignore
-            let sHour = selectedStartTime?.getHours()
+            let sHour = selectedStartTimeEdit?.getHours()
             // @ts-ignore
-            let sMin = selectedStartTime?.getMinutes()
+            let sMin = selectedStartTimeEdit?.getMinutes()
             // @ts-ignore
-            formattedStart = `${sHour}:${sMin}:${sMin}Z`
+            formattedStart = `${String(sHour).padStart(2, '0')}:${String(sMin).padStart(2, '0')}:${String(sMin).padStart(2, '0')}`
+
         }
         if (typeof selectedEndTimeEdit === "object" && isFirstEndEdit) {
             // @ts-ignore
-            let eHour = selectedEndTime?.getHours()
+            let eHour = selectedEndTimeEdit?.getHours()
             // @ts-ignore
-            let eMin = selectedEndTime?.getMinutes()
+            let eMin = selectedEndTimeEdit?.getMinutes()
             // @ts-ignore
-            formattedEnd = `${eHour}:${eMin}:${eMin}Z`
+            formattedEnd = `${String(eHour).padStart(2, '0')}:${String(eMin).padStart(2, '0')}:${String(eMin).padStart(2, '0')}`
+
+        }
+        if (typeof selectedStartEdit === "object") {
+            // @ts-ignore
+            formattedStartDate = moment(selectedEndEdit).format("YYYY-MM-DD")
+        }
+        if (typeof selectedEndEdit === "object") {
+            // @ts-ignore
+            formattedEndDate =  moment(selectedEndEdit).format("YYYY-MM-DD")
         }
 
-        if (typeof selectedStart === "object") {
-
-            // @ts-ignore
-            formattedStartDate = moment(selectedStart).format("YYYY-MM-DD")
-        }
-        if (typeof selectedEnd === "object") {
-
-            // @ts-ignore
-            formattedEndDate =  moment(selectedStart).format("YYYY-MM-DD")
-        }
-        sendStart = `${formattedStartDate}T${formattedStart}`;
-        sendEnd = `${formattedEndDate}T${formattedEnd}`;
+        sendStart = `${selectedStartEdit}T${formattedStart}Z`;
+        sendEnd = `${selectedEndEdit}T${formattedEnd}Z`;
 
         let timeSlotData: any = {
-            startTime: sendStart+"",
+            startTime: sendStart,
             duration: selectedDurationEdit,
             recurrenceType: selectedRepeatEdit?.value,
             interval: +selectedIntervalEdit,
-            endTime: sendEnd+"",
+            endTime: sendEnd,
         };
-        if (selectedRepeat?.value === "WEEKLY") {
+
+        if (selectedRepeatEdit?.value === "WEEKLY") {
             timeSlotData.weekDays = selectedDay;
-        } else if (selectedRepeat?.value === "MONTHLY") {
+        } else if (selectedRepeatEdit?.value === "MONTHLY") {
             timeSlotData.monthDays = selectedDaysOfMonth;
         }
-        mutation.mutate(timeSlotData);
+        editMutation.mutate(timeSlotData);
     };
-
 
     const deleteMutation = useMutation({
         mutationFn: () => deleteSchedule(token),
         onSuccess: () => {
-            toastSuccess({message: t("Profile.DeleteScheduleModal")});
+            toastSuccess({message: t("Profile.deleteSuccess")});
             queryClient.invalidateQueries({queryKey: ['profileData']});
             closeDeleteModal();
         },
@@ -349,15 +365,24 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
     };
     const openEditModal = () => {
         if (startTime) {
-            const startDate = new Date(startTime);
-            setSelectedStartEdit(startDate);
-            setSelectedStartTimeEdit(new Date(startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset())));
+            const parsedDate = dayjs(startTime);
+            const date = parsedDate.format("YYYY-MM-DD");
+            const time = parsedDate.format("HH:mm");
+            setSelectedStartEdit(new Date(date));
+            const dateWithTime = new Date();
+            dateWithTime.setHours(parsedDate.hour());
+            dateWithTime.setMinutes(parsedDate.minute());
+            setSelectedStartTimeEdit(dateWithTime);
         }
-
         if (endTime) {
-            const endDate = new Date(endTime);
-            setSelectedEndEdit(endDate);
-            setSelectedEndTimeEdit(new Date(endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset())));
+            const parsedDate = dayjs(endTime);
+            const date = parsedDate.format("YYYY-MM-DD");
+            const time = parsedDate.format("HH:mm");
+            setSelectedEndEdit(new Date(date));
+            const dateWithTime = new Date();
+            dateWithTime.setHours(parsedDate.hour());
+            dateWithTime.setMinutes(parsedDate.minute());
+            setSelectedEndTimeEdit(dateWithTime);
         }
         if (durationTime) {
             setSelectedDurationEdit(durationTime)
@@ -373,7 +398,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
             setSelectedDaysOfMonthEdit(monthDays)
         }
         if (weekDays && !empty(weekDays.length)) {
-            setSelectedDaysOfMonthEdit(monthDays)
+            setSelectedDayEdit(weekDays)
         }
         setIsModalEdit(true);
     };
@@ -398,7 +423,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                         className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-4 lg:mb-0 container p-3">
                         <h1 className="text-xl text-center text-[#000]">{t("Profile.AddScheduleModal.header")}</h1>
                         <div
-                            className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat?.value === "week" ? 'gap-y-6' : 'gap-y-8'}`}>
+                            className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat?.value === "WEEKLY" ? 'gap-y-6' : 'gap-y-8'}`}>
                             <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
                                 <span className="text-sm">{t("Profile.AddScheduleModal.start")}: </span>
                                 <DatePicker
@@ -418,7 +443,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                     containerClassName="w-full sm:w-1/2"
                                     inputClass="profile-timepicker w-full"
                                     disableDayPicker
-                                    format="HH:mm:ss"
+                                    format="HH:mm"
                                     placeholder="Time"
                                     value={selectedStartTime}
                                     //@ts-ignore
@@ -452,7 +477,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                     containerClassName="w-full sm:w-1/2"
                                     inputClass="profile-timepicker w-full"
                                     disableDayPicker
-                                    format="HH:mm:ss"
+                                    format="HH:mm"
                                     placeholder="Time"
                                     value={selectedEndTime}
                                     //@ts-ignore
@@ -639,7 +664,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                 </div>
             }
             {isModalEdit && (
-                <dialog ref={modalRef} id="modal" className={`modal modal-open`}>
+                <dialog ref={modalRefEdit} id="modal" className={`modal modal-open`}>
                     <div
                         className={`modal-box min-h-[65%] pb-8 max-w-lg bg-white flex flex-col items-center`}>
                         <form>
@@ -651,16 +676,21 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                             className="flex flex-col pb-3 lg:pb-6 items-center justify-center w-full rounded-md mt-2 mb-4 lg:mb-0 container p-3">
                             <h1 className="text-xl text-center text-[#000]">{t("Profile.AddScheduleModal.headerEdit")}</h1>
                             <div
-                                className={`flex flex-col items-center justify-center mt-5 ${selectedRepeat?.value === "week" ? 'gap-y-6' : 'gap-y-8'}`}>
+                                className={`flex flex-col items-center justify-center mt-5 ${selectedRepeatEdit?.value === "WEEKLY" ? 'gap-y-6' : 'gap-y-8'}`}>
                                 <div className="flex flex-col sm:flex-row items-center w-full gap-y-2 gap-x-2">
                                     <span className="text-sm">{t("Profile.AddScheduleModal.start")}: </span>
                                     <DatePicker
                                         containerClassName="w-full sm:w-1/2"
                                         inputClass="profile-calendar w-full"
                                         className="yellow z-20"
+                                        format={"YYYY-MM-DD"}
                                         value={selectedStartEdit}
                                         //@ts-ignore
-                                        onChange={setSelectedStart}
+                                        onChange={(e)=>{
+                                        //@ts-ignore
+                                            setSelectedStartEdit(e)
+                                            setIsFirstStartDateEdit(false)
+                                        }}
                                         calendar={gregorian}
                                         locale={gregorian_en}
                                         calendarPosition="bottom-right"
@@ -674,7 +704,11 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                         placeholder="Time"
                                         value={selectedStartTimeEdit}
                                         //@ts-ignore
-                                        onChange={setSelectedStartTime}
+                                        onChange={(e)=> {
+                                            // @ts-ignore
+                                            setSelectedStartTimeEdit(e)
+                                            setIsFirstStartEdit(false)
+                                        }}
                                         plugins={[<TimePicker hideSeconds hStep={1} mStep={5}/>]}
                                         calendar={gregorian}
                                         locale={gregorian_en}
@@ -687,9 +721,14 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                         containerClassName="w-full sm:w-1/2"
                                         inputClass="profile-calendar w-full"
                                         className="yellow z-20"
+                                        format={"YYYY-MM-DD"}
                                         value={selectedEndEdit}
                                         //@ts-ignore
-                                        onChange={setSelectedEnd}
+                                        onChange={(e)=>{
+                                            //@ts-ignore
+                                            setSelectedEndEdit(e)
+                                            setIsFirstEndDateEdit(false)
+                                        }}
                                         calendar={gregorian}
                                         locale={gregorian_en}
                                         calendarPosition="bottom-right"
@@ -703,7 +742,11 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                         placeholder="Time"
                                         value={selectedEndTimeEdit}
                                         //@ts-ignore
-                                        onChange={setSelectedEndTimeEdit}
+                                        onChange={(e)=> {
+                                            // @ts-ignore
+                                            setSelectedEndTimeEdit(e)
+                                            setIsFirstEndEdit(false)
+                                        }}
                                         plugins={[<TimePicker hideSeconds hStep={1} mStep={5}/>]}
                                         calendar={gregorian}
                                         locale={gregorian_en}
@@ -716,9 +759,9 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                     <div className="flex gap-x-2 ms-2 flex-wrap justify-center gap-y-3 mt-2 sm:mt-0">
                                         {duration.map(durationItem => (
                                             <button
-                                                onClick={() => setSelectedDuration(durationItem.time)}
+                                                onClick={() => setSelectedDurationEdit(durationItem.time)}
                                                 key={durationItem.id}
-                                                className={`p-2 min-w-[3.9rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${selectedDuration === durationItem.time && 'text-[#F2A926] border-[#F2A926]'}`}
+                                                className={`p-2 min-w-[3.9rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${selectedDurationEdit === durationItem.time && 'text-[#F2A926] border-[#F2A926]'}`}
                                             >
                                                 {durationItem.time} {t("Profile.scheduleInfo.min")}
                                             </button>
@@ -727,8 +770,8 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                 </div>
                                 <div className="flex items-center w-full gap-x-2 flex-col sm:flex-row gap-y-3">
                                     <span className="text-sm">{t("Profile.scheduleInfo.interval")}:</span>
-                                    <input value={selectedInterval}
-                                           onChange={(e) => setSelectedInterval(e.target.value)}
+                                    <input value={selectedIntervalEdit}
+                                           onChange={(e) => setSelectedIntervalEdit(e.target.value)}
                                            type='number'
                                            inputMode='numeric'
                                            placeholder={t("Profile.AddScheduleModal.numberOf")}
@@ -751,17 +794,17 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                         onChange={setSelectedRepeat}
                                     />
                                 </div>
-                                {selectedRepeat?.value === "WEEKLY" && (
+                                {selectedRepeatEdit?.value === "WEEKLY" && (
                                     <div className="flex items-center w-full flex-col sm:flex-row">
                                         <span className="text-sm">{t("Profile.scheduleInfo.on")}:</span>
                                         <div
                                             className="flex gap-x-2 ms-2 justify-center flex-wrap mt-2 sm:mt-0 gap-y-2">
                                             {days.map(daysItem => {
-                                                const isSelected = selectedDay.includes(daysItem.value);
+                                                const isSelected = selectedDayEdit.includes(daysItem.value);
                                                 return (
                                                     <button
                                                         className={`py-2 min-w-[3rem] text-xs rounded-3xl flex items-center justify-center border-[.1px] ${isSelected ? "border-[#F2A926] text-[#F2A926]" : ""}`}
-                                                        onClick={() => handleSelectDay(daysItem.value)}
+                                                        onClick={() => handleSelectDayEdit(daysItem.value)}
                                                         key={daysItem.id}
                                                     >
                                                         {daysItem.day}
@@ -771,7 +814,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                         </div>
                                     </div>
                                 )}
-                                {selectedRepeat?.value === "MONTHLY" && (
+                                {selectedRepeatEdit?.value === "MONTHLY" && (
                                     <div className="flex items-center w-full flex-col sm:flex-row gap-y-3">
                                         <span className="text-sm">{t("Profile.scheduleInfo.daysOfMonth")}:</span>
                                         <Select
@@ -788,9 +831,9 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                                         : "px-4 py-2 ",
                                                 multiValue: () => "bg-[#F9A82699] rounded-full border px-2 py-1 mx-1 truncate my-1 relative w-[20%] h-7 flex justify-between",
                                             }}
-                                            value={dayOfMonthOptions.filter(option => selectedDaysOfMonth.includes(option.value))}
+                                            value={dayOfMonthOptions.filter(option => selectedDaysOfMonthEdit.includes(option.value))}
                                             options={dayOfMonthOptions}
-                                            onChange={handleSelectDaysOfMonth}
+                                            onChange={handleSelectDaysOfMonthEdit}
                                             onMenuOpen={handleMenuOpen}
                                             onMenuClose={handleMenuClose}
                                         />
@@ -798,7 +841,7 @@ const ProfileTimeSlot: React.FC<ProfileTimeSlotProps> = ({
                                 )}
                                 <button
                                     disabled={loading}
-                                    onClick={sendTimeSlot}
+                                    onClick={editTimeSlot}
                                     className={`btn btn-sm w-full md:w-2/3 border-none px-2 bg-[#F9A826] text-[#FFFFFF] rounded-md shadow-md text-xs hover:bg-[#F9A945]  ${selectedRepeat?.value !== "week" && 'mt-2'}`}>
                                     {loading ? (
                                         <PulseLoader color="#FFFFFF" size={5}/>
