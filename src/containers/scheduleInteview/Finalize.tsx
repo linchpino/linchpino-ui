@@ -6,6 +6,7 @@ import {BASE_URL_API} from "@/utils/system";
 import axios from "axios";
 import PulseLoader from "react-spinners/PulseLoader";
 import {useTranslations} from "next-intl";
+import {toastError} from "@/components/CustomToast";
 
 type Inputs = {
     children: any;
@@ -13,12 +14,14 @@ type Inputs = {
 
 const Finalize: FC<Inputs> = (props) => {
     const t = useTranslations()
+    const isFree = true
 
     const {children} = props;
     const now = new DateObject();
     const {scheduleInterview} = useStore();
     const [imageUrl, setImageUrl] = useState<string>('/logo-sm.svg');
     const [isLoadingAvatar, setIsLoadingAvatar] = useState<boolean>(true);
+    const [trackingCode, setTrackingCode] = useState("");
     const localStartTime = scheduleInterview.startTime
         ? new Date(scheduleInterview.startTime).toLocaleString('en-US', {
             weekday: 'long',
@@ -52,6 +55,37 @@ const Finalize: FC<Inputs> = (props) => {
 
         fetchAvatar();
     }, [scheduleInterview.avatar]);
+    const handleTrackingCodeSubmit = async (e: any) => {
+        console.log(e)
+        // e.preventDefault();
+        // if (!trackingCode) {
+        //     toastError({ message: t("Errors.trackingCodeRequired") });
+        //     return;
+        // }
+        // try {
+        //     await axios.post(`${BASE_URL_API}payments/verify`, {
+        //         trackingCode,
+        //         mentorId: scheduleInterview.mentorAccountId,
+        //     });
+        //     setScheduleInterviewItem("paymentCompleted", true);
+        //     toastSuccess({ message: t("Schedule.paymentVerified") });
+        //     setActiveStep(activeStep + 1);
+        // } catch (error) {
+        //     toastError({ message: t("Errors.invalidTrackingCode") });
+        // }
+    };
+
+    const handlePaymentRedirect = async () => {
+        try {
+            const {data} = await axios.post(`${BASE_URL_API}payments/start`, {
+                mentorId: scheduleInterview.mentorAccountId,
+                amount: 100000,
+            });
+            window.location.href = data.paymentLink;
+        } catch (error) {
+            toastError({message: t("Errors.paymentFailed")});
+        }
+    };
 
     return (
         <div className='flex flex-col items-center w-full max-w-xs gap-y-4'>
@@ -76,8 +110,43 @@ const Finalize: FC<Inputs> = (props) => {
                     )}
                 </div>
                 <h6 className='text-[#F9A826] text-[14px]'>{scheduleInterview.mentorName}</h6>
-                {/*<Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly/>*/}
+                {!isFree &&
+                    <>
+                        <button
+                            onClick={handlePaymentRedirect}
+                            className="btn btn-sm bg-[#F9A826] text-white rounded-md shadow-md border-none w-full"
+                        >
+                            {t("Schedule.goToPayment")}
+                        </button>
+                    </>
+                }
             </div>
+            {isFree &&
+                <>
+                    <form onSubmit={handleTrackingCodeSubmit} className="w-full">
+                        <label className="form-control w-full">
+                            <div className="label">
+                              <span className="label-text text-[#3F3D56]">
+                                {t("Schedule.enterTrackingCode")}
+                              </span>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder={t("Schedule.trackingCodePlaceholder")}
+                                className="input input-bordered w-full bg-white"
+                                value={trackingCode}
+                                onChange={(e) => setTrackingCode(e.target.value)}
+                            />
+                        </label>
+                        <button
+                            type="submit"
+                            className={`btn btn-sm mt-4 w-full bg-[#F9A826] text-white rounded-md shadow-md border-none`}
+                        >
+                            {t("Schedule.confirmTrackingCode")}
+                        </button>
+                    </form>
+                </>
+           }
             {children}
         </div>
     )

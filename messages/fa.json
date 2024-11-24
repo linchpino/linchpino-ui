@@ -8,8 +8,8 @@
     "unexpectedSignInError": "یک خطای ناشناخته در حین ورود رخ داده است.",
     "unexpectedError": "یک خطای غیرمنتظره رخ داده است.",
     "joinInterviewLoadError": "متأسفانه، درخواست شما با خطا مواجه شد.",
-    "selectNoOption" : "موردی یافت نشد",
-    "selectLoading" : "در حال بارگزاری..."
+    "selectNoOption": "موردی یافت نشد",
+    "selectLoading": "در حال بارگزاری..."
   },
   "Forms": {
     "email": "ایمیل",
@@ -124,7 +124,12 @@
     "confirmButton": "تأیید",
     "unavailableTimeSlot": "برای این تاریخ، زمان موجود نیست.",
     "unavailableDate": "هیچ تاریخی در دسترس نیست.",
-    "finalMessage": "هیچ تاریخی در دسترس نیست."
+    "finalMessage": "هیچ تاریخی در دسترس نیست.",
+    "paymentRequired": "پرداخت",
+    "goToPayment": "پرداخت",
+    "enterTrackingCode": "وارد کردن کد رهگیری",
+    "trackingCodePlaceholder": "کد رهگیری شما",
+    "confirmTrackingCode": "تایید کد رهگیری"
   },
   "BeMentor": {
     "emailStep": "ثبت نام",
@@ -141,15 +146,15 @@
     "nextButton": "مرحله ی بعد",
     "expertise": "مهارت ها ",
     "interviewPlaceholder": "نوع مصاحبه",
-    "payAsYouGo" : "پرداخت به ازای استفاده",
+    "payAsYouGo": "پرداخت به ازای استفاده",
     "fixPrice": "قیمت ثابت",
-    "free" : "رایگان",
-    "paymentMethod" : "نحوه پرداخت",
-    "paymentMethodPlaceholder" : "انتخاب پرداخت",
-    "min" : "حداقل",
-    "max" : "حداکثر",
-    "iban" : "شبا",
-    "ibanRegion" : "IR"
+    "free": "رایگان",
+    "paymentMethod": "نحوه پرداخت",
+    "paymentMethodPlaceholder": "انتخاب پرداخت",
+    "min": "حداقل",
+    "max": "حداکثر",
+    "iban": "شبا",
+    "ibanRegion": "IR"
   },
   "JobseekerActivation": {
     "registrationError": "ثبت نام ناموفق بود. لطفاً دوباره تلاش کنید.",
